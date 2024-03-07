@@ -37,8 +37,5 @@ services:
   #   depends_on:
   #     - inklinker_backend
 
-volumes:
-  model_data:
-
 networks:
   dengta_network:   
