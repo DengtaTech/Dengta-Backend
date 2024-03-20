@@ -1,10 +1,10 @@
-// EnvironmentManager.js
+require('dotenv').config();
 const { InfisicalClient } = require('@infisical/sdk');
 
 class EnvironmentManager {
   static client = new InfisicalClient({
-    clientId: "a57b009f-051b-4156-acad-356a2bddc673",
-    clientSecret: "a9592f18753634dfbebfba0befef37464c3da220520e8cc1edbc5be2eceadc0e",
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
   });
 
   static secrets = {};
@@ -15,7 +15,7 @@ class EnvironmentManager {
     try {
       const secretsList = await EnvironmentManager.client.listSecrets({
         environment: "dev",
-        projectId: "8941a750-f116-4e5e-bfc4-063817b01d8b",
+        projectId: process.env.PROJECT_ID,
         path: "/",
         includeImports: false,
       });
