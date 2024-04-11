@@ -27,10 +27,11 @@ Footprint.init({
   },
   status: {
     type: DataTypes.STRING(50),
-    // allowNull: false
+    defaultValue: "draft"
   },
   milestone: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   userId: {
     type: DataTypes.INTEGER,
