@@ -1,4 +1,5 @@
 const sequelize = require('../../config/db')
+const { Model, DataTypes } = require('sequelize');
 
 class FootprintTagType extends Model {}
 
