@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
-const EnvironmentManager = require('./utils/envEnitity'); // 调整路径以匹配你的项目结构
+const initializer = require('./config/initApp');
+const EnvironmentManager = require('./config/envService');
+const User = require('./Database/Entities/users')
+const ProfileHashTag = require('./Database/Entities/profileHashTags');
+const PORT = 3000;
+
 
 
 
@@ -12,10 +17,19 @@ app.get("/", (req, res) => {
     res.json({ TEST: testSecret });
 });
 
-EnvironmentManager.loadSecrets().then(() => {
-    console.log('Environment variables are loaded and ready to use.');
+async function testMM() {
+    const testSuperMM = await User.findOne({
+        where: {
+            realName: "Jane6"
+        },
+        include: ProfileHashTag
+    });
+    console.log("selects", testSuperMM.toJSON());
+};
 
+initializer.initApp().then(() => {
     app.listen(PORT, () => {
         console.log(`App listening on port ${PORT}`);
     });
+    testMM()
 });

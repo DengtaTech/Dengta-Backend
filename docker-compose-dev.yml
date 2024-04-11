@@ -12,9 +12,9 @@ services:
       networks:
         - dengta_network
 
-  db_production:
+  db_development:
     image: mysql:8.0.36-debian
-    container_name: mysql-production
+    container_name: mysql-development
     platform: linux/amd64
     stdin_open: true
     tty: true
@@ -23,7 +23,11 @@ services:
     ports:
       - "3309:3306"
     volumes:
-      - /Users/waiting/dengta-dump/production-mysql-data:/var/lib/mysql
+      - /Users/waiting/dengta-dump/development-mysql-data:/var/lib/mysql 
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+
     networks:
       - dengta_network
       

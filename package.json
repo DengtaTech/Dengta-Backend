@@ -14,6 +14,8 @@
     "express": "^4.18.3",
     "mysql2": "^3.9.2",
     "jsonwebtoken": "^9.0.2",
-    "@infisical/sdk": "^2.1.8"
+    "@infisical/sdk": "^2.1.8",
+    "cls-hooked": "^4.2.2",
+    "sequelize": "^6.37.2"
   }
 }
