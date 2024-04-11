@@ -3,17 +3,40 @@ const User = require('./Entities/users');
 const Followship = require('./Entities/followship');
 const Footprint = require('./Entities/footprints');
 const FootprintReaction = require('./Entities/footprintReactions');
+const FootprintHashTag = require('./Entities/footprintHashTags');
+const FootprintTagType = require('./Entities/footprintTagType');
 const ReactionType = require('./Entities/reactionType');
 const UserCredential = require('./Entities/userCredentials');
 const ProfileHashTag = require('./Entities/profileHashTags');
 const ProfileTagType = require('./Entities/profileTagType');
-
+const Notification = require('./Entities/notifications');
+const UserRole = require('./Entities/userRoles');
+const Role = require('./Entities/roles');
 // Users-UserCredentials 1-1
 User.hasOne(UserCredential,{foreignKey: 'userId'});
 UserCredential.belongsTo(User,{foreignKey: 'userId'})
 
-// Users- 1-M
+// Users-Notifications 1-M
+User.hasMany(Notification,{foreignKey: 'userId'});
+Notification.belongsTo(User,{foreignKey: 'userId'});
 
+// Users-UserRoles-Roles
+User.belongsToMany(Role,{
+    through: UserRole,
+    foreignKey: 'userId',
+    otherKey: 'roleId'
+});
+Role.belongsToMany(User,{
+    through: UserRole,
+    foreignKey: 'roleId',
+    otherKey: 'userId'
+});
+
+User.hasMany(UserRole,{ foreignKey: 'userId' });
+UserRole.belongsTo(User,{ foreignKey: 'userId' });
+
+Role.hasMany(UserRole,{ foreignKey: 'roleId' });
+UserRole.belongsTo(Role,{ foreignKey: 'roleId' });
 
 // Users-ProfileTagType super M-M
 User.belongsToMany(ProfileTagType,{
@@ -61,6 +84,24 @@ FootprintReaction.belongsTo(User,{ foreignKey: 'userId' });
 
 Footprint.hasMany(FootprintReaction,{ foreignKey: 'footprintId' });
 FootprintReaction.belongsTo(Footprint,{ foreignKey: 'footprintId' });
+
+//Footprints-FootprintHashTags-FootprintTagType
+Footprint.belongsToMany(FootprintTagType,{
+    through: FootprintHashTag,
+    foreignKey: 'footprintId',
+    otherKey: 'footprintTagTypeId'
+});
+FootprintTagType.belongsToMany(Footprint,{
+    through: FootprintHashTag,
+    foreignKey: 'footprintTagTypeId',
+    otherKey: 'footprintId'
+});
+
+Footprint.hasMany(FootprintHashTag,{ foreignKey: 'footprintId' });
+FootprintHashTag.belongsTo(Footprint,{ foreignKey: 'footprintId' });
+
+FootprintTagType.hasMany(FootprintHashTag,{ foreignKey: 'footprintTagTypeId' });
+FootprintHashTag.belongsTo(FootprintTagType,{ foreignKey: 'footprintTagTypeId' });
 
 //ReactionType-FootprintReactions 1-M
 ReactionType.hasMany(FootprintReaction,{ foreignKey: 'reactionTypeId' });
