@@ -23,7 +23,7 @@ services:
     ports:
       - "3309:3306"
     volumes:
-      - /Users/waiting/dengta-dump/development-mysql-data:/var/lib/mysql 
+      - ${DEVELOPMENT_MYSQL_DATA_PATH}:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB_NAME}
