@@ -14,7 +14,7 @@ class EnvironmentManager {
 
     try {
       const secretsList = await EnvironmentManager.client.listSecrets({
-        environment: "dev",
+        environment: "prod", //本地開發記得替換成 dev
         projectId: process.env.PROJECT_ID,
         path: "/",
         includeImports: false,
