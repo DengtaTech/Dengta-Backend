@@ -23,7 +23,7 @@ services:
     ports:
       - "3309:3306"
     volumes:
-      - /Users/waiting/dengta-dump/production-mysql-data:/var/lib/mysql
+      - /home/dengta/dengta-file/production-mysql-data:/var/lib/mysql
     networks:
       - dengta_network
       
