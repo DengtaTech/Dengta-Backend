@@ -14,5 +14,5 @@ USER appuser
 
 EXPOSE 3000
 
-# 上server時要改成 mysql-production
-CMD ["sh", "-c", "while ! nc -z mysql-development 3306; do sleep 1; done && pm2-runtime app.js"]
+# 上server時要改成 mysql-production 本地use mysql-development
+CMD ["sh", "-c", "while ! nc -z mysql-production 3306; do sleep 1; done && pm2-runtime app.js"]
