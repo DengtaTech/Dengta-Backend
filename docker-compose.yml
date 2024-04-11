@@ -15,7 +15,6 @@ services:
   db_production:
     image: mysql:8.0.36-debian
     container_name: mysql-production
-    platform: linux/amd64
     stdin_open: true
     tty: true
     restart: always
