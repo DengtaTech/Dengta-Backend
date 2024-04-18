@@ -9,7 +9,6 @@ const PORT = 3000;
 
 
 
-
 app.get("/", (req, res) => {
     const testSecret = EnvironmentManager.getSecret("TEST");
     res.json({ TEST: testSecret });
