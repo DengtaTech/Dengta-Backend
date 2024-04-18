@@ -1,6 +1,9 @@
 node_modules
 **/.dockerignore
 **/.env
+**/.env.*
 **/.git
 **/.gitignore
 **/docker-compose*
+.eslintrc.json
+.prettierrc.json

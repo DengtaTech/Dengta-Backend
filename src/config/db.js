@@ -12,17 +12,17 @@ Sequelize.useCLS(namespace);
 // const MYSQL_DB_HOST = EnvironmentManager.getSecret("MYSQL_DB_HOST");
 // console.log("MYSQL_DB_HOST: ",MYSQL_DB_HOST);
 
-const MYSQL_DB_NAME = process.env.MYSQL_DB_NAME;
-const MYSQL_DB_USER = process.env.MYSQL_DB_USER;
-const MYSQL_DB_PASSWORD = process.env.MYSQL_DB_PASSWORD;
-const MYSQL_DB_HOST = process.env.MYSQL_DB_HOST;
+const MYSQL_USER = process.env.MYSQL_USER;
+const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
+const MYSQL_HOST = process.env.MYSQL_HOST;
+const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
 
 const sequelize = new Sequelize(
-  MYSQL_DB_NAME,
-  MYSQL_DB_USER,
-  MYSQL_DB_PASSWORD,
+  MYSQL_DATABASE,
+  MYSQL_USER,
+  MYSQL_PASSWORD,
   {
-    host: MYSQL_DB_HOST,
+    host: MYSQL_HOST,
     dialect: 'mysql',
     pool: {
       max: 5,

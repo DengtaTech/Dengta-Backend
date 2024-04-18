@@ -3,10 +3,14 @@ FROM node:20.4-alpine
 WORKDIR /app
 
 COPY . .
+
+RUN apk add --no-cache bash curl && curl -1sLf \
+'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash \
+&& apk add infisical
+
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm install -g pm2 \
     && npm install --production
-# RUN npm install -g pm2 && npm install --production
 
 COPY --chown=appuser:appgroup . .
 
@@ -14,5 +18,7 @@ USER appuser
 
 EXPOSE 3000
 
-# 上server時要改成 mysql-production 本地use mysql-development
-CMD ["sh", "-c", "while ! nc -z mysql-production 3306; do sleep 1; done && pm2-runtime app.js"]
+# ARG INFISICAL_ENVIRONMENT
+# ENV ENVIRONMENT=${INFISICAL_ENVIRONMENT}
+
+CMD infisical run --env=$INFISICAL_ENVIRONMENT --path=/share -- pm2-runtime src/app.js
