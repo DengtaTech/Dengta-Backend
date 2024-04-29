@@ -13,7 +13,7 @@ services:
         - INFISICAL_TOKEN=${INFISICAL_TOKEN}
         - INFISICAL_ENVIRONMENT=${INFISICAL_ENVIRONMENT}
       networks:
-        - dengta_network
+        - backend_network
       depends_on:
         mysql:
           condition: service_healthy
@@ -41,7 +41,7 @@ services:
       timeout: 25s
       retries: 10
     networks:
-      - dengta_network
+      - backend_network
       
   # redis:
   #   image: redis
@@ -73,4 +73,5 @@ volumes:
 
 
 networks:
-  dengta_network:   
+  backend_network:
+    name: dengta_backend_network
