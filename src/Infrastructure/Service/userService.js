@@ -1,4 +1,4 @@
-const sequelize = require('../../mysql');
+const sequelize = require('../../config/db');
 const userRepo = require('../Repository/userRepo');
 const userCredentialRepo = require('../Repository/userCredentialRepo');
 const UserCredential = require('../../Database/Entities/userCredentials');

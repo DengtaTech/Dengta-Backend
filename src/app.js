@@ -1,16 +1,16 @@
 const express = require('express');
-
+const models = require("./Database/models");
 const app = express();
-const initializer = require('./config/initApp');
-const EnvironmentManager = require('./config/envService');
 const PORT = 3000;
 
-app.get('/', (req, res) => {
-  const testSecret = EnvironmentManager.getSecret('TEST');
-  res.json({ TEST: testSecret });
-});
 
-initializer.initApp().then(() => {
+
+
+
+
+
+
+models.initDb().then(() => {
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });

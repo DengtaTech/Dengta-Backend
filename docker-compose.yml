@@ -5,28 +5,41 @@ services:
   dengta_backend:
       build: 
         context: .
+        # args:
+        #     INFISICAL_ENVIRONMENT: ${INFISICAL_ENVIRONMENT}
         dockerfile: Dockerfile
       container_name: dengta_backend_container
-      env_file:
-        - .env
+      environment:
+        - INFISICAL_TOKEN=${INFISICAL_TOKEN}
+        - INFISICAL_ENVIRONMENT=${INFISICAL_ENVIRONMENT}
       networks:
         - dengta_network
+      depends_on:
+        mysql:
+          condition: service_healthy
 
-  db_production:
+  mysql:
     image: mysql:8.0.36-debian
-    container_name: mysql-production
+    container_name: ${MYSQL_CONTAINER_NAME}
     platform: linux/amd64
     stdin_open: true
     tty: true
     restart: always
     working_dir: /var/lib/mysql
+    command: --bind-address=0.0.0.0
     ports:
-      - "3309:3306"
+      - ${MYSQL_PORT}:3306
     volumes:
-      - ${PRODUCTION_MYSQL_DATA_PATH}:/var/lib/mysql
+      - dengta_mysql_volume:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}      
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 25s
+      retries: 10
     networks:
       - dengta_network
       
@@ -54,6 +67,10 @@ services:
   #     - inklinker_network
   #   depends_on:
   #     - inklinker_backend
+volumes:
+  dengta_mysql_volume:
+    name: ${MYSQL_VOLUME_PATH}
+
 
 networks:
   dengta_network:   
