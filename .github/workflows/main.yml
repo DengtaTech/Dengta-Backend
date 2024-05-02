@@ -20,7 +20,7 @@ jobs:
       - name: Setup SSH Keys
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DENGTA_UBUNTU_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.DENGTA_UBUNTU_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ env.SERVER_HOST }} > ~/.ssh/known_hosts
 
@@ -36,6 +36,6 @@ jobs:
       
       - name: Update Docker Containers and Images
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker rm -f dengta-backend-dev-container'
-          ssh -i ~/.ssh/id_ed25519 ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker rmi dengta-backend-dev-image'
-          ssh -i ~/.ssh/id_ed25519 ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose-dev.yml up -d'
+          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker rm -f dengta-backend-dev-container'
+          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker rmi dengta-backend-dev-image'
+          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose.yml up -d'
