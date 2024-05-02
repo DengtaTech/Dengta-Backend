@@ -8,7 +8,7 @@ on:
 
 env:
   DEPLOY_ACCOUNT: githubactions
-  SERVER_HOST: dengta.backend.org
+  SERVER_HOST: backend.dengta.org
 
 jobs:
   deploy:
