@@ -37,4 +37,5 @@ jobs:
       - name: Update Docker Containers and Images
         run: |
           ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose.yml down'
+          ls -al
           ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose.yml --env-file ~/dengta-backend-development/.env.development up --build -d'
