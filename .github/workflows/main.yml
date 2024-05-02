@@ -32,6 +32,7 @@ jobs:
       - name: scp .env.production to server
         run: |
           echo ${{ secrets.COMPOSE_ENV_FILE_DEV }} > .env.development
+          ls -al
           scp -i ~/.ssh/id_rsa .env.development ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }}:~/dengta-backend-development/.env.development
       
       - name: Update Docker Containers and Images
