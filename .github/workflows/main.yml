@@ -1,0 +1,42 @@
+name: Dengta Backend CI/CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "dev"
+
+env:
+  DEPLOY_ACCOUNT: githubactions
+  SERVER_HOST: backend.dengta.org
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DENGTA_UBUNTU_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ env.SERVER_HOST }} > ~/.ssh/known_hosts
+
+      - name: Send Code to Server
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'rm -rf ~/dengta-backend-development && mkdir -p ~/dengta-backend-development'
+          scp -r -i ~/.ssh/id_rsa ./* ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }}:~/dengta-backend-development
+
+      - name: scp .env.production to server
+        run: |
+          echo "${{ secrets.COMPOSE_ENV_FILE_DEV }}" > .env.development
+          ls -al
+          scp -i ~/.ssh/id_rsa .env.development ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }}:~/dengta-backend-development/.env.development
+      
+      - name: Update Docker Containers and Images
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose.yml down'
+          ls -al
+          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose.yml --env-file ~/dengta-backend-development/.env.development up --build -d'
