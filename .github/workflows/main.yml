@@ -36,6 +36,5 @@ jobs:
       
       - name: Update Docker Containers and Images
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker rm -f dengta-backend-dev-container'
-          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker rmi dengta-backend-dev-image'
+          ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose.yml down'
           ssh -i ~/.ssh/id_rsa ${{ env.DEPLOY_ACCOUNT }}@${{ env.SERVER_HOST }} 'docker compose -f ~/dengta-backend-development/docker-compose.yml --env-file ~/dengta-backend-development/.env.development up -d'
