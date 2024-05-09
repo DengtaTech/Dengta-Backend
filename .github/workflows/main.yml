@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "dev"
+      - "develop"
 
 env:
   DEPLOY_ACCOUNT: githubactions
