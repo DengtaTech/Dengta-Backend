@@ -33,3 +33,10 @@ jobs:
         run: |
           docker compose -f /srv/dengta-backend-development/docker-compose.yml down
           docker compose -f /srv/dengta-backend-development/docker-compose.yml --env-file /srv/dengta-backend-development/.env.development up --build -d
+
+      - name: Send Notification to Discord
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          message: "[Deploy] Deployment completed on backend.dengta.org"
