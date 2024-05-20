@@ -37,7 +37,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}      
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD} && mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} -e 'show databases;'"]
       timeout: 25s
       retries: 10
     networks:
@@ -74,5 +74,5 @@ volumes:
 
 networks:
   backend_network:
-    external:
-      name: dengta_backend_network
+    # external:
+    name: dengta_backend_network
