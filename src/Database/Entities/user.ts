@@ -1,10 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity , OneToMany, Relation, OneToOne } from "typeorm";
 import { Footprint } from "./footprint.js";
 import { UserCredential } from "./userCredential.js";
+import { UserRole } from "./userRole.js";
+import { Followship } from "./followship.js";
+import { ProfileHashTag } from "./profileHashTag.js";
+import { FootprintHashTag } from "./footprintHashTag.js";
+import { FootprintReaction } from "./footprintReaction.js";
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
     id!: number;
 
     @Column({ type: "varchar", length: 50, nullable: false })
@@ -13,8 +18,8 @@ export class User extends BaseEntity {
     @Column({ type: "varchar", length: 50, nullable: false })
     realName!: string;
 
-    // @Column({ type: "date", nullable: false })
-    // birthday!: Date;
+    @Column({ type: "date", nullable: true })
+    birthday!: Date;
 
     @Column({ type: "varchar", default: 'native' })
     provider!: string;
@@ -22,35 +27,57 @@ export class User extends BaseEntity {
     @Column({ type: "varchar", length: 255, nullable: true })
     avatar!: string;
 
-    // @Column({ type: "varchar", length: 255, nullable: true })
-    // backgroundImage!: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    backgroundImage!: string;
 
-    // @Column({ type: "int", nullable: true })
-    // gender!: number;
+    @Column({ type: "int", nullable: true })
+    gender!: number;
 
-    // @Column({ type: "varchar", length: 50, nullable: true })
-    // phone!: string;
+    @Column({ type: "varchar", length: 50, nullable: true })
+    phone!: string;
 
-    // @Column({ type: "varchar", length: 255, nullable: true })
-    // lifeRole!: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    lifeRole!: string;
 
-    // @Column({ type: "varchar", length: 255, nullable: true })
-    // selfIntro!: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    selfIntro!: string;
 
-    // @Column({ type: "varchar", length: 255, nullable: true })
-    // fbLink!: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    fbLink!: string;
 
-    // @Column({ type: "varchar", length: 255, nullable: true })
-    // igLink!: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    igLink!: string;
 
-    // @Column({ type: "varchar", length: 255, nullable: true })
-    // linkedInLink!: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    linkedInLink!: string;
 
-    // @Column({ type: "int", nullable: true })
-    // isActive!: number;
+    @Column({ type: "int", nullable: true })
+    isActive!: number;
+
+    @Column({ type: "datetime", nullable: false, default: () => "CURRENT_TIMESTAMP" })
+    createdAt!: Date;
+
     @OneToMany(() => Footprint, footprint => footprint.user,{ cascade: true })
     footprints?: Relation<Footprint[]>;
 
+    @OneToMany(() => UserRole, userRole => userRole.user,{ cascade: true })
+    userRoles?: Relation<UserRole[]>;
+
+    @OneToMany(() => ProfileHashTag, profileHashTag => profileHashTag.user,{ cascade: true })
+    profileHashTags?: Relation<ProfileHashTag[]>;
+
+    @OneToMany(() => FootprintHashTag, footprintHashTag => footprintHashTag.user,{ cascade: true })
+    footprintHashTags?: Relation<FootprintHashTag[]>;
+
+    @OneToMany(() => FootprintReaction, footprintReaction => footprintReaction.user,{ cascade: true })
+    footprintReactions?: Relation<FootprintReaction[]>;
+
+    @OneToMany(() => Followship, followship => followship.follower, { cascade: true })
+    followers?: Relation<Followship[]>;
+
+    @OneToMany(() => Followship, followship => followship.followee, { cascade: true })
+    followees?: Relation<Followship[]>;
+    
     @OneToOne(() => UserCredential, userCredential => userCredential.user,{ cascade: true })
     userCredential?: Relation<UserCredential>;
 }

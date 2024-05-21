@@ -8,7 +8,7 @@ export const userService = {
         try {
             const checkUserExist = await userCredentialRepo.findByEmail(userInfoObj.email);
             if (checkUserExist!=null) return null;
-
+            // transaction begin
             const result = await Database.transaction(async (transactionManager) => {
                 const newUser = await userRepo.insertNewUser(userInfoObj.realName, userInfoObj.accountName,transactionManager);
                 console.log('userId:', newUser.id);

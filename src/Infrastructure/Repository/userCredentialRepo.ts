@@ -7,6 +7,7 @@ export const userCredentialRepo = {
             const newUserCredential = new UserCredential();
             newUserCredential.email = userInfoObj.email;
             newUserCredential.password = userInfoObj.password;
+            // newUserCredential.userId = user.id;
             newUserCredential.user = user;
             const savedUserCredential = await transactionManager.save(newUserCredential);
             console.log(savedUserCredential);

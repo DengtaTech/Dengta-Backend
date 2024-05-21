@@ -28,7 +28,7 @@ export const signUpHandler = {
         // undefined means error occured in Service
         if(user === undefined){
             return;
-        }   
+        }
         console.log(user);
         const tokenInfo = await auth.generateAccessToken(user.id);
         

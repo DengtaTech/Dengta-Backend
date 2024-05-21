@@ -10,7 +10,7 @@ const port = 3000;
 app.use(express.json());
 app.use('/api/1.0/user', userRouter);
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/api/1.0/health', (req: Request, res: Response) => {
     res.send('Hello, TypeScript with Express!');
 });
 
