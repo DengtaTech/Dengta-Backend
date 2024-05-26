@@ -19,20 +19,20 @@ jobs:
 
       - name: Move code to /srv
         run: |
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-backend-development
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-backend-development
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-backend-development
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-backend-production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-backend-production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-backend-production
 
       - name: scp .env.production to server
         run: |
-          echo "${{ secrets.COMPOSE_ENV_FILE_DEV }}" > .env.development
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.development /srv/dengta-backend-development/.env.development
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-backend-development
+          echo "${{ secrets.COMPOSE_ENV_FILE_PRODUCTION }}" > .env.production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.production /srv/dengta-backend-production/.env.production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-backend-production
 
       - name: Update Docker Containers and Images
         run: |
-          docker compose -f /srv/dengta-backend-development/docker-compose.yml down
-          docker compose -f /srv/dengta-backend-development/docker-compose.yml --env-file /srv/dengta-backend-development/.env.development up --build -d
+          docker compose -f /srv/dengta-backend-production/docker-compose.yml down
+          docker compose -f /srv/dengta-backend-production/docker-compose.yml --env-file /srv/dengta-backend-production/.env.production up --build -d
 
       - name: Send Notification to Discord
         uses: appleboy/discord-action@master
