@@ -14,6 +14,7 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --omit=dev --omit=optional \
     && npm cache clean --force
 
+# 
 COPY --chown=appuser:appgroup . .
 
 USER appuser
