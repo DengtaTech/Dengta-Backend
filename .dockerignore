@@ -10,3 +10,4 @@ coverage/
 .eslintrc.json
 .prettierrc.json
 /dist
+.version

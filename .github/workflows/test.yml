@@ -1,0 +1,46 @@
+name: Dengta Backend CI
+
+on:
+    pull_request:
+      branches:
+        - main
+        - develop
+    workflow_call: # 可以被其他 workflow 呼叫
+    
+env:
+    DEPLOY_ACCOUNT: githubactions
+    SERVER_HOST: backend.dengta.org
+
+jobs:
+  run-test:
+    runs-on: [self-hosted, dengta-ubuntu]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install
+        run: sudo npm install
+      - name: Run testing db using docker
+        run: sudo docker run -d -p 3307:3306 dengtatech/testing-db
+      - name: Wait for db to start
+        run: sleep 10
+      - name: Run tests
+        run: npm test
+      - name: Send Notification to Discord
+        if: success()
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "GitHub Bot"
+          message: |
+            **[Test]** Tests completed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** succeeded.
+      - name: Send Notification to Discord
+        if: failure()
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "GitHub Bot"
+          message: |
+            **[Test]** Tests completed,but failed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** failed.
+    
