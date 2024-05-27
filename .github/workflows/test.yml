@@ -27,17 +27,11 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apt-get install -y nodejs
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apk add --no-cache bash curl
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | sudo bash -
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apk add infisical
   
       - name: Install
         run: |
           cd /srv/dengta-ci
           npm install
-    
       - name: Run testing db using docker
         run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run -d -p 3309:3306 dengtatech/testing-db
       - name: Wait for db to start
