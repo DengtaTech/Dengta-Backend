@@ -7,7 +7,7 @@ ENV MYSQL_ROOT_PASSWORD $MYSQL_ROOT_PASSWORD
 ENV MYSQL_USER dengta
 ENV MYSQL_PASSWORD $MYSQL_ROOT_PASSWORD
 
-ADD schema.sql /docker-entrypoint-initdb.d
+ADD backup.sql /docker-entrypoint-initdb.d
 
 EXPOSE 3306
 

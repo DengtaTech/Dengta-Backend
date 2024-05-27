@@ -1,4 +1,3 @@
-
 import express, { Request, Response } from 'express';
 import "reflect-metadata";
 import { Database } from './Database/data-source.js';
@@ -25,3 +24,4 @@ Database.initialize().then(() => {
     console.error("Failed to initialize the database:", err);
 });
 
+export default app; // Export for testing

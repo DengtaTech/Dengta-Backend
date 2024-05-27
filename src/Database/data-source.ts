@@ -15,12 +15,14 @@ const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 const MYSQL_HOST = process.env.MYSQL_HOST;
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
+const MYSQL_PORT = process.env.MYSQL_PORT;
 
-console.log(MYSQL_HOST);
+console.log(MYSQL_PORT);
 export const Database = new DataSource({
     type: "mysql",
     host: MYSQL_HOST,
     username: MYSQL_USER,
+    port: MYSQL_PORT ? Number(MYSQL_PORT) : undefined,
     password: MYSQL_PASSWORD,
     database: MYSQL_DATABASE,
     synchronize: true,
