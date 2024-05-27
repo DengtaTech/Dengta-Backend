@@ -15,26 +15,37 @@ jobs:
   run-test:
     runs-on: [self-hosted, dengta-ubuntu]
     steps:
+      - name: Fix permissions
+        run: |
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /home/githubactions/actions-runner/_work/Dengta-Backend
+
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Node.js 18
+      - name: Move code to /srv 
         run: |
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf test
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p test
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-ci
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-ci
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-ci
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apt-get install -y nodejs
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apk add --no-cache bash curl
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | sudo bash -
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apk add infisical
-          
+  
       - name: Install
-        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S npm install
+        run: |
+          cd /srv/dengta-ci
+          npm install
+    
       - name: Run testing db using docker
-        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run -d -p 3307:3306 dengtatech/testing-db
+        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run -d -p 3309:3306 dengtatech/testing-db
       - name: Wait for db to start
         run: sleep 10
       - name: Run tests
-        run: npm test
+        run: |
+          cd /srv/dengta-ci
+          npm test
       - name: Send Notification to Discord
         if: success()
         uses: appleboy/discord-action@master
