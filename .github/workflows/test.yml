@@ -17,16 +17,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Node.js
+      - name: Install Node.js 18
         run: |
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-            node -v
-            npm -v
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apt-get install -y nodejs
+          node -v
+          npm -v
       - name: Install
-        run:  npm install
+        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S npm install
       - name: Run testing db using docker
-        run:  docker run -d -p 3307:3306 dengtatech/testing-db
+        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run -d -p 3307:3306 dengtatech/testing-db
       - name: Wait for db to start
         run: sleep 10
       - name: Run tests
