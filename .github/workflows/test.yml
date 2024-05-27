@@ -18,9 +18,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install
-        run: sudo npm install
+        run:  npm install
       - name: Run testing db using docker
-        run: sudo docker run -d -p 3307:3306 dengtatech/testing-db
+        run:  docker run -d -p 3307:3306 dengtatech/testing-db
       - name: Wait for db to start
         run: sleep 10
       - name: Run tests
