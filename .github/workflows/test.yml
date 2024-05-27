@@ -23,8 +23,10 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf test
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apt-get install -y nodejs
-          node -v
-          npm -v
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apk add --no-cache bash curl
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | sudo bash -
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apk add infisical
+          
       - name: Install
         run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S npm install
       - name: Run testing db using docker
