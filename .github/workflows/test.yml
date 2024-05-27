@@ -19,14 +19,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Install Node.js 18
         run: |
-          echo "${{ secrets.SERVER_PASS }}" | sudo -S curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-          echo "${{ secrets.SERVER_PASS }}" | sudo -S apt-get install -y nodejs
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S apt-get install -y nodejs
           node -v
           npm -v
       - name: Install
-        run:  echo "${{ secrets.SERVER_PASS }}" | sudo -S npm install
+        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S npm install
       - name: Run testing db using docker
-        run:  echo "${{ secrets.SERVER_PASS }}" | sudo -S docker run -d -p 3307:3306 dengtatech/testing-db
+        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run -d -p 3307:3306 dengtatech/testing-db
       - name: Wait for db to start
         run: sleep 10
       - name: Run tests
