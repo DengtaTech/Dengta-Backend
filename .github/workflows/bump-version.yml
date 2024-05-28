@@ -38,7 +38,7 @@ jobs:
         run: |
             echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-dump-version
             echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-dump-version
-            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r {,.[!.],..?}* /srv/dengta-dump-version
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r {,.[!.]}* /srv/dengta-dump-version
             echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-dump-version
     
       - name: Bump version
