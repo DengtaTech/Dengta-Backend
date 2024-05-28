@@ -21,4 +21,4 @@ USER appuser
 
 EXPOSE 3000
 
-CMD infisical run --env=$INFISICAL_ENVIRONMENT --path=/share -- node dist/app.js
+CMD infisical run --env=$INFISICAL_ENVIRONMENT --path=/share -- node dist/src/app.js

@@ -4,7 +4,7 @@ import { Database } from './Database/data-source.js';
 import userRouter from './Routers/userRouter.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.EXPRESS_PORT;
 
 app.use(express.json());
 app.use('/api/1.0/user', userRouter);
