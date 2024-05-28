@@ -33,8 +33,17 @@ jobs:
         with:
           fetch-depth: '0'
           token: ${{ secrets.GHPAT_WEITING }}
+
+      - name: Move code to /srv 
+        run: |
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-dump-version
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-dump-version
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-dump-version
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-dump-version
+    
       - name: Bump version
         run: |
+            cd /srv/dengta-dump-version
             INPUT_BUMP_TYPE="${{ github.event.inputs.bump_type }}"
             echo "Bump version, input: $INPUT_BUMP_TYPE"
             if [ "$INPUT_BUMP_TYPE" == "major" ]; then
@@ -50,7 +59,7 @@ jobs:
             echo "New version: $new_version"
 
             # Update version in .version
-            echo "HOHOJIA_VERSION=$new_version" > .version
+            echo "DENGTA_VERSION=$new_version" > .version
 
             git config --global user.name 'dengta'
             git config --global user.email 'dengta_gh_action@users.noreply.github.com'
