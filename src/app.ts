@@ -1,11 +1,10 @@
-
 import express, { Request, Response } from 'express';
 import "reflect-metadata";
 import { Database } from './Database/data-source.js';
 import userRouter from './Routers/userRouter.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.EXPRESS_PORT;
 
 app.use(express.json());
 app.use('/api/1.0/user', userRouter);
@@ -25,3 +24,4 @@ Database.initialize().then(() => {
     console.error("Failed to initialize the database:", err);
 });
 
+export default app; // Export for testing

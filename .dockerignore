@@ -1,5 +1,6 @@
 node_modules/
 scripts/
+coverage/
 **/.dockerignore
 **/.env
 **/.env.*
@@ -9,3 +10,4 @@ scripts/
 .eslintrc.json
 .prettierrc.json
 /dist
+.version

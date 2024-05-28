@@ -1,17 +1,28 @@
-name: Dengta Backend CI/CD
+name: Dengta Backend CD
+
+concurrency: production
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - "develop"
+    tags:
+      - 'v*'
+  # Trigger when push a tag with format v* (e.g. v1.0.0)
 
 env:
   DEPLOY_ACCOUNT: githubactions
   SERVER_HOST: backend.dengta.org
 
+# For action-gh-release
+permissions:
+  contents: write
+
+
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
   deploy:
+    needs: test
     runs-on: [self-hosted, dengta-ubuntu]
     steps:
       - name: Checkout Repository
@@ -42,3 +53,14 @@ jobs:
           username: "GitHub Bot"
           message: |
             **[Deploy]** Deployment completed on backend.dengta.org. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** succeeded.
+
+  create-release:
+    needs: [deploy]
+    runs-on: [self-hosted, dengta-ubuntu]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Create a Release
+      uses: softprops/action-gh-release@v2
+      with:
+        generate_release_notes: true 
