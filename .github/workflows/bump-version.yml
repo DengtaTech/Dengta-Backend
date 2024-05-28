@@ -58,6 +58,7 @@ jobs:
                 exit 1
             fi
             echo "New version: $new_version"
+            echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
 
             # Update version in .version
             echo "DENGTA_VERSION=$new_version" > .version
@@ -86,5 +87,5 @@ jobs:
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "GitHub Bot"
           message: |
-            **[Bump Version]** Version upgraded. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」**.
+            **[Bump Version]** New software version v${{ env.NEW_VERSION }} has been released by **「${{ github.actor }}」**..
       
