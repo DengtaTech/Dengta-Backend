@@ -31,7 +31,10 @@ jobs:
           cd /srv/dengta-ci
           npm install
       - name: Run testing db using docker
-        run:  echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run -d -p 3309:3306 dengtatech/testing-db
+        run:  | 
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker stop testing-db-container
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker rm testing-db-container
+            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run -d -p 3309:3306 dengtatech/testing-db
       - name: Wait for db to start
         run: sleep 10
       - name: Run tests
