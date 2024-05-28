@@ -14,11 +14,9 @@ env:
 jobs:
   run-test:
     runs-on: [self-hosted, dengta-ubuntu]
+    env:
+        INFISICAL_TOKEN: ${{ secrets.INFISICAL_TOKEN }}
     steps:
-      - name: Fix permissions
-        run: |
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /home/githubactions/actions-runner/_work/Dengta-Backend
-
       - name: Checkout
         uses: actions/checkout@v4
       - name: Move code to /srv 
