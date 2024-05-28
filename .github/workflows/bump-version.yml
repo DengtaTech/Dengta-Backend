@@ -87,5 +87,5 @@ jobs:
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "GitHub Bot"
           message: |
-            **[Bump Version]** New software version **v${{ env.NEW_VERSION }}** has been released by **「${{ github.actor }}」**..
+            **[Bump Version]** New software version **v${{ env.NEW_VERSION }}** has been released by **「${{ github.actor }}」**.
       
