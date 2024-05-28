@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": ["ES6"],
+
+        /* ORM settings */
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+
+        /* Modules */
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+
+        /* JavaScript Support */
+        "checkJs": true,  
+
+        /* Emit */
+        "sourceMap": true,
+        "outDir": "./dist",
+
+
+        /* Interop Constraints */
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+
+        /* Type Checking */
+        "strict": true,
+        "noImplicitAny": true,
+        "skipLibCheck": true
+    },
+    "ts-node": {
+        "files": true
+    },
+    "exclude": [
+        "node_modules",
+        "coverage",
+        "dist"
+      ]
+}

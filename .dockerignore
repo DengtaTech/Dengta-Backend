@@ -1,4 +1,6 @@
-node_modules
+node_modules/
+scripts/
+coverage/
 **/.dockerignore
 **/.env
 **/.env.*
@@ -7,3 +9,5 @@ node_modules
 **/docker-compose*
 .eslintrc.json
 .prettierrc.json
+/dist
+.version

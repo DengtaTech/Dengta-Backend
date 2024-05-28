@@ -1,0 +1,66 @@
+name: Dengta Backend CD
+
+concurrency: production
+
+on:
+  push:
+    tags:
+      - 'v*'
+  # Trigger when push a tag with format v* (e.g. v1.0.0)
+
+env:
+  DEPLOY_ACCOUNT: githubactions
+  SERVER_HOST: backend.dengta.org
+
+# For action-gh-release
+permissions:
+  contents: write
+
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+  deploy:
+    needs: test
+    runs-on: [self-hosted, dengta-ubuntu]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Move code to /srv
+        run: |
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-backend-production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-backend-production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-backend-production
+
+      - name: scp .env.production to server
+        run: |
+          echo "${{ secrets.COMPOSE_ENV_FILE_PRODUCTION }}" > .env.production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.production /srv/dengta-backend-production/.env.production
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-backend-production
+
+      - name: Update Docker Containers and Images
+        run: |
+          docker compose -f /srv/dengta-backend-production/docker-compose.yml down
+          docker compose -f /srv/dengta-backend-production/docker-compose.yml --env-file /srv/dengta-backend-production/.env.production up --build -d
+
+      - name: Send Notification to Discord
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "GitHub Bot"
+          message: |
+            **[Deploy]** Deployment completed on backend.dengta.org. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** succeeded.
+
+  create-release:
+    needs: [deploy]
+    runs-on: [self-hosted, dengta-ubuntu]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Create a Release
+      uses: softprops/action-gh-release@v2
+      with:
+        generate_release_notes: true 
