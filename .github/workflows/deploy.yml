@@ -2,11 +2,15 @@ name: Dengta Backend CD
 
 concurrency: production
 
+# on:
+#   push:
+#     tags:
+#       - 'v*'
+  # Trigger when push a tag with format v* (e.g. v1.0.0)
 on:
   push:
-    tags:
-      - 'v*'
-  # Trigger when push a tag with format v* (e.g. v1.0.0)
+    branches:
+      - develop
 
 env:
   DEPLOY_ACCOUNT: githubactions
