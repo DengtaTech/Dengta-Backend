@@ -1,40 +1,40 @@
 name: Dengta Backend CI
 
 on:
-    pull_request:
-      branches:
-        - main
-        - develop
-    workflow_call: # 可以被其他 workflow 呼叫
-    
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_call: # 可以被其他 workflow 呼叫
+
 env:
-    DEPLOY_ACCOUNT: githubactions
-    SERVER_HOST: backend.dengta.org
+  DEPLOY_ACCOUNT: githubactions
+  SERVER_HOST: backend.dengta.org
 
 jobs:
   run-test:
     runs-on: [self-hosted, dengta-ubuntu]
     env:
-        INFISICAL_TOKEN: ${{ secrets.INFISICAL_TOKEN }}
+      INFISICAL_TOKEN: ${{ secrets.INFISICAL_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Move code to /srv 
+      - name: Move code to /srv
         run: |
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
-  
+
       - name: Install
         run: |
           cd /srv/dengta-ci
           npm install
       - name: Run testing db using docker
-        run:  | 
-            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker stop testing-db-container
-            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker rm testing-db-container
-            echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run --name testing-db-container -d -p 3309:3306 dengtatech/testing-db
+        run: |
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker stop testing-db-container
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker rm testing-db-container
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run --name testing-db-container -d -p 3309:3306 dengtatech/testing-db
       - name: Wait for db to start
         run: sleep 20
       - name: Run tests
@@ -47,7 +47,7 @@ jobs:
         with:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: "GitHub Bot"
+          username: 'GitHub Bot'
           message: |
             **[Test]** Tests completed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** succeeded.
       - name: Send Notification to Discord
@@ -56,7 +56,6 @@ jobs:
         with:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: "GitHub Bot"
+          username: 'GitHub Bot'
           message: |
             **[Test]** Tests completed,but failed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** failed.
-    

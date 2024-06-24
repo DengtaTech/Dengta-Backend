@@ -8,7 +8,8 @@
     "build": "rm -rf dist && npx tsc",
     "dev": "infisical run --env=dev --path=/share -- node dist/src/app.js",
     "test": "infisical run --env=dev --path=/share -- jest --runInBand --coverage --forceExit",
-    "lint": "eslint ."
+    "lint": "npx eslint .",
+    "prettier": "npx prettier --write ."
   },
   "keywords": [],
   "author": "",
