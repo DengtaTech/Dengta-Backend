@@ -8,8 +8,8 @@
         "emitDecoratorMetadata": true,
 
         /* Modules */
-        "module": "ESNext",
-        "moduleResolution": "Node",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "resolveJsonModule": true,
 
         /* JavaScript Support */
