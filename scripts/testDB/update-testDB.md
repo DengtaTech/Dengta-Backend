@@ -3,7 +3,7 @@
 ## Using test DB from docker
 
 ```
-docker run -d --pull always -p 3308:3306 dengtatech/testing-db 
+docker run -d --pull always -p 3309:3306 dengtatech/testing-db 
 ```
 
 ## Upload test DB image to docker hub

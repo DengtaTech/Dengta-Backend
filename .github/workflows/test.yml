@@ -6,7 +6,7 @@ on:
         - main
         - develop
     workflow_call: # 可以被其他 workflow 呼叫
-    
+
 env:
     DEPLOY_ACCOUNT: githubactions
     SERVER_HOST: backend.dengta.org
