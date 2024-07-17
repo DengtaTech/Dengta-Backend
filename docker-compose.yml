@@ -1,22 +1,21 @@
 version: '3.8'
 
 services:
-
   dengta_backend:
-      build: 
-        context: .
-        # args:
-        #     INFISICAL_ENVIRONMENT: ${INFISICAL_ENVIRONMENT}
-        dockerfile: Dockerfile
-      container_name: dengta_backend_container
-      environment:
-        - INFISICAL_TOKEN=${INFISICAL_TOKEN}
-        - INFISICAL_ENVIRONMENT=${INFISICAL_ENVIRONMENT}
-      networks:
-        - backend_network
-      depends_on:
-        mysql:
-          condition: service_healthy
+    build:
+      context: .
+      # args:
+      #     INFISICAL_ENVIRONMENT: ${INFISICAL_ENVIRONMENT}
+      dockerfile: Dockerfile
+    container_name: dengta_backend_container
+    environment:
+      - INFISICAL_TOKEN=${INFISICAL_TOKEN}
+      - INFISICAL_ENVIRONMENT=${INFISICAL_ENVIRONMENT}
+    networks:
+      - backend_network
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   mysql:
     image: mysql:8.0.36-debian
@@ -35,18 +34,21 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}      
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD} && mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} -e 'show databases;'"]
+      test:
+        [
+          'CMD-SHELL',
+          "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD} && mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} -e 'show databases;'",
+        ]
       timeout: 25s
       retries: 10
     networks:
       - backend_network
-  
+
 volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}
-
 
 networks:
   backend_network:
