@@ -13,10 +13,10 @@ export const signUpHandler = {
     email: string,
     password: string,
   ): Promise<Signup.ISignUpResponse | undefined> => {
-    //init
+    //init variables
     let provider: string = 'native';
     let response = null;
-
+ 
     const hashedPassword = await tool.generateHashPassword(password);
     const userInfoObj: Signup.ISignUpObject = {
       realName: realName,
