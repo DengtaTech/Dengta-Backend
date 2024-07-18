@@ -1,6 +1,6 @@
 export const signUpRes = {
   customize: async (
-    newUser: Dengta.IUserObject,
+    newUser: Signup.IUserObject,
     accessTokenInfoObj: Signup.IJwtTokenObject,
   ): Promise<Signup.ISignUpResponse> => {
     const response: Signup.ISignUpResponse = {

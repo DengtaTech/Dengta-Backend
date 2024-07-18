@@ -12,8 +12,15 @@ export const tool = {
     }
   },
   checkEmail: async (email: string): Promise<boolean> => {
-    const emailRegex =
-      /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+    const emailRegex = /^\w+([-.]\w+)*@[A-Za-z0-9]+([-.]\w+)*\.[A-Za-z]+$/;
     return emailRegex.test(email);
+  },
+  confirmPassword: async (input: string, real: string): Promise<boolean> => {
+    try {
+      return await bcrypt.compare(input, real);
+    } catch (error) {
+      console.error("Error comparing passwords:", error);
+      return false;
+    }
   },
 };

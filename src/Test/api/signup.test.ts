@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../../app.js';
+import { tool } from '../../utils/tool.js';
 import { Database } from '../../Database/data-source.js';
 import { testHelper } from '../testUtils/testHelper.js';
 
@@ -14,11 +15,12 @@ describe('POST /api/1.0/user/signup', () => {
     console.log('Database destroyed');
   });
   it('should register a user successfully', async () => {
+    const hashedPassword = await tool.generateHashPassword('test');
     const response = await request(app).post('/api/1.0/user/signup').send({
       realName: 'test',
       accountName: 'test',
       email: 'test@test.com',
-      password: 'test',
+      password: hashedPassword,
     });
 
     expect(response.status).toBe(200);
@@ -27,18 +29,13 @@ describe('POST /api/1.0/user/signup', () => {
   });
 
   it('should not allow duplicate email', async () => {
-    const response1 = await request(app).post('/api/1.0/user/signup').send({
+    const hashedPassword = await tool.generateHashPassword('test');
+    const response = await request(app).post('/api/1.0/user/signup').send({
       realName: 'test',
       accountName: 'test',
       email: 'test@test.com',
-      password: 'test',
+      password: hashedPassword,
     });
-    const response2 = await request(app).post('/api/1.0/user/signup').send({
-      realName: 'test',
-      accountName: 'test',
-      email: 'test@test.com',
-      password: 'test',
-    });
-    expect(response2.status).toBe(403);
+    expect(response.status).toBe(403);
   });
 });

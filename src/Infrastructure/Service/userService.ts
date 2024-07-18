@@ -7,7 +7,7 @@ export const userService = {
   signUp: async (
     res: Response,
     userInfoObj: Signup.ISignUpObject,
-  ): Promise<Dengta.IUserObject | undefined | null> => {
+  ): Promise<Signup.IUserObject | undefined | null> => {
     try {
       const checkUserExist = await userCredentialRepo.findByEmail(
         userInfoObj.email,
@@ -27,7 +27,7 @@ export const userService = {
           transactionManager,
         );
         console.log('test user:', newUser);
-        const response: Dengta.IUserObject = {
+        const response: Signup.IUserObject = {
           id: newUser.id,
           realName: newUser.realName,
           accountName: newUser.accountName,
