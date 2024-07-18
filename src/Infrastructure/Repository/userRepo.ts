@@ -14,6 +14,7 @@ export const userRepo = {
       console.log(savedUser);
       return savedUser;
     } catch (error) {
+      console.error('Failed to save user:', error);
       throw error;
     }
   },
@@ -23,6 +24,7 @@ export const userRepo = {
       console.log(user);
       return user;
     } catch (error) {
+      console.error('Error finding user by id:', error);
       throw error;
     }
   },

@@ -4,9 +4,15 @@ WORKDIR /app
 
 COPY . .
 
-RUN apk add --no-cache bash curl && curl -1sLf \
-'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash \
-&& apk add infisical
+# RUN apk add --no-cache bash curl && curl -1sLf \
+# 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash \
+# && apk add infisical
+
+RUN apk add --no-cache bash curl \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash \
+    && apk add infisical \
+    && apk del bash curl \
+    && rm -rf /var/cache/apk/* /tmp/*
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --legacy-peer-deps \
@@ -21,4 +27,4 @@ USER appuser
 
 EXPOSE 3000
 
-CMD infisical run --env=$INFISICAL_ENVIRONMENT --path=/share -- node dist/src/app.js
+CMD infisical run --env="$INFISICAL_ENVIRONMENT" --path=/share -- node dist/src/app.js
