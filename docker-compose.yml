@@ -65,9 +65,9 @@ volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}
 
-# networks:
-#   backend_network:
-#     external:
-#       name: dengta_backend_network
 networks:
-  backend_network:   
+  backend_network:
+    external:
+      name: dengta_backend_network
+# networks:
+#   backend_network:   
