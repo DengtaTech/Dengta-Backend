@@ -10,7 +10,7 @@ COPY . .
 
 # -sLf --> Without the -1 option, curl is free to negotiate HTTP/2 if it's available, which can provide performance benefits such as reduced latency and header compression
 RUN apk add --no-cache bash curl \
-    curl -sLf --proto =https 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash && \
+    curl -sLf --proto =https 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash \
     && apk add infisical \
     && apk del bash curl \
     && rm -rf /var/cache/apk/* /tmp/*
