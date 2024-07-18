@@ -45,8 +45,21 @@ services:
       retries: 10
     networks:
       - backend_network
-
   
+  cache:
+    build:
+      context: ./src/Database/Cache
+    container_name: ${REDIS_CONTAINER_NAME}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - type: tmpfs
+        target: /data
+    networks:
+      - backend_network
+
+
+
 
 volumes:
   dengta_mysql_volume:
@@ -56,3 +69,5 @@ networks:
   backend_network:
     external:
       name: dengta_backend_network
+# networks:
+#   backend_network:   

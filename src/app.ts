@@ -3,7 +3,9 @@ import 'reflect-metadata';
 import { Database } from './Database/data-source.js';
 import userRouter from './Routers/userRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
+// using redis example
 import { User as CacheUser } from './Database/Cache/Entities/user.js';
+
 const app = express();
 const port = process.env.EXPRESS_PORT;
 
@@ -13,7 +15,8 @@ app.use('/api/1.0/user', userRouter);
 app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
 });
-async function test() {
+
+async function usingRedisExample() {
   console.log('test');
   await CacheUser.setById(1, {
     id: 1,
@@ -33,7 +36,7 @@ Database.initialize()
   .then(() => {
     initDbCache();
     console.log('all database initialized successfully');
-    test();
+    usingRedisExample();
     app.listen(port, () => {
       console.log(`App listening on port: ${port}`);
     });
