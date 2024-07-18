@@ -29,20 +29,20 @@ function getAllNonFunctionKeys(obj: object): string[] {
 
     return keys;
 }
-
+type Constructor<U> = new() => U;
 export class BaseEntity {
     protected static _redis?: Redis;
     protected static REDIS_ROOT: string;
     private static PROPERTIES: string[];
 
-    public static init<U extends BaseEntity>(this: { new(): U }) {
+    public static init<U extends BaseEntity>(this: Constructor<U>) {
         // setup redis of derived class
         (this as unknown as typeof BaseEntity)._redis = newRedis();
         (this as unknown as typeof BaseEntity).PROPERTIES = getAllNonFunctionKeys(new this);
     }
 
     public static async set<U extends BaseEntity>(
-        this: { new(): U },
+        this: Constructor<U>,
         where: string | number,
         value: Property<U>,
         expireTime?: Partial<KeyToType<Property<U>, number>>
@@ -76,7 +76,7 @@ export class BaseEntity {
         }
     }
 
-    public static async get<U extends BaseEntity>(this: { new(): U }, where: string | number): Promise<U | undefined> {
+    public static async get<U extends BaseEntity>(this: Constructor<U>, where: string | number): Promise<U | undefined> {
         const this_ = this as unknown as typeof BaseEntity;
         assert(this_._redis);
         const object = {};
@@ -105,7 +105,7 @@ export class BaseEntity {
         return object as U;
     }
 
-    public static async del<U extends BaseEntity>(this: { new(): U }, where: string | number) {
+    public static async del<U extends BaseEntity>(this: Constructor<U>, where: string | number) {
         const this_ = this as unknown as typeof BaseEntity;
         assert(this_._redis);
         const transaction = this_._redis.multi();
@@ -124,6 +124,7 @@ export class BaseEntity {
     }
 }
 
-export function init(...entities: { new(): BaseEntity }[]) {
+type BaseEntityConstructor = new () => BaseEntity;
+export function init(...entities: BaseEntityConstructor[]) {
     entities.forEach(entity => (entity as unknown as typeof BaseEntity).init());
 }

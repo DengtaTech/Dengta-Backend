@@ -28,7 +28,6 @@ async function usingRedisExample() {
   const cache = await CacheUser.getById(1);
   if (cache !== undefined) {
     console.log(cache);
-    return ;
   }
 }
 
