@@ -14,10 +14,9 @@ export const userCredentialRepo = {
             newUserCredential.user = user;
             const savedUserCredential =
                 await transactionManager.save(newUserCredential);
-            console.log(savedUserCredential);
             return savedUserCredential;
         } catch (error) {
-            console.error("Failed to save user credential:", error);
+            console.error("Failed to save user credential:");
             throw error;
         }
     },
@@ -26,10 +25,9 @@ export const userCredentialRepo = {
             const userCredential = await UserCredential.findOne({
                 where: { email: email },
             });
-            console.log(userCredential);
             return userCredential;
         } catch (error) {
-            console.error("Error finding user by email:", error);
+            console.error("Error finding user by email:");
             throw error;
         }
     },

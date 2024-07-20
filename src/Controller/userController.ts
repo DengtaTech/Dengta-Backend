@@ -1,27 +1,25 @@
 import { signUpHandler } from '../Application/Features/User/Commands/SignUp/signUpHandler.js';
 import { Request, Response } from 'express';
-import { errorMsg } from '../utils/errorMsg.js';
 import { tool } from '../utils/tool.js';
+import { EmailFormatError, InputEmptyError } from '../Errors/errors.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
     const { realName, accountName, email, password } = req.body;
     if (!realName || !accountName || !email || !password) {
-      errorMsg.inputEmpty(res);
-      return;
+      throw new InputEmptyError();
     }
-    console.log('test return');
     if (!(await tool.checkEmail(email))) {
-      errorMsg.emailFormat(res);
-      return;
+      throw new EmailFormatError();
     }
+    
     const response = await signUpHandler.handle(
-      res,
       realName,
       accountName,
       email,
       password,
     );
-    if (response) res.status(200).json(response);
+
+    res.status(200).json(response);
   },
 };

@@ -1,22 +1,18 @@
-import { Response } from 'express';
 import { userService } from '../../../../../Infrastructure/Service/userService.js';
 import { tool } from '../../../../../utils/tool.js';
-import { errorMsg } from '../../../../../utils/errorMsg.js';
 import { auth } from '../../../../../utils/auth.js';
 import { signUpRes } from './signUpRes.js';
 
+
 export const signUpHandler = {
   handle: async (
-    res: Response<Dengta.oError>,
     realName: string,
     accountName: string,
     email: string,
     password: string,
-  ): Promise<Signup.ISignUpResponse | undefined> => {
+  ): Promise<Signup.ISignUpResponse> => {
     //init variables
-    let provider: string = 'native';
-    let response = null;
- 
+    const provider: string = 'native';
     const hashedPassword = await tool.generateHashPassword(password);
     const userInfoObj: Signup.ISignUpObject = {
       realName: realName,
@@ -26,19 +22,8 @@ export const signUpHandler = {
       provider: provider,
       avatar: '',
     };
-    const user = await userService.signUp(res, userInfoObj);
-    if (user === null) {
-      errorMsg.emailExist(res);
-      return;
-    }
-    // undefined means error occured in Service
-    if (user === undefined) {
-      return;
-    }
-    console.log(user);
+    const user = await userService.signUp(userInfoObj);
     const tokenInfo = await auth.generateAccessToken(user.id);
-
-    response = await signUpRes.customize(user, tokenInfo);
-    return response;
+    return signUpRes.customize(user, tokenInfo);
   },
 };
