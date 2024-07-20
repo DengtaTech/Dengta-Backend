@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import 'reflect-metadata';
 import { Database } from './Database/data-source.js';
 import userRouter from './Routers/userRouter.js';
