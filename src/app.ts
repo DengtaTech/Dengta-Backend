@@ -17,7 +17,6 @@ app.get('/api/1.0/health', (req: Request, res: Response) => {
 });
 
 async function usingRedisExample() {
-  console.log('test');
   await CacheUser.setById(1, {
     id: 1,
     name: 'Dengta',
@@ -27,7 +26,7 @@ async function usingRedisExample() {
   });
   const cache = await CacheUser.getById(1);
   if (cache !== undefined) {
-    console.log(cache);
+    console.log("Redis is working");
   }
 }
 

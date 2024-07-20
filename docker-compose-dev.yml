@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0.36-debian
+    container_name: ${MYSQL_CONTAINER_NAME}
+    platform: linux/amd64
+    stdin_open: true
+    tty: true
+    restart: always
+    working_dir: /var/lib/mysql
+    command: --bind-address=0.0.0.0
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - dengta_mysql_volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD} && mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} -e 'show databases;'",
+        ]
+      timeout: 25s
+      retries: 10
+    networks:
+      - backend_network
+  
+  cache:
+    build:
+      context: ./src/Database/Cache
+    container_name: ${REDIS_CONTAINER_NAME}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - type: tmpfs
+        target: /data
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - backend_network
+
+volumes:
+  dengta_mysql_volume:
+    name: ${MYSQL_VOLUME_PATH}
+
+networks:
+  backend_network:
+    name: dengta_backend_network
+    external: true
