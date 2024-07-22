@@ -11,7 +11,7 @@
     "dev": "npm run dev:setenv && npm run dev:run",
     "devi:setenv": "sudo docker compose -f ./docker-compose-dev.yml --env-file ./.env.dev up -d --build",
     "devi": "infisical run --env=dev --path=/share -- node dist/src/app.js",
-    "satging": "sudo docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
+    "staging": "sudo docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
     "test": "infisical run --env=dev --path=/share -- jest --runInBand --coverage --forceExit",
     "lint": "npx eslint .",
     "prettier": "npx prettier --write ."
