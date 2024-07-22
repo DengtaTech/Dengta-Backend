@@ -2,33 +2,9 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8.0.36-debian
-    container_name: ${MYSQL_CONTAINER_NAME}
-    platform: linux/amd64
-    stdin_open: true
-    tty: true
-    restart: always
-    working_dir: /var/lib/mysql
-    command: --bind-address=0.0.0.0
-    ports:
-      - ${MYSQL_PORT}:3306
-    volumes:
-      - dengta_mysql_volume:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD} && mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} -e 'show databases;'",
-        ]
-      timeout: 25s
-      retries: 10
-    networks:
-      - backend_network
+    extends:
+      file: docker-compose.yml
+      service: mysql
 
   cache:
     extends:
