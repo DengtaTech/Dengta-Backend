@@ -17,10 +17,16 @@ describe('POST /api/1.0/user/signup', () => {
   it('should register a user successfully', async () => {
     const hashedPassword = await tool.generateHashPassword('test');
     const response = await request(app).post('/api/1.0/user/signup').send({
-      realName: 'test',
-      accountName: 'test',
+      name: 'test',
+      lifeRole: 'test',
+      gender: 1,
+      birthday: "12/11/1981",
       email: 'test@test.com',
       password: hashedPassword,
+      links: [{
+          type: "facebook",
+          url: "https://test.com"
+      }]
     });
 
     expect(response.status).toBe(200);
@@ -31,10 +37,16 @@ describe('POST /api/1.0/user/signup', () => {
   it('should not allow duplicate email', async () => {
     const hashedPassword = await tool.generateHashPassword('test');
     const response = await request(app).post('/api/1.0/user/signup').send({
-      realName: 'test',
-      accountName: 'test',
+      name: 'test',
+      lifeRole: 'test',
+      gender: 1,
+      birthday: "12/11/1981",
       email: 'test@test.com',
       password: hashedPassword,
+      links: [{
+          type: "facebook",
+          url: "https://test.com"
+      }]
     });
     expect(response.status).toBe(403);
   });

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mysql:
+    extends:
+      file: docker-compose.yml
+      service: mysql
+
+  cache:
+    extends:
+      file: docker-compose.yml
+      service: cache
+    ports:
+      - ${REDIS_PORT}:6379
+
+volumes:
+  dengta_mysql_volume:
+    name: ${MYSQL_VOLUME_PATH}
+
+networks:
+  backend_network:
+    name: dengta_backend_network

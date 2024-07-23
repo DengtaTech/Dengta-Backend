@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 export const testHelper = {
   clearDatabase: async (dataSource: DataSource) => {
     const tables = [
+      'Links',
       'Users',
       'UserCredentials',
       'Roles',
