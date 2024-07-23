@@ -12,8 +12,8 @@ import { UserCredential } from './userCredential.js';
 import { UserRole } from './userRole.js';
 import { Followship } from './followship.js';
 import { ProfileHashTag } from './profileHashTag.js';
-import { FootprintHashTag } from './footprintHashTag.js';
 import { FootprintReaction } from './footprintReaction.js';
+import { Link } from './link.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
@@ -21,10 +21,10 @@ export class User extends BaseEntity {
   id!: number;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
-  accountName!: string;
+  name!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
-  realName!: string;
+  lifeRole!: string;
 
   @Column({ type: 'date', nullable: true })
   birthday!: Date;
@@ -35,17 +35,11 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   avatar!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  backgroundImage!: string;
-
   @Column({ type: 'int', nullable: true })
   gender!: number;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   phone!: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  lifeRole!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   selfIntro!: string;
@@ -58,6 +52,9 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   linkedInLink!: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  twitterLink!: string;
 
   @Column({ type: 'int', nullable: true })
   isActive!: number;
@@ -72,6 +69,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Footprint, (footprint) => footprint.user, { cascade: true })
   footprints?: Relation<Footprint[]>;
 
+  @OneToMany(() => Link, (link) => link.user, { cascade: true })
+  links?: Relation<Link[]>;
+
   @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
   userRoles?: Relation<UserRole[]>;
 
@@ -79,13 +79,6 @@ export class User extends BaseEntity {
     cascade: true,
   })
   profileHashTags?: Relation<ProfileHashTag[]>;
-
-  @OneToMany(
-    () => FootprintHashTag,
-    (footprintHashTag) => footprintHashTag.user,
-    { cascade: true },
-  )
-  footprintHashTags?: Relation<FootprintHashTag[]>;
 
   @OneToMany(
     () => FootprintReaction,

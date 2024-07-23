@@ -20,7 +20,6 @@ export const auth = {
     next: NextFunction,
   ) => {
     const token = req.headers.authorization;
-    console.log(token);
     try {
       if (!token) {
         errorMsg.noToken(res);

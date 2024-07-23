@@ -3,8 +3,13 @@ import 'reflect-metadata';
 import { Database } from './Database/data-source.js';
 import userRouter from './Routers/userRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+import YAML from 'yaml';
+
 // using redis example
 import { User as CacheUser } from './Database/Cache/Entities/user.js';
+import { errorHandler } from './Middlewares/errorHandler.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
@@ -16,8 +21,15 @@ app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
 });
 
+app.use(errorHandler);
+
+
+const file  = fs.readFileSync('./swagger.yaml', 'utf8')
+const swaggerDocument = YAML.parse(file);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
 async function usingRedisExample() {
-  console.log('test');
   await CacheUser.setById(1, {
     id: 1,
     name: 'Dengta',
@@ -27,7 +39,7 @@ async function usingRedisExample() {
   });
   const cache = await CacheUser.getById(1);
   if (cache !== undefined) {
-    console.log(cache);
+    console.log("Redis is working");
   }
 }
 
