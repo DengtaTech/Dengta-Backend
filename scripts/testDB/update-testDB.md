@@ -25,5 +25,5 @@ docker login --username dengtatech
 
 ```sh
 docker buildx build --build-arg MYSQL_ROOT_PASSWORD=[PASSWORD_HERE] \
- --platform linux/amd64,linux/arm64 --push  -t dengtatech/testing-db:latest -f Dockerfile .
+ --platform linux/amd64,linux/arm64 --push  -t dengtatech/testing-db:latest -f Dockerfile . 
 ```

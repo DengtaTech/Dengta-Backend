@@ -34,6 +34,15 @@ CREATE TABLE `Followship` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `Followship`
+--
+
+LOCK TABLES `Followship` WRITE;
+/*!40000 ALTER TABLE `Followship` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Followship` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `FootprintHashTags`
 --
 
@@ -41,15 +50,24 @@ DROP TABLE IF EXISTS `FootprintHashTags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `FootprintHashTags` (
-  `userId` bigint unsigned NOT NULL,
+  `footprintId` bigint unsigned NOT NULL,
   `footprintTagTypeId` bigint unsigned NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`userId`,`footprintTagTypeId`),
+  PRIMARY KEY (`footprintId`,`footprintTagTypeId`),
   KEY `FK_5b706f024acfd116d18c676acbe` (`footprintTagTypeId`),
   CONSTRAINT `FK_5b706f024acfd116d18c676acbe` FOREIGN KEY (`footprintTagTypeId`) REFERENCES `FootprintTagType` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_a9e32991185c0bb5f4a09dc6fd4` FOREIGN KEY (`userId`) REFERENCES `Users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FK_772a9851c182b28289c577ea5fb` FOREIGN KEY (`footprintId`) REFERENCES `Footprints` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `FootprintHashTags`
+--
+
+LOCK TABLES `FootprintHashTags` WRITE;
+/*!40000 ALTER TABLE `FootprintHashTags` DISABLE KEYS */;
+/*!40000 ALTER TABLE `FootprintHashTags` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `FootprintReactions`
@@ -72,6 +90,15 @@ CREATE TABLE `FootprintReactions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `FootprintReactions`
+--
+
+LOCK TABLES `FootprintReactions` WRITE;
+/*!40000 ALTER TABLE `FootprintReactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `FootprintReactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `FootprintTagType`
 --
 
@@ -85,6 +112,15 @@ CREATE TABLE `FootprintTagType` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `FootprintTagType`
+--
+
+LOCK TABLES `FootprintTagType` WRITE;
+/*!40000 ALTER TABLE `FootprintTagType` DISABLE KEYS */;
+/*!40000 ALTER TABLE `FootprintTagType` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `Footprints`
@@ -111,6 +147,44 @@ CREATE TABLE `Footprints` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `Footprints`
+--
+
+LOCK TABLES `Footprints` WRITE;
+/*!40000 ALTER TABLE `Footprints` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Footprints` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Links`
+--
+
+DROP TABLE IF EXISTS `Links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Links` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userId` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_86035ab9fa38661d8b06004d834` (`userId`),
+  CONSTRAINT `FK_86035ab9fa38661d8b06004d834` FOREIGN KEY (`userId`) REFERENCES `Users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Links`
+--
+
+LOCK TABLES `Links` WRITE;
+/*!40000 ALTER TABLE `Links` DISABLE KEYS */;
+INSERT INTO `Links` VALUES (1,'facebook','https://test.com','2024-07-23 09:19:42',1);
+/*!40000 ALTER TABLE `Links` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ProfileHashTags`
 --
 
@@ -129,6 +203,15 @@ CREATE TABLE `ProfileHashTags` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ProfileHashTags`
+--
+
+LOCK TABLES `ProfileHashTags` WRITE;
+/*!40000 ALTER TABLE `ProfileHashTags` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ProfileHashTags` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ProfileTagType`
 --
 
@@ -142,6 +225,15 @@ CREATE TABLE `ProfileTagType` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ProfileTagType`
+--
+
+LOCK TABLES `ProfileTagType` WRITE;
+/*!40000 ALTER TABLE `ProfileTagType` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ProfileTagType` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ReactionType`
@@ -159,6 +251,15 @@ CREATE TABLE `ReactionType` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ReactionType`
+--
+
+LOCK TABLES `ReactionType` WRITE;
+/*!40000 ALTER TABLE `ReactionType` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ReactionType` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Roles`
 --
 
@@ -172,6 +273,15 @@ CREATE TABLE `Roles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Roles`
+--
+
+LOCK TABLES `Roles` WRITE;
+/*!40000 ALTER TABLE `Roles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Roles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `UserCredentials`
@@ -194,6 +304,16 @@ CREATE TABLE `UserCredentials` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `UserCredentials`
+--
+
+LOCK TABLES `UserCredentials` WRITE;
+/*!40000 ALTER TABLE `UserCredentials` DISABLE KEYS */;
+INSERT INTO `UserCredentials` VALUES (1,'test@test.com','$2b$10$USIs1JdELk6XJauwzX5C9uc.AV3T5NomXUT9.Ix6SrDDf/59gD.xm','2024-07-23 09:19:42',1);
+/*!40000 ALTER TABLE `UserCredentials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `UserRoles`
 --
 
@@ -212,6 +332,15 @@ CREATE TABLE `UserRoles` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `UserRoles`
+--
+
+LOCK TABLES `UserRoles` WRITE;
+/*!40000 ALTER TABLE `UserRoles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserRoles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Users`
 --
 
@@ -220,24 +349,33 @@ DROP TABLE IF EXISTS `Users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `accountName` varchar(50) NOT NULL,
-  `realName` varchar(50) NOT NULL,
   `birthday` date DEFAULT NULL,
   `provider` varchar(255) NOT NULL DEFAULT 'native',
   `avatar` varchar(255) DEFAULT NULL,
-  `backgroundImage` varchar(255) DEFAULT NULL,
   `gender` int DEFAULT NULL,
   `phone` varchar(50) DEFAULT NULL,
-  `lifeRole` varchar(255) DEFAULT NULL,
   `selfIntro` varchar(255) DEFAULT NULL,
   `fbLink` varchar(255) DEFAULT NULL,
   `igLink` varchar(255) DEFAULT NULL,
   `linkedInLink` varchar(255) DEFAULT NULL,
   `isActive` int DEFAULT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(50) NOT NULL,
+  `twitterLink` varchar(255) DEFAULT NULL,
+  `lifeRole` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Users`
+--
+
+LOCK TABLES `Users` WRITE;
+/*!40000 ALTER TABLE `Users` DISABLE KEYS */;
+INSERT INTO `Users` VALUES (1,'1981-12-11','native','',1,NULL,NULL,NULL,NULL,NULL,NULL,'2024-07-23 09:19:42','test',NULL,'test');
+/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -248,4 +386,4 @@ CREATE TABLE `Users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-26 13:01:23
+-- Dump completed on 2024-07-23  9:25:33
