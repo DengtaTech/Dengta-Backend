@@ -15,6 +15,7 @@ export const testHelper = {
       'FootprintHashTags',
       'ReactionType',
       'FootprintReactions',
+      'Links',
     ];
     await dataSource.query('SET FOREIGN_KEY_CHECKS = 0;');
     for (const table of tables) {

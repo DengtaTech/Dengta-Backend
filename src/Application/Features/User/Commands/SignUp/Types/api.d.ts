@@ -1,22 +1,36 @@
 declare namespace Signup {
-  type UserPicture =
-    | `https://${number}.${number}.${number}.${number}/${string}/${string}`
-    | '';
+  
   interface IUserObject {
     id: number;
     provider: string;
     email: string;
-    realName: string;
-    accountName: string;
-    avatar: string;
+    name: string;
+    lifeRole: string;
+    avatar: Dengta.UserAvatar;
+  }
+  interface ILink {
+    type: string;
+    url: string;
+  }
+  interface ISignUpReq {
+    name: string;
+    lifeRole: string;
+    gender: Dengta.Gender;
+    birthday: string;
+    email: string;
+    password: string;
+    links: ILink[];
   }
   interface ISignUpObject {
-    realName: string;
-    accountName: string;
+    name: string;
+    lifeRole: string;
     provider: string;
     email: string;
     password: string;
-    avatar: UserPicture;
+    gender: Dengta.Gender;
+    birthday: Date;
+    avatar: Dengta.UserAvatar;
+    links: ILink[];
   }
   interface IJwtTokenObject {
     token: string;

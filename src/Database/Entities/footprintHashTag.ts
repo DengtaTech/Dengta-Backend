@@ -6,13 +6,13 @@ import {
   Relation,
   Column,
 } from 'typeorm';
-import { User } from './user.js';
 import { FootprintTagType } from './footprintTagType.js';
+import { Footprint } from './footprint.js';
 
 @Entity({ name: 'FootprintHashTags' })
 export class FootprintHashTag {
   @PrimaryColumn({ type: 'bigint', unsigned: true })
-  userId!: number;
+  footprintId!: number;
 
   @PrimaryColumn({ type: 'bigint', unsigned: true })
   footprintTagTypeId!: number;
@@ -24,11 +24,11 @@ export class FootprintHashTag {
   })
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.footprintHashTags, {
+  @ManyToOne(() => Footprint, (footprint) => footprint.footprintHashTags, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'userId' })
-  user?: Relation<User>;
+  @JoinColumn({ name: 'footprintId' })
+  footprint?: Relation<Footprint>;
 
   @ManyToOne(
     () => FootprintTagType,

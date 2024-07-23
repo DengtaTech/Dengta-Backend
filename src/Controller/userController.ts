@@ -5,19 +5,16 @@ import { EmailFormatError, InputEmptyError } from '../Errors/errors.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
-    const { realName, accountName, email, password } = req.body;
-    if (!realName || !accountName || !email || !password) {
+    const { name, lifeRole, gender, birthday, email, password, links } = req.body;
+    if (!name || !lifeRole || !gender || !birthday || !email || !password) {
       throw new InputEmptyError();
     }
     if (!(await tool.checkEmail(email))) {
       throw new EmailFormatError();
-    }
-    
+    } 
+    const userDto: Signup.ISignUpReq = { name, lifeRole, gender, birthday, email, password, links };
     const response = await signUpHandler.handle(
-      realName,
-      accountName,
-      email,
-      password,
+        userDto
     );
 
     res.status(200).json(response);
