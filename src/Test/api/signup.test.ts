@@ -6,7 +6,7 @@ import { testHelper } from '../testUtils/testHelper.js';
 
 describe('POST /api/1.0/user/signup', () => {
   beforeAll(async () => {
-    await Database.initialize();
+    if (!Database.isInitialized) await Database.initialize();
     await testHelper.clearDatabase(Database);
   });
 
