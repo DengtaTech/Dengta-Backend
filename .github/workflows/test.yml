@@ -24,17 +24,18 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-ci
-      - name: scp .env.dev to server
-        run: |
-          echo "${{ secrets.COMPOSE_ENV_FILE_TEST }}" > .env.development
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.development /srv/dengta-ci/.env.development
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
-      - name: run test db and redis
-        run: |
-          docker compose -f /srv/dengta-ci/docker-compose-dev.yml down -v
-          docker compose -f /srv/dengta-ci/docker-compose-dev.yml --env-file /srv/dengta-ci/.env.development up --build -d
-      - name: Wait for db to start
-        run: sleep 30
+      # - name: scp .env.dev to server
+      #   run: |
+      #     echo "${{ secrets.COMPOSE_ENV_FILE_TEST }}" > .env.development
+      #     echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.development /srv/dengta-ci/.env.development
+      #     echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
+      # - name: run test db and redis
+      #   run: |
+      #     docker compose -f /srv/dengta-ci/docker-compose-dev.yml down -v
+      #     docker compose -f /srv/dengta-ci/docker-compose-dev.yml --env-file /srv/dengta-ci/.env.development up --build -d
+      # - name: Wait for db to start
+      #   run: sleep 30
       - name: Install
         run: |
           cd /srv/dengta-ci
@@ -52,12 +53,12 @@ jobs:
           username: 'GitHub Bot'
           message: |
             **[Test]** Tests completed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** succeeded.
-      # - name: Send Notification to Discord
-      #   if: failure()
-      #   uses: appleboy/discord-action@master
-      #   with:
-      #     webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-      #     webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-      #     username: 'GitHub Bot'
-      #     message: |
-      #       **[Test]** Tests completed,but failed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** failed.
+      - name: Send Notification to Discord
+        if: failure()
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: 'GitHub Bot'
+          message: |
+            **[Test]** Tests completed,but failed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** failed.
