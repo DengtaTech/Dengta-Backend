@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { User } from './user.js';
 import { FootprintReaction } from './footprintReaction.js';
-import { FootprintTagType } from './footprintTagType.js';
 import { FootprintHashTag } from './footprintHashTag.js';
 
 @Entity({ name: 'Footprints' })
