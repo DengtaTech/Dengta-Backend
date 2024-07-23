@@ -26,7 +26,7 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-ci
       - name: scp .env.dev to server
         run: |
-          echo "${{ secrets.COMPOSE_ENV_FILE_PRODUCTION }}" > .env.dev
+          echo "${{ secrets.COMPOSE_ENV_FILE_TEST }}" > .env.dev
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.dev /srv/dengta-ci/.env.dev
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
       - name: run test db and redis
