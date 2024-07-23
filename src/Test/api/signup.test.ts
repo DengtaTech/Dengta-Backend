@@ -6,7 +6,6 @@ import { testHelper } from '../testUtils/testHelper.js';
 
 describe('POST /api/1.0/user/signup', () => {
   beforeAll(async () => {
-    await Database.query('DROP DATABASE IF EXISTS test_db; CREATE DATABASE test_db;');
     if (!Database.isInitialized) await Database.initialize();
     await testHelper.clearDatabase(Database);
   });
