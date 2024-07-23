@@ -11,6 +11,7 @@ import { FootprintTagType } from './Entities/footprintTagType.js';
 import { FootprintHashTag } from './Entities/footprintHashTag.js';
 import { ReactionType } from './Entities/reactionType.js';
 import { FootprintReaction } from './Entities/footprintReaction.js';
+import { Link } from './Entities/link.js';
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
@@ -38,5 +39,6 @@ export const Database = new DataSource({
     FootprintHashTag,
     ReactionType,
     FootprintReaction,
+    Link
   ],
 });

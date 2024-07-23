@@ -6,24 +6,26 @@ import { signUpRes } from './signUpRes.js';
 
 export const signUpHandler = {
   handle: async (
-    realName: string,
-    accountName: string,
-    email: string,
-    password: string,
+    body : Signup.ISignUpReq
   ): Promise<Signup.ISignUpResponse> => {
     //init variables
     const provider: string = 'native';
+    const { name, lifeRole, gender, birthday, email, password, links } = body;
+    const dateBirthday = new Date(birthday);
     const hashedPassword = await tool.generateHashPassword(password);
     const userInfoObj: Signup.ISignUpObject = {
-      realName: realName,
-      accountName: accountName,
+      name: name,
+      lifeRole: lifeRole,
+      gender: gender,
+      birthday: dateBirthday,
       email: email,
       password: hashedPassword,
       provider: provider,
       avatar: '',
+      links: links,
     };
-    const user = await userService.signUp(userInfoObj);
-    const tokenInfo = await auth.generateAccessToken(user.id);
-    return signUpRes.customize(user, tokenInfo);
+    const result = await userService.signUp(userInfoObj);
+    const tokenInfo = await auth.generateAccessToken(result.id);
+    return signUpRes.customize(result, tokenInfo);
   },
 };

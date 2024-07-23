@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { User } from './user.js';
 import { FootprintReaction } from './footprintReaction.js';
+import { FootprintTagType } from './footprintTagType.js';
+import { FootprintHashTag } from './footprintHashTag.js';
 
 @Entity({ name: 'Footprints' })
 export class Footprint extends BaseEntity {
@@ -57,4 +59,7 @@ export class Footprint extends BaseEntity {
     { cascade: true },
   )
   reactions?: Relation<FootprintReaction[]>;
+
+  @OneToMany(() => FootprintHashTag, (footprintHashTag) => footprintHashTag.footprint, { cascade: true })
+  footprintHashTags?: Relation<FootprintHashTag[]>;
 }
