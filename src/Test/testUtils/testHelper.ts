@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 export const testHelper = {
   clearDatabase: async (dataSource: DataSource) => {
     const tables = [
+      'Links',
       'Users',
       'UserCredentials',
       'Roles',
@@ -15,7 +16,6 @@ export const testHelper = {
       'FootprintHashTags',
       'ReactionType',
       'FootprintReactions',
-      'Links',
     ];
     await dataSource.query('SET FOREIGN_KEY_CHECKS = 0;');
     for (const table of tables) {

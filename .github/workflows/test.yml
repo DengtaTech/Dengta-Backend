@@ -24,19 +24,17 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S rm -rf /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-ci
+      - name: scp .env.dev to server
+        run: |
+          echo "${{ secrets.COMPOSE_ENV_FILE_PRODUCTION }}" > .env.dev
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.dev /srv/dengta-ci/.env.dev
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
-
-      - name: Install
+      - name: run test db and redis
         run: |
-          cd /srv/dengta-ci
-          npm install --force
-      - name: Run testing db using docker
-        run: |
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker stop testing-db-container
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker rm testing-db-container
-          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S docker run --name testing-db-container -d -p 3309:3306 dengtatech/testing-db
+          docker compose -f /srv/dengta-ci/docker-compose-dev.yml down
+          docker compose -f /srv/dengta-ci/docker-compose-dev.yml --env-file /srv/dengta-ci/.env.dev up --build -d
       - name: Wait for db to start
-        run: sleep 20
+        run: sleep 10
       - name: Run tests
         run: |
           cd /srv/dengta-ci
