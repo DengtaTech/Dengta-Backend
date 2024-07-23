@@ -31,7 +31,7 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
       - name: run test db and redis
         run: |
-          docker compose -f /srv/dengta-ci/docker-compose-dev.yml down -v
+          docker compose -f /srv/dengta-ci/docker-compose-dev.yml down
           docker compose -f /srv/dengta-ci/docker-compose-dev.yml --env-file /srv/dengta-ci/.env.dev up --build -d
       - name: Wait for db to start
         run: sleep 30
@@ -42,6 +42,7 @@ jobs:
       - name: Run tests
         run: |
           cd /srv/dengta-ci
+          npm run build
           npm test
       - name: Send Notification to Discord
         if: success()
