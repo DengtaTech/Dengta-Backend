@@ -1,6 +1,6 @@
 export const signUpRes = {
   customize: async (
-    newUser: Signup.IUserObject,
+    result: Signup.IUserObject,
     accessTokenInfoObj: Signup.IJwtTokenObject,
   ): Promise<Signup.ISignUpResponse> => {
     const response: Signup.ISignUpResponse = {
@@ -8,12 +8,12 @@ export const signUpRes = {
         accessToken: accessTokenInfoObj.token,
         accessExpired: accessTokenInfoObj.expire,
         user: {
-          id: newUser.id,
-          provider: newUser.provider,
-          realName: newUser.realName,
-          accountName: newUser.accountName,
-          email: newUser.email,
-          avatar: newUser.avatar,
+          id: result.id,
+          provider: result.provider,
+          name: result.name,
+          lifeRole: result.lifeRole,
+          email: result.email,
+          avatar: result.avatar,
         },
       },
     };

@@ -2,7 +2,6 @@ import { Redis } from "ioredis";
 
 import assert from "assert";
 
-console.log(process.env.REDIS_PASSWORD);
 export function newRedis() {
     const client = new Redis({
         port: 6379,

@@ -1,0 +1,95 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'DengTA API'
+  description: DengTA
+
+servers:
+  - url: 'http://localhost:3001/api/1.0'
+
+paths:
+  /user/signup:
+    post:
+      tags:
+        - User
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - realName
+              - accountName
+              - email
+              - password
+              properties:
+              realName:
+                type: string
+              accountName:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+              example:
+                realName: John Doe
+                accountName: johndoe
+                email: johndoe@example.com
+                password: password123
+      responses:
+        '200':
+          description: The spacecraft corresponding to the provided `spacecraftId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        403:
+          $ref: '#/components/errors/EmailExistsError'
+components:
+  schemas:
+    UserResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1IiwiaWF0IjoxNzIxNDY2ODk3LCJleHAiOjE3MjE1NTMyOTd9.RtvpdPUgSh00UyvtHhQbB8wib-tjguHWsVk-RAExOJY"
+            accessExpired:
+              type: string
+              example: "86400"
+            user:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "15"
+                provider:
+                  type: string
+                  example: "native"
+                realName:
+                  type: string
+                  example: "John Doe"
+                accountName:
+                  type: string
+                  example: "johndoe"
+                email:
+                  type: string
+                  example: "johndoe@example.com"
+                avatar:
+                  type: string
+                  nullable: true
+  errors:
+    EmailExistsError:
+      description: Email already exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Email already exists."
