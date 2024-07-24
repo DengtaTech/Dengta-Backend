@@ -1,3 +1,4 @@
+import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { EntityManager } from 'typeorm';
 export const linkRepo = {
@@ -5,7 +6,7 @@ export const linkRepo = {
         links: Signup.ILink[],
         userId: number,
         transactionManager: EntityManager,
-    ): Promise<void> => {
+    ): Promise<Link[]> => {
         try {
             const linkEntities = links.map(link => {
                 const newLink = new Link();
@@ -15,7 +16,8 @@ export const linkRepo = {
                 return newLink;
             });
             // 批量插入
-            await transactionManager.save(linkEntities);
+            const savedLinks = await transactionManager.save(linkEntities);
+            return savedLinks;
         } catch (error) {
             console.error('Failed to save user:');
             throw error;

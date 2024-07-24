@@ -1,35 +1,21 @@
+import { User, UserCredential } from "./entities";
+
 declare namespace Signup {
   
-  interface IUserObject {
-    id: number;
-    provider: string;
-    email: string;
-    name: string;
-    lifeRole: string;
-    avatar: Dengta.UserAvatar;
-  }
-  interface ILink {
-    type: string;
-    url: string;
-  }
-  interface ISignUpReq {
-    name: string;
-    lifeRole: string;
-    gender: Dengta.Gender;
-    birthday: string;
-    email: string;
-    password: string;
+  type ILink = Pick<Link, 'type' | 'url'>;
+
+  type SignupUserInput = Pick<User, 'name' | 'lifeRole' | 'birthday' | 'gender'> & {
     links: ILink[];
+  };
+
+  type SignupCredentialsInput = Pick<UserCredential, 'email' | 'password'>;
+
+  interface ISignUpReq extends SignupUserInput, SignupCredentialsInput {
+    provider?: string;
+    avatar?: string;
   }
-  interface ISignUpObject {
-    name: string;
-    lifeRole: string;
-    provider: string;
-    email: string;
-    password: string;
-    gender: Dengta.Gender;
-    birthday: Date;
-    avatar: Dengta.UserAvatar;
+  //Dto專門用於Service層組資料，回傳給Handler用
+  interface IUserDto extends Pick<User, 'id' | 'name' | 'lifeRole'>, Pick<UserCredential, 'email'> {
     links: ILink[];
   }
   interface IJwtTokenObject {
@@ -40,7 +26,7 @@ declare namespace Signup {
     data: {
       accessToken: string;
       accessExpired: string;
-      user: Dengta.IUserObject;
+      user: IUserDto;
     };
   }
 }

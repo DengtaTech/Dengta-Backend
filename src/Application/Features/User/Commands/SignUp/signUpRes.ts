@@ -1,6 +1,8 @@
+import { Signup } from "./Types/api.js";
+
 export const signUpRes = {
   customize: async (
-    result: Signup.IUserObject,
+    result: Signup.IUserDto,
     accessTokenInfoObj: Signup.IJwtTokenObject,
   ): Promise<Signup.ISignUpResponse> => {
     const response: Signup.ISignUpResponse = {
@@ -9,11 +11,10 @@ export const signUpRes = {
         accessExpired: accessTokenInfoObj.expire,
         user: {
           id: result.id,
-          provider: result.provider,
           name: result.name,
           lifeRole: result.lifeRole,
           email: result.email,
-          avatar: result.avatar,
+          links: result.links,
         },
       },
     };
