@@ -5,6 +5,7 @@ import { linkRepo } from '../Repository/linkRepo.js';
 import {
   EmailExistsError,
 } from '../../Errors/errors.js';
+import { User } from '../../Database/Entities/user.js';
 
 export const userService = {
   signUp: async (
@@ -31,6 +32,7 @@ export const userService = {
           userInfoObj,
           transactionManager,
         );
+
         if(userInfoObj.links.length !== 0) {
             await linkRepo.initLink(userInfoObj.links, newUser.id, transactionManager);
         }
@@ -48,4 +50,12 @@ export const userService = {
       }
     });    
   },
+
+  getUserInfo: async (id: number): Promise<User> => {
+    const userInfo = await userRepo.findById(id);
+    if (!userInfo) {
+      throw new Error('User not found');
+    }
+    return userInfo;
+  }
 };

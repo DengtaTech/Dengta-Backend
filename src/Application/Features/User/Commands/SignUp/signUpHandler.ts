@@ -1,6 +1,6 @@
 import { userService } from '../../../../../Infrastructure/Service/userService.js';
 import { tool } from '../../../../../utils/tool.js';
-import { auth } from '../../../../../utils/auth.js';
+import { auth } from '../../../../../utils/jwt.js';
 import { signUpRes } from './signUpRes.js';
 
 
