@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
 
 export const auth = {
   generateAccessToken: async (
