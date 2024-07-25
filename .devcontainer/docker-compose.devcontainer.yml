@@ -1,0 +1,33 @@
+services:
+  dengta_backend:
+    extends:
+      # Note that the path of the Dockerfile and context is relative to the
+      # *primary* docker-compose.yml file (the first in the devcontainer.json
+      # "dockerComposeFile" array).
+      file: ../docker-compose.yml
+      service: dengta_backend
+    build: .
+    environment: !reset []  # remove all environment variables and set as empty array
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    extends:
+      file: ../docker-compose-dev.yml
+      service: mysql
+
+  cache:
+    extends:
+      file: ../docker-compose-dev.yml
+      service: cache
+
+volumes:
+  dengta_mysql_volume:
+    name: ${MYSQL_VOLUME_PATH}
+
+networks:
+  backend_network:
+    name: dengta_backend_network
