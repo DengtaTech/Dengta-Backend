@@ -10,6 +10,7 @@
 	// },
 	"dockerComposeFile": "docker-compose.devcontainer.yml",
 	"service": "dengta_backend",
+	// "runServices": [],
 	"overrideCommand": true,
 
   // ## Environment ##

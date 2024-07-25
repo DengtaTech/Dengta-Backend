@@ -8,6 +8,8 @@ services:
       service: dengta_backend
     build: .
     environment: !reset []  # remove all environment variables and set as empty array
+    env_file:
+      - .env
     ports:
       - "3000:3000"
     depends_on:
