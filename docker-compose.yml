@@ -21,7 +21,7 @@ services:
     platform: linux/amd64
     stdin_open: true
     tty: true
-    restart: always
+    restart: unless-stopped
     working_dir: /var/lib/mysql
     command: --bind-address=0.0.0.0
     ports:
