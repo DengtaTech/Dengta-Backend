@@ -24,7 +24,7 @@
 			"packages": "bash,vim,curl,git",
 			"upgradePackages": true
 		},
-    // "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
 	},
 	// "runArgs": [
 		// "--gpus",
@@ -35,13 +35,23 @@
 	// ],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [3000],
+	"portsAttributes": {
+		"3000": {
+			"label": "dengta_backend",
+			"requireLocalPort": true,
+		}
+	},
 	// "privileged": true,
 
   // ## Custom commands in different stages ##
 	// "onCreateCommand": "",
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "cd ${containerWorkspaceFolder} && npm install --legacy-peer-deps",
-	// "postStartCommand": "service dbus start",
+	// "postStartCommand": "",
+	"postAttachCommand": {
+		"mysql port forwarding": "sleep 3 && service socat_mysql start",
+		"cache port forwarding": "sleep 3 && service socat_cache start"
+	},
 
 	// ## Tool-specific properties ##
 	"customizations": {

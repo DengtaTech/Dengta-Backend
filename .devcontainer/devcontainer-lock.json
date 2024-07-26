@@ -1,5 +1,10 @@
 {
   "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "1.5.0",
+      "resolved": "ghcr.io/devcontainers/features/docker-outside-of-docker@sha256:20761bd733511c1995ee955682cc2778b0a2e556abf88e9b88490c3be3c80bbc",
+      "integrity": "sha256:20761bd733511c1995ee955682cc2778b0a2e556abf88e9b88490c3be3c80bbc"
+    },
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
       "version": "1.0.2",
       "resolved": "ghcr.io/rocker-org/devcontainer-features/apt-packages@sha256:87a4d7750a596a5db034ba8508782f31aebdc2ffe955c66aaecb33d9de2ecdae",
