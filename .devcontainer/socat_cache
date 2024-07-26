@@ -8,6 +8,11 @@ LOGFILE=/tmp/socat_cache.log
 case "$1" in
     start)
         echo "Starting Socat Cache Port Forwarding..."
+        while ! nc -zw 10 cache 6379
+        do
+            echo "Can't connect to cache:6379"
+            sleep 2
+        done
         while :
         do
             /usr/bin/nohup /usr/bin/socat -d -lf $LOGFILE TCP4-LISTEN:6379,bind=127.0.0.1,reuseaddr,fork TCP4:cache:6379 >/dev/null 2>&1 &

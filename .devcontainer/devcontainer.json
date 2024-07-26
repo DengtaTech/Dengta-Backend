@@ -49,8 +49,8 @@
 	"postCreateCommand": "cd ${containerWorkspaceFolder} && npm install --legacy-peer-deps",
 	// "postStartCommand": "",
 	"postAttachCommand": {
-		"mysql port forwarding": "sleep 3 && service socat_mysql start",
-		"cache port forwarding": "sleep 3 && service socat_cache start"
+		"mysql port forwarding": "service socat_mysql start",
+		"cache port forwarding": "service socat_cache start"
 	},
 
 	// ## Tool-specific properties ##
