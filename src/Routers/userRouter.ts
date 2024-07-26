@@ -7,9 +7,13 @@ const router = express.Router();
 
 router.post('/signup', wrapAsync(userController.signUp));
 
-/*
-need middleware to check if user is authenticated
-*/
+
 router.get('/info', verifyToken, wrapAsync(userController.getUserInfo));
+
+// TODO: Implement the following routes
+// router.patch('/info', verifyToken, wrapAsync(userController.updateUserInfo));
+// router.patch('/avatar', verifyToken, wrapAsync(userController.updateAvatar));
+
+
 
 export default router;

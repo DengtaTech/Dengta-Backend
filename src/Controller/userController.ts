@@ -35,4 +35,11 @@ export const userController = {
     const user = await userService.getUserInfo(parseInt(id));
     res.status(200).json({ data: { ...user } });
   },
+
+  // updateAvatar: async (req: Request, res: Response): Promise<void> => {
+  //   const { id } = req.body.decodedToken;
+  //   const { avatar } = req.body;
+  //   await userService.updateAvatar(parseInt(id), avatar);
+  //   res.status(200).json({ message: 'Update avatar successfully' });
+  // }
 };
