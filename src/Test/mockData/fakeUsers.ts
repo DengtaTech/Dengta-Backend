@@ -1,0 +1,489 @@
+const fakeUsers = [
+  {
+    userId: 1,
+    selfIntro:
+      'I am a beginner in programming. I want to learn python and machine learning.',
+    goal: 'I want to be a data scientist.',
+    profileTags: ['python', 'machine learning', 'data scientist'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'start learning python',
+        tags: ['python', 'programming'],
+        description:
+          'I want to learn python, because it is a popular programming language.',
+      },
+      {
+        footPrintId: 2,
+        title: 'start learning object oriented programming',
+        tags: ['programming'],
+        description:
+          'I want to learn object oriented programming, because it is a popular programming paradigm.',
+      },
+      {
+        footPrintId: 3,
+        title: 'start learning data structure',
+        tags: ['programming'],
+        description:
+          'I want to learn data structure, because it is important for programming.',
+      },
+      {
+        footPrintId: 4,
+        title: 'start learning algorithm',
+        tags: ['programming'],
+        description:
+          'I want to learn algorithm, because it is important for programming.',
+      },
+      {
+        footPrintId: 5,
+        title: 'start learning machine learning',
+        tags: ['machine learning'],
+        description:
+          'I want to learn machine learning, because it is a popular field.',
+      },
+      {
+        footPrintId: 6,
+        title: 'start making a project',
+        tags: ['project'],
+        description: 'I want to make a project about stock price prediction.',
+      },
+    ],
+  },
+  {
+    userId: 2,
+    selfIntro:
+      'I am a professional painter. I love creating art and exploring new techniques.',
+    goal: 'I want to have my own art exhibition.',
+    profileTags: ['painting', 'art', 'exhibition'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'start painting landscapes',
+        tags: ['painting', 'landscape'],
+        description:
+          'I enjoy painting landscapes to capture the beauty of nature.',
+      },
+      {
+        footPrintId: 2,
+        title: 'experiment with watercolor',
+        tags: ['watercolor', 'art'],
+        description: 'I want to experiment with watercolor techniques.',
+      },
+      {
+        footPrintId: 3,
+        title: 'attend art workshop',
+        tags: ['workshop', 'art'],
+        description: 'I attended a workshop to learn from other artists.',
+      },
+      {
+        footPrintId: 4,
+        title: 'create a new art piece',
+        tags: ['art', 'creation'],
+        description: 'I am working on a new piece for my portfolio.',
+      },
+      {
+        footPrintId: 5,
+        title: 'explore abstract art',
+        tags: ['abstract', 'art'],
+        description: 'I am exploring abstract art to expand my style.',
+      },
+      {
+        footPrintId: 6,
+        title: 'prepare for exhibition',
+        tags: ['exhibition', 'art'],
+        description: 'I am preparing my artworks for an upcoming exhibition.',
+      },
+    ],
+  },
+  {
+    userId: 3,
+    selfIntro:
+      'I work in digital marketing and enjoy creating engaging content.',
+    goal: 'I want to become a marketing manager.',
+    profileTags: ['marketing', 'digital marketing', 'content creation'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'create a marketing campaign',
+        tags: ['marketing', 'campaign'],
+        description: 'I created a marketing campaign for a new product.',
+      },
+      {
+        footPrintId: 2,
+        title: 'analyze market trends',
+        tags: ['market analysis', 'trends'],
+        description: 'I analyzed current market trends to adjust our strategy.',
+      },
+      {
+        footPrintId: 3,
+        title: 'optimize SEO',
+        tags: ['SEO', 'optimization'],
+        description: 'I worked on optimizing SEO for our website.',
+      },
+      {
+        footPrintId: 4,
+        title: 'design social media content',
+        tags: ['social media', 'content'],
+        description:
+          'I designed engaging content for our social media channels.',
+      },
+      {
+        footPrintId: 5,
+        title: 'run a PPC campaign',
+        tags: ['PPC', 'advertising'],
+        description: 'I ran a successful PPC advertising campaign.',
+      },
+      {
+        footPrintId: 6,
+        title: 'attend marketing conference',
+        tags: ['conference', 'networking'],
+        description:
+          'I attended a marketing conference to network with other professionals.',
+      },
+    ],
+  },
+  {
+    userId: 4,
+    selfIntro:
+      'I am an experienced software engineer with a passion for backend development.',
+    goal: 'I want to become a tech lead.',
+    profileTags: ['software engineering', 'backend development', 'tech lead'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'develop a new API',
+        tags: ['API', 'development'],
+        description: 'I developed a new API for our application.',
+      },
+      {
+        footPrintId: 2,
+        title: 'optimize database queries',
+        tags: ['database', 'optimization'],
+        description: 'I optimized database queries to improve performance.',
+      },
+      {
+        footPrintId: 3,
+        title: 'implement caching',
+        tags: ['caching', 'performance'],
+        description: 'I implemented caching to reduce load times.',
+      },
+      {
+        footPrintId: 4,
+        title: 'code review',
+        tags: ['code review', 'collaboration'],
+        description: 'I conducted code reviews to maintain code quality.',
+      },
+      {
+        footPrintId: 5,
+        title: 'write unit tests',
+        tags: ['testing', 'quality assurance'],
+        description:
+          'I wrote unit tests to ensure the reliability of our code.',
+      },
+      {
+        footPrintId: 6,
+        title: 'mentor junior developers',
+        tags: ['mentoring', 'development'],
+        description: 'I mentored junior developers to help them grow.',
+      },
+    ],
+    questionnaire: [
+      {
+        question: 'workDomain',
+        answer: 'IT',
+      },
+      {
+        question: 'workName',
+        answer: 'Software Engineer',
+      },
+    ],
+  },
+  {
+    userId: 5,
+    selfIntro:
+      'I am a fitness trainer who loves helping people achieve their fitness goals.',
+    goal: 'I want to open my own gym.',
+    profileTags: ['fitness', 'training', 'gym'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'design a workout plan',
+        tags: ['workout', 'fitness'],
+        description: 'I designed a customized workout plan for a client.',
+      },
+      {
+        footPrintId: 2,
+        title: 'conduct fitness assessment',
+        tags: ['assessment', 'fitness'],
+        description: 'I conducted a fitness assessment to track progress.',
+      },
+      {
+        footPrintId: 3,
+        title: 'lead a group class',
+        tags: ['group class', 'fitness'],
+        description: 'I led a group fitness class at the local gym.',
+      },
+      {
+        footPrintId: 4,
+        title: 'attend nutrition workshop',
+        tags: ['nutrition', 'workshop'],
+        description: 'I attended a workshop on nutrition and diet planning.',
+      },
+      {
+        footPrintId: 5,
+        title: 'create a fitness blog',
+        tags: ['blog', 'fitness'],
+        description: 'I started a blog to share fitness tips and advice.',
+      },
+      {
+        footPrintId: 6,
+        title: 'prepare for fitness competition',
+        tags: ['competition', 'fitness'],
+        description: 'I am preparing for an upcoming fitness competition.',
+      },
+    ],
+  },
+  {
+    userId: 6,
+    selfIntro:
+      'I am a chef with a passion for creating new recipes and exploring global cuisines.',
+    goal: 'I want to write my own cookbook.',
+    profileTags: ['cooking', 'recipes', 'global cuisine'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'create a new recipe',
+        tags: ['recipe', 'cooking'],
+        description: 'I created a new recipe for a fusion dish.',
+      },
+      {
+        footPrintId: 2,
+        title: 'attend culinary school',
+        tags: ['culinary school', 'cooking'],
+        description:
+          'I attended a course at a culinary school to improve my skills.',
+      },
+      {
+        footPrintId: 3,
+        title: 'work in a restaurant',
+        tags: ['restaurant', 'cooking'],
+        description: 'I worked as a chef in a well-known restaurant.',
+      },
+      {
+        footPrintId: 4,
+        title: 'explore global cuisines',
+        tags: ['global cuisine', 'cooking'],
+        description:
+          'I traveled to different countries to learn about their cuisines.',
+      },
+      {
+        footPrintId: 5,
+        title: 'participate in a cooking competition',
+        tags: ['competition', 'cooking'],
+        description: 'I participated in a national cooking competition.',
+      },
+      {
+        footPrintId: 6,
+        title: 'start a food blog',
+        tags: ['blog', 'cooking'],
+        description:
+          'I started a blog to share my recipes and culinary experiences.',
+      },
+    ],
+  },
+  {
+    userId: 7,
+    selfIntro:
+      'I am a data analyst who enjoys interpreting data to provfootPrintIde business insights.',
+    goal: 'I want to become a data scientist.',
+    profileTags: ['data analysis', 'business insights', 'data scientist'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'analyze sales data',
+        tags: ['data analysis', 'sales'],
+        description:
+          'I analyzed sales data to footPrintIdentify trends and patterns.',
+      },
+      {
+        footPrintId: 2,
+        title: 'create data visualization',
+        tags: ['data visualization', 'data analysis'],
+        description: 'I created data visualizations to present findings.',
+      },
+      {
+        footPrintId: 3,
+        title: 'conduct market research',
+        tags: ['market research', 'data analysis'],
+        description:
+          'I conducted market research to support business decisions.',
+      },
+      {
+        footPrintId: 4,
+        title: 'work with big data',
+        tags: ['big data', 'data analysis'],
+        description:
+          'I worked with big data technologies to process large datasets.',
+      },
+      {
+        footPrintId: 5,
+        title: 'attend data science workshop',
+        tags: ['data science', 'workshop'],
+        description:
+          'I attended a workshop to learn about data science techniques.',
+      },
+      {
+        footPrintId: 6,
+        title: 'implement machine learning model',
+        tags: ['machine learning', 'data analysis'],
+        description: 'I implemented a machine learning model to predict sales.',
+      },
+    ],
+  },
+  {
+    userId: 8,
+    selfIntro:
+      'I am a freelance writer who loves to create engaging content across various topics.',
+    goal: 'I want to publish my own book.',
+    profileTags: ['writing', 'content creation', 'publishing'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'write a blog post',
+        tags: ['writing', 'blog'],
+        description:
+          'I wrote a blog post about the importance of storytelling.',
+      },
+      {
+        footPrintId: 2,
+        title: 'freelance writing project',
+        tags: ['writing', 'freelance'],
+        description: 'I completed a freelance writing project for a client.',
+      },
+      {
+        footPrintId: 3,
+        title: 'attend writing workshop',
+        tags: ['workshop', 'writing'],
+        description: 'I attended a writing workshop to improve my skills.',
+      },
+      {
+        footPrintId: 4,
+        title: 'start a novel',
+        tags: ['writing', 'novel'],
+        description: 'I started writing my first novel.',
+      },
+      {
+        footPrintId: 5,
+        title: 'explore different genres',
+        tags: ['writing', 'genres'],
+        description: 'I explored writing in different genres to find my niche.',
+      },
+      {
+        footPrintId: 6,
+        title: 'publish an article',
+        tags: ['writing', 'publishing'],
+        description: 'I published an article in a well-known magazine.',
+      },
+    ],
+  },
+  {
+    userId: 9,
+    selfIntro:
+      'I am a frontend engineer passionate about building interactive web applications.',
+    goal: 'I want to become a senior frontend developer.',
+    profileTags: ['frontend development', 'web applications', 'UI/UX'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'learn React',
+        tags: ['React', 'frontend'],
+        description: 'I am learning React to build modern web applications.',
+      },
+      {
+        footPrintId: 2,
+        title: 'implement responsive design',
+        tags: ['responsive design', 'UI/UX'],
+        description: 'I implemented responsive design in my latest project.',
+      },
+      {
+        footPrintId: 3,
+        title: 'optimize web performance',
+        tags: ['performance', 'web development'],
+        description: 'I optimized the performance of our web application.',
+      },
+      {
+        footPrintId: 4,
+        title: 'attend frontend conference',
+        tags: ['conference', 'frontend'],
+        description:
+          'I attended a conference to learn about the latest frontend trends.',
+      },
+      {
+        footPrintId: 5,
+        title: 'explore new CSS frameworks',
+        tags: ['CSS', 'frontend'],
+        description:
+          'I explored new CSS frameworks to improve my styling skills.',
+      },
+      {
+        footPrintId: 6,
+        title: 'create a design system',
+        tags: ['design system', 'UI/UX'],
+        description:
+          "I created a design system for our company's web applications.",
+      },
+    ],
+  },
+  {
+    userId: 10,
+    selfIntro:
+      'I am a hardware engineer with a passion for designing and testing electronic circuits.',
+    goal: 'I want to become a lead hardware engineer.',
+    profileTags: ['hardware engineering', 'electronic circuits', 'testing'],
+    footPrints: [
+      {
+        footPrintId: 1,
+        title: 'design a new circuit board',
+        tags: ['circuit design', 'hardware'],
+        description: 'I designed a new circuit board for a client project.',
+      },
+      {
+        footPrintId: 2,
+        title: 'test electronic components',
+        tags: ['testing', 'hardware'],
+        description:
+          'I tested electronic components to ensure they meet specifications.',
+      },
+      {
+        footPrintId: 3,
+        title: 'attend hardware engineering workshop',
+        tags: ['workshop', 'hardware'],
+        description:
+          'I attended a workshop to learn about advanced hardware design techniques.',
+      },
+      {
+        footPrintId: 4,
+        title: 'optimize circuit layout',
+        tags: ['optimization', 'hardware'],
+        description:
+          'I optimized the layout of a circuit board to improve performance.',
+      },
+      {
+        footPrintId: 5,
+        title: 'explore new microcontrollers',
+        tags: ['microcontrollers', 'hardware'],
+        description:
+          'I explored new microcontrollers to find better solutions for our projects.',
+      },
+      {
+        footPrintId: 6,
+        title: 'collaborate with software team',
+        tags: ['collaboration', 'hardware', 'software'],
+        description:
+          'I collaborated with the software team to ensure seamless integration.',
+      },
+    ],
+  },
+];
+
+export default fakeUsers;

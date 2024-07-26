@@ -1,0 +1,29 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  OneToMany,
+  Relation,
+  OneToOne,
+} from 'typeorm';
+
+import { FootprintTagType } from './footprintTagType.js';
+
+@Entity({ name: 'FootprintEmbedding' })
+export class FootprintTagTypeEmbedding extends BaseEntity {
+  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
+  id!: number;
+
+  @Column({ type: 'json', nullable: false })
+  contentEmbedding!: number[];
+
+  @OneToOne(
+    () => FootprintTagType,
+    (footprintTagType) => footprintTagType.embedding,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  footprintTagType?: Relation<FootprintTagType>;
+}

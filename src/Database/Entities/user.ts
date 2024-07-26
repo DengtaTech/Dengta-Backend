@@ -14,6 +14,7 @@ import { Followship } from './followship.js';
 import { ProfileHashTag } from './profileHashTag.js';
 import { FootprintReaction } from './footprintReaction.js';
 import { Link } from './link.js';
+import { UserEmbedding } from './userEmbedding.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
@@ -101,4 +102,9 @@ export class User extends BaseEntity {
     cascade: true,
   })
   userCredential?: Relation<UserCredential>;
+
+  @OneToOne(() => UserEmbedding, (userEmbedding) => userEmbedding.user, {
+    cascade: true,
+  })
+  selfIntroEmbedding?: Relation<UserEmbedding>;
 }
