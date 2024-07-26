@@ -10,7 +10,8 @@ export const signUpHandler = {
     body : Signup.ISignUpReq
   ): Promise<Signup.ISignUpResponse> => {
     //init variables
-    const provider: string = 'native';
+    let provider: string = 'native';
+    // console.log('code', provider); // for testing
     const { name, lifeRole, gender, birthday, email, password, links } = body;
 
     const hashedPassword = await tool.generateHashPassword(password);
