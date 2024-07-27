@@ -11,3 +11,4 @@ coverage/
 .prettierrc.json
 /dist
 .version
+/.devcontainer
