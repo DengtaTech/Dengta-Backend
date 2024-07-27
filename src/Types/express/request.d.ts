@@ -1,0 +1,7 @@
+import { Dengta } from '../common.js';
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    decodedToken?: Dengta.TJwtTokenObject;
+  }
+}

@@ -1,4 +1,4 @@
-import { Signup } from "./Types/api.js";
+import { Signup } from './Types/api.js';
 
 export const signUpRes = {
   customize: async (

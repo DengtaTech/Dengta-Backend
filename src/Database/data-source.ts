@@ -39,6 +39,6 @@ export const Database = new DataSource({
     FootprintHashTag,
     ReactionType,
     FootprintReaction,
-    Link
+    Link,
   ],
 });

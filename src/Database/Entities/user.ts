@@ -18,7 +18,7 @@ import { Link } from './link.js';
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  id!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   name!: string;
@@ -35,7 +35,11 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   avatar!: string;
 
-  @Column({ type: 'enum', enum: ['male', 'female', 'nonbinary', 'notdisclosed'], nullable: true })
+  @Column({
+    type: 'enum',
+    enum: ['male', 'female', 'nonbinary', 'notdisclosed'],
+    nullable: true,
+  })
   gender!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })

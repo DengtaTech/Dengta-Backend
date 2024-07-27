@@ -5,7 +5,8 @@ export class BaseError extends Error {
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
-    Object.setPrototypeOf(this, BaseError.prototype);
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
@@ -20,7 +21,6 @@ export class NoTokenError extends BaseError {
     super('Client error - No token provided', 401);
   }
 }
-
 
 export class WrongTokenError extends BaseError {
   constructor() {

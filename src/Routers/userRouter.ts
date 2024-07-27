@@ -1,19 +1,19 @@
 import express from 'express';
 import { userController } from '../Controller/userController.js';
 import wrapAsync from '../utils/wrapAsync.js';
-import { verifyToken } from '../Middlewares/auth.js';
+import { jwtAuthentication } from '../Middlewares/auth.js';
+import { upload } from '../Middlewares/multer.js';
 
 const router = express.Router();
 
 router.post('/signup', wrapAsync(userController.signUp));
 
+router.get('/info', jwtAuthentication, wrapAsync(userController.getUserInfo));
 
-router.get('/info', verifyToken, wrapAsync(userController.getUserInfo));
-
-// TODO: Implement the following routes
-// router.patch('/info', verifyToken, wrapAsync(userController.updateUserInfo));
-// router.patch('/avatar', verifyToken, wrapAsync(userController.updateAvatar));
-
-
+router.post(
+  '/avatar',
+  [jwtAuthentication, upload.single('avatar')],
+  wrapAsync(userController.uploadAvatar),
+);
 
 export default router;

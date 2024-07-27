@@ -1,12 +1,30 @@
 import jwt from 'jsonwebtoken';
 import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
+import { Dengta } from '../Types/common.js';
+
+type JwtPayload = {
+  id: number;
+};
+
+export function isTJwtTokenObject(obj: unknown): obj is Dengta.TJwtTokenObject {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'id' in obj &&
+    'exp' in obj &&
+    'iat' in obj &&
+    typeof obj.id === 'string' &&
+    typeof obj.exp === 'number' &&
+    typeof obj.iat === 'number'
+  );
+}
 
 export const auth = {
   generateAccessToken: async (
     userId: number,
   ): Promise<Signup.IJwtTokenObject> => {
     const secretKey = process.env.JWT_SECRET as string;
-    const payload = { id: userId };
+    const payload: JwtPayload = { id: userId };
     const token = jwt.sign(payload, secretKey, { expiresIn: '24h' });
     const tokenInfo: Signup.IJwtTokenObject = {
       token: token,

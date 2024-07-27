@@ -1,8 +1,8 @@
-import { BaseEntity } from "../lib.js";
+import { BaseEntity } from '../lib.js';
 
 export class User extends BaseEntity {
   // user:<userId>
-  protected static override REDIS_ROOT = "user";
+  protected static override REDIS_ROOT = 'user';
 
   public id!: number;
   public name!: string;
@@ -10,14 +10,16 @@ export class User extends BaseEntity {
   public avatar!: string;
   public selfIntro!: string;
 
-  public static async getById(id: number): Promise<Dengta.Cache.IUserDetailObject | undefined> {
+  public static async getById(
+    id: number,
+  ): Promise<Dengta.Cache.IUserDetailObject | undefined> {
     return await super.get<User>(id);
   }
 
   public static async setById(
     id: number,
     value: Dengta.Cache.IUserDetailObject,
-    expireTime?: Partial<KeyToType<Property<User>, number>> | undefined
+    expireTime?: Partial<KeyToType<Property<User>, number>> | undefined,
   ) {
     await super.set<User>(id, value, expireTime);
   }

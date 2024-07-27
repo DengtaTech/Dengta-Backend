@@ -21,7 +21,7 @@ export const userRepo = {
       throw error;
     }
   },
-  findById: async (userId: number): Promise<User | null> => {
+  findById: async (userId: string): Promise<User | null> => {
     try {
       const user = await User.findOne({ where: { id: userId } });
       return user;
