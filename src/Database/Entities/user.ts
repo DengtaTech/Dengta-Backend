@@ -45,18 +45,6 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   selfIntro!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  fbLink!: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  igLink!: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  linkedInLink!: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  twitterLink!: string;
-
   @Column({ type: 'int', nullable: true })
   isActive!: number;
 
