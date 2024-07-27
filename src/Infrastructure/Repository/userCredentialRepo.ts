@@ -1,11 +1,10 @@
-import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { UserCredential } from '../../Database/Entities/userCredential.js';
 import { EntityManager } from 'typeorm';
 export const userCredentialRepo = {
     insertNewUser: async (
         user: User,
-        userInfoObj: Signup.ISignUpReq,
+        userInfoObj: Signup.ISignUpObject,
         transactionManager: EntityManager,
     ): Promise<UserCredential> => {
         try {

@@ -1,9 +1,8 @@
-import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { EntityManager } from 'typeorm';
 export const userRepo = {
   insertNewUser: async (
-    userInfoObj: Signup.ISignUpReq,
+    userInfoObj: Signup.ISignUpObject,
     transactionManager: EntityManager,
   ): Promise<User> => {
     try {
@@ -11,8 +10,8 @@ export const userRepo = {
       newUser.name = userInfoObj.name;
       newUser.lifeRole = userInfoObj.lifeRole;
       newUser.birthday = userInfoObj.birthday;
-      newUser.provider = userInfoObj.provider as string;
-      newUser.avatar = userInfoObj.avatar as string;
+      newUser.provider = userInfoObj.provider;
+      newUser.avatar = userInfoObj.avatar;
       newUser.gender = userInfoObj.gender;
       const savedUser = await transactionManager.save(newUser);
       return savedUser;

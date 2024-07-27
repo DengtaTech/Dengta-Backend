@@ -2,7 +2,6 @@ import { signUpHandler } from '../Application/Features/User/Commands/SignUp/sign
 import { Request, Response } from 'express';
 import { tool } from '../utils/tool.js';
 import { EmailFormatError, InputEmptyError } from '../Errors/errors.js';
-import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -13,8 +12,7 @@ export const userController = {
     if (!(await tool.checkEmail(email))) {
       throw new EmailFormatError();
     } 
-    const birthdayDate = new Date(birthday);
-    const userDto: Signup.ISignUpReq = { name, lifeRole, gender, birthday: birthdayDate, email, password, links };
+    const userDto: Signup.ISignUpReq = { name, lifeRole, gender, birthday, email, password, links };
     const response = await signUpHandler.handle(
         userDto
     );

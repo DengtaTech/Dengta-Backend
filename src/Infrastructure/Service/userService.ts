@@ -5,13 +5,11 @@ import { linkRepo } from '../Repository/linkRepo.js';
 import {
   EmailExistsError,
 } from '../../Errors/errors.js';
-import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
-import { Link } from '../../Database/Entities/link.js';
 
 export const userService = {
   signUp: async (
-    userInfoObj: Signup.ISignUpReq
-  ): Promise<Signup.IUserDto> => {
+    userInfoObj: Signup.ISignUpObject
+  ): Promise<Signup.IUserObject> => {
     // try {
     const checkUserExist = await userCredentialRepo.findByEmail(
       userInfoObj.email,
@@ -33,17 +31,17 @@ export const userService = {
           userInfoObj,
           transactionManager,
         );
-        let initLinks: Link[] = [];
         if(userInfoObj.links.length !== 0) {
-            initLinks = await linkRepo.initLink(userInfoObj.links, newUser.id, transactionManager);
+            await linkRepo.initLink(userInfoObj.links, newUser.id, transactionManager);
         }
         return {
           id: newUser.id,
           name: newUser.name,
           lifeRole: newUser.lifeRole,
+          provider: newUser.provider,
           email: newUserCredential.email,
-          links: initLinks,
-        } as Signup.IUserDto;
+          avatar: newUser.avatar,
+        } as Signup.IUserObject;
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;

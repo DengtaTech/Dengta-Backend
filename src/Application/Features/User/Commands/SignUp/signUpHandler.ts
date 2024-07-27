@@ -2,7 +2,6 @@ import { userService } from '../../../../../Infrastructure/Service/userService.j
 import { tool } from '../../../../../utils/tool.js';
 import { auth } from '../../../../../utils/auth.js';
 import { signUpRes } from './signUpRes.js';
-import { Signup } from './Types/api.js';
 
 
 export const signUpHandler = {
@@ -12,13 +11,13 @@ export const signUpHandler = {
     //init variables
     const provider: string = 'native';
     const { name, lifeRole, gender, birthday, email, password, links } = body;
-
+    const dateBirthday = new Date(birthday);
     const hashedPassword = await tool.generateHashPassword(password);
-    const userInfoObj: Signup.ISignUpReq = {
+    const userInfoObj: Signup.ISignUpObject = {
       name: name,
       lifeRole: lifeRole,
       gender: gender,
-      birthday: birthday,
+      birthday: dateBirthday,
       email: email,
       password: hashedPassword,
       provider: provider,
