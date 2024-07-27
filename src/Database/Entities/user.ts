@@ -14,6 +14,7 @@ import { Followship } from './followship.js';
 import { ProfileHashTag } from './profileHashTag.js';
 import { FootprintReaction } from './footprintReaction.js';
 import { Link } from './link.js';
+import { SearchHistory } from './searchHistory.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
@@ -89,4 +90,7 @@ export class User extends BaseEntity {
     cascade: true,
   })
   userCredential?: Relation<UserCredential>;
+
+  @OneToMany(() => SearchHistory, (history) => history.user, { cascade: true })
+  searchHistories?: Relation<SearchHistory[]>;
 }

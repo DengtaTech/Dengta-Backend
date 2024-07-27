@@ -21,10 +21,20 @@ export const userRepo = {
       throw error;
     }
   },
-  findById: async (userId: number): Promise<User | null> => {
+  findById: async (
+    userId: number,
+    transactionManager?: EntityManager,
+  ): Promise<User | null> => {
     try {
-      const user = await User.findOne({ where: { id: userId } });
-      return user;
+      if (transactionManager) {
+        const user = transactionManager.findOne(User, {
+          where: { id: userId },
+        });
+        return user;
+      } else {
+        const user = await User.findOne({ where: { id: userId } });
+        return user;
+      }
     } catch (error) {
       console.error('Error finding user by id:');
       throw error;
