@@ -5,8 +5,10 @@ import {
   BaseEntity,
   OneToMany,
   Relation,
+  OneToOne,
 } from 'typeorm';
 import { FootprintHashTag } from './footprintHashTag.js';
+import { FootprintTagTypeEmbedding } from './footprintTagTypeEmbedding.js';
 
 @Entity({ name: 'FootprintTagType' })
 export class FootprintTagType extends BaseEntity {
@@ -29,4 +31,11 @@ export class FootprintTagType extends BaseEntity {
     { cascade: true },
   )
   footprintHashTags?: Relation<FootprintHashTag[]>;
+
+  @OneToOne(
+    () => FootprintTagTypeEmbedding,
+    (embedding) => embedding.footprintTagType,
+    { cascade: true },
+  )
+  embedding?: Relation<FootprintTagTypeEmbedding>;
 }

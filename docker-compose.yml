@@ -58,8 +58,10 @@ services:
     networks:
       - backend_network
 
-
-
+  milvus:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: standalone
 
 volumes:
   dengta_mysql_volume:
@@ -69,6 +71,3 @@ networks:
   backend_network:
     external: true
     name: dengta_backend_network
-
-# networks:
-#   backend_network:

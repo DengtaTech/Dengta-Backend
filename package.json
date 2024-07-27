@@ -20,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zilliz/milvus2-sdk-node": "^2.4.4",
     "bcrypt": "^5.1.0",
     "cls-hooked": "^4.2.2",
     "dotenv": "^16.4.5",

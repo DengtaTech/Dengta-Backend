@@ -1,7 +1,13 @@
 import express, { Request, Response } from 'express';
 import 'reflect-metadata';
 import { Database } from './Database/data-source.js';
+import { initMilvus } from './Database/VectorDB/vector-db.js';
+import fakeUsers from './Test/mockData/fakeUsers.js';
+
+import { recommendationService } from './Infrastructure/Service/recommendationService.js';
+
 import userRouter from './Routers/userRouter.js';
+import recommendationRouter from './Routers/recommendationRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
 import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
@@ -16,6 +22,7 @@ const port = process.env.EXPRESS_PORT;
 
 app.use(express.json());
 app.use('/api/1.0/user', userRouter);
+app.use('/api/1.0/recommendation', recommendationRouter);
 
 app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
@@ -23,11 +30,9 @@ app.get('/api/1.0/health', (req: Request, res: Response) => {
 
 app.use(errorHandler);
 
-
-const file  = fs.readFileSync('./swagger.yaml', 'utf8')
+const file = fs.readFileSync('./swagger.yaml', 'utf8');
 const swaggerDocument = YAML.parse(file);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 
 async function usingRedisExample() {
   await CacheUser.setById(1, {
@@ -35,19 +40,40 @@ async function usingRedisExample() {
     name: 'Dengta',
     lifeRole: '小可爱',
     avatar: 'https://avatars.githubusercontent.com/u/101214613?v=4',
-    selfIntro: '小可爱的小可爱'
+    selfIntro: '小可爱的小可爱',
   });
   const cache = await CacheUser.getById(1);
   if (cache !== undefined) {
-    console.log("Redis is working");
+    console.log('Redis is working');
   }
 }
 
+async function usingMilvusExample() {
+  for (let i = 0; i < fakeUsers.length; i++) {
+    const user = fakeUsers[i];
+    await recommendationService.addUserDataToMilvus(user, 3);
+  }
+
+  console.log(fakeUsers[0]);
+
+  const similarUsers = await recommendationService.getSimilarUsers(
+    1,
+    'data scientist',
+    5,
+  );
+
+  console.log(similarUsers);
+}
+
 Database.initialize()
-  .then(() => {
+  .then(async () => {
     initDbCache();
     console.log('all database initialized successfully');
     usingRedisExample();
+
+    await initMilvus(true);
+    await usingMilvusExample();
+
     app.listen(port, () => {
       console.log(`App listening on port: ${port}`);
     });
