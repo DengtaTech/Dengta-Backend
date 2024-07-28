@@ -11,4 +11,10 @@ router.get(
   wrapAsync(searchHistoryController.getSearchHistory),
 );
 
+router.delete(
+  '/',
+  auth.verifyToken,
+  wrapAsync(searchHistoryController.clearSearchHistory),
+);
+
 export default router;

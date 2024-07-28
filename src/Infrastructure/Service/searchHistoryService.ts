@@ -29,4 +29,25 @@ export const searchHistoryService = {
       }
     });
   },
+  clearSearchHistory: async (searchInfoObj: SearchHistoryRetrieve.IUserDto) => {
+    return Database.transaction(async (transactionManager) => {
+      try {
+        const checkUserExist = await userRepo.findById(
+          searchInfoObj.id,
+          transactionManager,
+        );
+        if (!checkUserExist) {
+          throw new WrongTokenError();
+        }
+        const clearResult = await searchHistoryRepo.deleteByUserId(
+          searchInfoObj.id,
+          transactionManager,
+        );
+        return clearResult;
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
+  },
 };
