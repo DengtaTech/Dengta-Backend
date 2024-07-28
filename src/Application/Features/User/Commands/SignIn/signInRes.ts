@@ -1,21 +1,18 @@
-import { Signup } from './Types/api.js';
+import { Signin } from './Types/api.js';
 import { Dengta } from '../../../../../Types/common.js';
 
-export const signUpRes = {
+export const signInRes = {
   customize: async (
-    result: Signup.ISignUpDto,
+    result: Signin.ISignInDto,
     accessTokenInfoObj: Dengta.IJwtTokenObject,
-  ): Promise<Signup.ISignUpResponse> => {
-    const response: Signup.ISignUpResponse = {
+  ): Promise<Signin.ISignInResponse> => {
+    const response: Signin.ISignInResponse = {
       data: {
         accessToken: accessTokenInfoObj.token,
         accessExpired: accessTokenInfoObj.expire,
         user: {
           id: result.id,
-          name: result.name,
-          lifeRole: result.lifeRole,
           email: result.email,
-          links: result.links,
         },
       },
     };

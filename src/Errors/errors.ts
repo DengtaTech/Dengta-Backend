@@ -16,6 +16,12 @@ export class EmailExistsError extends BaseError {
   }
 }
 
+export class UserNotFoundError extends BaseError {
+  constructor() {
+    super('Email not signed up', 403);
+  }
+}
+
 export class NoTokenError extends BaseError {
   constructor() {
     super('Client error - No token provided', 401);
@@ -25,6 +31,12 @@ export class NoTokenError extends BaseError {
 export class WrongTokenError extends BaseError {
   constructor() {
     super('Client error - Invalid token', 403);
+  }
+}
+
+export class WrongPasswordError extends BaseError {
+  constructor() {
+    super('Client error - wrong password', 403);
   }
 }
 

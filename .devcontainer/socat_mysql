@@ -1,0 +1,61 @@
+#!/bin/bash
+# chkconfig: 2345 20 80
+# description: Socat MySQL Port Forwarding
+
+PIDFILE=/tmp/socat_mysql.pid
+LOGFILE=/tmp/socat_mysql.log
+
+case "$1" in
+    start)
+        echo "Starting Socat MySQL Port Forwarding..."
+        while ! nc -zw 10 mysql 3306
+        do
+            echo "Can't connect to mysql:3306"
+            sleep 2
+        done
+        while :
+        do
+            /usr/bin/nohup /usr/bin/socat -d -lf $LOGFILE TCP4-LISTEN:3309,bind=127.0.0.1,reuseaddr,fork TCP4:mysql:3306 >/dev/null 2>&1 &
+            echo $! > $PIDFILE
+            sleep 2
+            if nc -zw 10 localhost 3309; then
+                echo "Started Socat MySQL Port Forwarding"
+                break
+            else
+                echo "Failed to start Socat MySQL Port Forwarding. Retrying..."
+                kill `cat $PIDFILE`
+                rm $PIDFILE
+            fi
+        done
+    ;;
+    stop)
+        echo "Stopping Socat MySQL Port Forwarding..."
+        if [ -f $PIDFILE ]; then
+            kill `cat $PIDFILE`
+            rm $PIDFILE
+        else
+            echo "PID file not found. Is socat_mysql running?"
+            exit 1
+        fi
+    ;;
+    status)
+        if [ -f $PIDFILE ]; then
+            if ps -p `cat $PIDFILE` > /dev/null; then
+                echo "Socat MySQL Port Forwarding is running."
+            else
+                echo "Process not found, but PID file exists. It's PID was `cat $PIDFILE`"
+                rm $PIDFILE
+                exit 1
+            fi
+        else
+            echo "Socat MySQL Port Forwarding is not running."
+            exit 3
+        fi
+    ;;
+    *)
+        echo "Usage: /etc/init.d/socat_mysql {start|stop|status}"
+        exit 2
+    ;;
+esac
+
+exit 0

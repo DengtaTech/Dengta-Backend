@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken';
-import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
 import { Dengta } from '../Types/common.js';
 
 type JwtPayload = {
   id: number;
 };
 
-export function isTJwtTokenObject(obj: unknown): obj is Dengta.TJwtTokenObject {
+export function isTJwtTokenPayload(
+  obj: unknown,
+): obj is Dengta.TJwtTokenPayload {
   return (
     typeof obj === 'object' &&
     obj !== null &&
@@ -22,11 +23,11 @@ export function isTJwtTokenObject(obj: unknown): obj is Dengta.TJwtTokenObject {
 export const auth = {
   generateAccessToken: async (
     userId: number,
-  ): Promise<Signup.IJwtTokenObject> => {
+  ): Promise<Dengta.IJwtTokenObject> => {
     const secretKey = process.env.JWT_SECRET as string;
     const payload: JwtPayload = { id: userId };
     const token = jwt.sign(payload, secretKey, { expiresIn: '24h' });
-    const tokenInfo: Signup.IJwtTokenObject = {
+    const tokenInfo: Dengta.IJwtTokenObject = {
       token: token,
       expire: `${60 * 60 * 24}`,
     };

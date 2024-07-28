@@ -7,6 +7,7 @@ import { upload } from '../Middlewares/multer.js';
 const router = express.Router();
 
 router.post('/signup', wrapAsync(userController.signUp));
+router.post('/signin', wrapAsync(userController.signIn));
 
 router.get('/info', jwtAuthentication, wrapAsync(userController.getUserInfo));
 

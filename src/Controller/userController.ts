@@ -7,6 +7,7 @@ import {
   NoTokenError,
 } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
+import { signInHandler } from '../Application/Features/User/Commands/SignIn/signInHandler.js';
 import { userService } from '../Infrastructure/Service/userService.js';
 import minioService from '../Infrastructure/Service/avatarService.js';
 
@@ -34,7 +35,14 @@ export const userController = {
 
     res.status(200).json(response);
   },
-
+  signIn: async (req: Request, res: Response): Promise<void> => {
+    const { provider, email, password } = req.body;
+    if (!email || !password) {
+      throw new InputEmptyError();
+    }
+    const response = await signInHandler.handle(email, password,provider);
+    res.status(200).json(response);
+  },
   getUserInfo: async (req: Request, res: Response): Promise<void> => {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import { NoTokenError } from '../Errors/errors.js';
-import { isTJwtTokenObject } from '../utils/jwt.js';
+import { isTJwtTokenPayload } from '../utils/jwt.js';
 const { TokenExpiredError, NotBeforeError, JsonWebTokenError } = jwt;
 
 export const jwtAuthentication = async (
@@ -19,7 +19,7 @@ export const jwtAuthentication = async (
       pureToken,
       process.env.JWT_SECRET as string,
     );
-    if (isTJwtTokenObject(decodedToken)) {
+    if (isTJwtTokenPayload(decodedToken)) {
       req.decodedToken = decodedToken;
     } else {
       throw new JsonWebTokenError('Invalid token');

@@ -2,13 +2,16 @@ import { Database } from '../../Database/data-source.js';
 import { userRepo } from '../Repository/userRepo.js';
 import { userCredentialRepo } from '../Repository/userCredentialRepo.js';
 import { linkRepo } from '../Repository/linkRepo.js';
-import { EmailExistsError } from '../../Errors/errors.js';
+import { EmailExistsError, UserNotFoundError } from '../../Errors/errors.js';
 import { User } from '../../Database/Entities/user.js';
 import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
+import { Signin } from '../../Application/Features/User/Commands/SignIn/Types/api.js';
 
 export const userService = {
-  signUp: async (userInfoObj: Signup.ISignUpReq): Promise<Signup.IUserDto> => {
+  signUp: async (
+    userInfoObj: Signup.ISignUpReq,
+  ): Promise<Signup.ISignUpDto> => {
     // try {
     const checkUserExist = await userCredentialRepo.findByEmail(
       userInfoObj.email,
@@ -44,12 +47,23 @@ export const userService = {
           lifeRole: newUser.lifeRole,
           email: newUserCredential.email,
           links: initLinks,
-        };
+        } as Signup.ISignUpDto;
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
       }
     });
+  },
+  signIn: async (email: string): Promise<Signin.ISignInDto> => {
+    const checkUserExist = await userCredentialRepo.findByEmail(email);
+    if (!checkUserExist) {
+      throw new UserNotFoundError();
+    }
+    return {
+      id: checkUserExist.userId,
+      email: checkUserExist.email,
+      password: checkUserExist.password,
+    };
   },
 
   getUserInfo: async (id: string): Promise<User> => {
