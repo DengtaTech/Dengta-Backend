@@ -19,6 +19,7 @@ RUN mkdir -p /etc/sudoers.d \
 
 COPY socat_mysql /etc/init.d/socat_mysql
 COPY socat_cache /etc/init.d/socat_cache
+
 USER node
 
 EXPOSE 3000
