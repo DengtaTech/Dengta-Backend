@@ -62,7 +62,7 @@ const createIndex = async () => {
       collection_name: 'user_intervals_embedding',
       field_name: 'embedding',
       index_type: 'IVF_FLAT',
-      metric_type: 'L2',
+      metric_type: 'COSINE',
       params: {
         nlist: 16384,
       },
