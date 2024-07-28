@@ -33,6 +33,7 @@ export const recommendationService = {
     const res = await milvusClient.search({
       collection_name: 'user_intervals_embedding',
       filter: 'userId != ' + userId,
+      group_by_field: 'userId',
       vector: mixedEmbedding,
       limit,
     });
