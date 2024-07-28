@@ -32,11 +32,11 @@ export class Footprint extends BaseEntity {
   @Column({ type: 'int', default: 0 })
   totalLike!: number;
 
-  @Column({ type: 'varchar', length: 50, default: 'draft' })
+  @Column({ type: 'varchar', length: 50, default: 'draft' }) // should be changed to enum
   status!: string;
 
-  @Column({ type: 'int', default: 0 })
-  milestone!: number;
+  @Column({ type: 'boolean', nullable: false, default: false }) // in mysql, boolean is tinyint(1)
+  milestone!: boolean;
 
   @Column({
     type: 'datetime',
@@ -59,6 +59,10 @@ export class Footprint extends BaseEntity {
   )
   reactions?: Relation<FootprintReaction[]>;
 
-  @OneToMany(() => FootprintHashTag, (footprintHashTag) => footprintHashTag.footprint, { cascade: true })
+  @OneToMany(
+    () => FootprintHashTag,
+    (footprintHashTag) => footprintHashTag.footprint,
+    { cascade: true },
+  )
   footprintHashTags?: Relation<FootprintHashTag[]>;
 }

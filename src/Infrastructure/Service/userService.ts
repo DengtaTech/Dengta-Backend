@@ -6,6 +6,7 @@ import {
   EmailExistsError,
   UserNotFoundError,
 } from '../../Errors/errors.js';
+import { User } from '../../Database/Entities/user.js';
 import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { Signin } from '../../Application/Features/User/Commands/SignIn/Types/api.js';
@@ -67,4 +68,12 @@ export const userService = {
       password: checkUserExist.password,
     }
   },
+
+  getUserInfo: async (id: number): Promise<User> => {
+    const userInfo = await userRepo.findById(id);
+    if (!userInfo) {
+      throw new Error('User not found');
+    }
+    return userInfo;
+  }
 };

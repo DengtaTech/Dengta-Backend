@@ -27,6 +27,7 @@ export class NoTokenError extends BaseError {
   }
 }
 
+
 export class WrongTokenError extends BaseError {
   constructor() {
     super('Client error - Invalid token', 403);

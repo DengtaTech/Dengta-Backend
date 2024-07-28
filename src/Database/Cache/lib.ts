@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Redis } from "ioredis";
 
 import assert from "assert";
@@ -55,12 +56,12 @@ export class BaseEntity {
                     `${this_.REDIS_ROOT}:${where}:${key}`,
                     val,
                     "EX",
-                    // @ts-expect-error
+                    // @ts-expect-error Missing type information for expireTime
                     expireTime?.[key] ?? 86400); // expires in a day
             } else {
                 transaction.set(
                     `${this_.REDIS_ROOT}:${where}:${key}`, JSON.stringify(val), "EX",
-                    // @ts-expect-error
+                    // @ts-expect-error Missing type information for expireTime
                     expireTime?.[key] ?? 86400); // expires in a day
             }
         }
@@ -80,7 +81,7 @@ export class BaseEntity {
         assert(this_._redis);
         const object = {};
         for (const key of this_.PROPERTIES) {
-            // @ts-expect-error
+            // @ts-expect-error 
             if (typeof this_[key] === "string" || typeof this_[key] === "number") {
                 const retrieved = await this_._redis.get(`${this_.REDIS_ROOT}:${where}:${key}`);
                 if (retrieved === null) {
