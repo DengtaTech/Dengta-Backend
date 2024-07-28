@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { tool } from '../utils/tool.js';
 import { EmailFormatError, InputEmptyError } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
+import { signInHandler } from '../Application/Features/User/Commands/SignIn/signInHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -19,6 +20,14 @@ export const userController = {
         userDto
     );
 
+    res.status(200).json(response);
+  },
+  signIn: async (req: Request, res: Response): Promise<void> => {
+    const { provider, email, password } = req.body;
+    if (!email || !password) {
+      throw new InputEmptyError();
+    }
+    const response = await signInHandler.handle(email, password,provider);
     res.status(200).json(response);
   },
 };

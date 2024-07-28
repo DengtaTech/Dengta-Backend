@@ -15,18 +15,14 @@ declare namespace Signup {
     avatar?: string;
   }
   //Dto專門用於Service層組資料，回傳給Handler用
-  interface IUserDto extends Pick<User, 'id' | 'name' | 'lifeRole'>, Pick<UserCredential, 'email'> {
+  interface ISignUpDto extends Pick<User, 'id' | 'name' | 'lifeRole'>, Pick<UserCredential, 'email'> {
     links: ILink[];
-  }
-  interface IJwtTokenObject {
-    token: string;
-    expire: string;
   }
   interface ISignUpResponse {
     data: {
       accessToken: string;
       accessExpired: string;
-      user: IUserDto;
+      user: ISignUpDto;
     };
   }
 }
