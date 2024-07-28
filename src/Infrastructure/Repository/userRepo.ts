@@ -29,5 +29,5 @@ export const userRepo = {
       console.error('Error finding user by id:');
       throw error;
     }
-  },
+  }
 };

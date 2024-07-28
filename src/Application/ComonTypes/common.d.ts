@@ -7,4 +7,8 @@ declare namespace Dengta {
   type UserAvatar =
     | `https://${number}.${number}.${number}.${number}/${string}/${string}`
     | '';
+  interface IJwtTokenObject {
+    token: string;
+    expire: string;
+  }
 }
