@@ -58,6 +58,16 @@ services:
     networks:
       - backend_network
 
+  etcd:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: etcd
+
+  minio:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: minio
+
   milvus:
     extends:
       file: ./src/Database/VectorDB/docker-compose.yml
