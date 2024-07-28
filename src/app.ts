@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import 'reflect-metadata';
 import { Database } from './Database/data-source.js';
 import { initMilvus } from './Database/VectorDB/vector-db.js';
-import fakeUsers from './Test/mockData/fakeUsers.js';
+import fakeUsers from './Test/mockData/fakeUsers.json' assert { type: 'json' };
 
 import { recommendationService } from './Infrastructure/Service/recommendationService.js';
 
@@ -49,8 +49,7 @@ async function usingRedisExample() {
 }
 
 async function usingMilvusExample() {
-  for (let i = 0; i < fakeUsers.length; i++) {
-    const user = fakeUsers[i];
+  for (const user of fakeUsers) {
     await recommendationService.addUserDataToMilvus(user, 3);
   }
 

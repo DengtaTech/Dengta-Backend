@@ -4,7 +4,7 @@ let milvusClient: MilvusClient;
 
 const dropCollection = async () => {
   try {
-    const drop = await milvusClient.dropCollection({
+    await milvusClient.dropCollection({
       collection_name: 'user_intervals_embedding',
     });
     console.log('Drop collection is finished');
