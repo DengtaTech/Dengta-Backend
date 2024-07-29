@@ -18,9 +18,10 @@ export const uploadAvatarHandler = {
 
     const presignedAvatarUrl =
       await minioService.getPresignedAvatarUrl(filename);
+      
     const response = await uploadAvatarRes.customize(
       filename,
-      presignedAvatarUrl as string,
+      presignedAvatarUrl,
     );
     return response;
   },

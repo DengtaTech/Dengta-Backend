@@ -4,7 +4,7 @@ declare namespace UploadAvatar {
   interface IUploadAvatarResponse {
     data: {
       filename: string;
-      url: string;
+      url: string | null;
     };
   }
 }
