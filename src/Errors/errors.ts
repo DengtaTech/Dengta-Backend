@@ -5,7 +5,8 @@ export class BaseError extends Error {
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
-    Object.setPrototypeOf(this, BaseError.prototype);
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
@@ -26,7 +27,6 @@ export class NoTokenError extends BaseError {
     super('Client error - No token provided', 401);
   }
 }
-
 
 export class WrongTokenError extends BaseError {
   constructor() {
@@ -49,6 +49,12 @@ export class InputEmptyError extends BaseError {
 export class EmailFormatError extends BaseError {
   constructor() {
     super('Email format problem', 403);
+  }
+}
+
+export class UploadAvatarError extends BaseError {
+  constructor() {
+    super('Failed to upload avatar', 500);
   }
 }
 

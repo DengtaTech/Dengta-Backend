@@ -1,10 +1,12 @@
-import { User, UserCredential } from "./entities";
+import { User, UserCredential } from './entities';
 
 declare namespace Signup {
-  
   type ILink = Pick<Link, 'type' | 'url'>;
 
-  type SignupUserInput = Pick<User, 'name' | 'lifeRole' | 'birthday' | 'gender'> & {
+  type SignupUserInput = Pick<
+    User,
+    'name' | 'lifeRole' | 'birthday' | 'gender'
+  > & {
     links: ILink[];
   };
 
@@ -15,7 +17,9 @@ declare namespace Signup {
     avatar?: string;
   }
   //Dto專門用於Service層組資料，回傳給Handler用
-  interface ISignUpDto extends Pick<User, 'id' | 'name' | 'lifeRole'>, Pick<UserCredential, 'email'> {
+  interface ISignUpDto
+    extends Pick<User, 'id' | 'name' | 'lifeRole'>,
+      Pick<UserCredential, 'email'> {
     links: ILink[];
   }
   interface ISignUpResponse {

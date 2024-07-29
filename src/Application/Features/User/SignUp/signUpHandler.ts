@@ -1,14 +1,11 @@
-import { userService } from '../../../../../Infrastructure/Service/userService.js';
-import { tool } from '../../../../../utils/tool.js';
-import { auth } from '../../../../../utils/jwt.js';
+import { userService } from '../../../../Infrastructure/Service/userService.js';
+import { tool } from '../../../../utils/tool.js';
+import { auth } from '../../../../utils/jwt.js';
 import { signUpRes } from './signUpRes.js';
 import { Signup } from './Types/api.js';
 
-
 export const signUpHandler = {
-  handle: async (
-    body : Signup.ISignUpReq
-  ): Promise<Signup.ISignUpResponse> => {
+  handle: async (body: Signup.ISignUpReq): Promise<Signup.ISignUpResponse> => {
     //init variables
     const provider: string = 'native';
     const { name, lifeRole, gender, birthday, email, password, links } = body;

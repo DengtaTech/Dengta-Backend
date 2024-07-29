@@ -1,4 +1,4 @@
-import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
+import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { EntityManager } from 'typeorm';
 export const userRepo = {
@@ -21,7 +21,7 @@ export const userRepo = {
       throw error;
     }
   },
-  findById: async (userId: number): Promise<User | null> => {
+  findById: async (userId: string): Promise<User | null> => {
     try {
       const user = await User.findOne({ where: { id: userId } });
       return user;
@@ -29,5 +29,5 @@ export const userRepo = {
       console.error('Error finding user by id:');
       throw error;
     }
-  }
+  },
 };

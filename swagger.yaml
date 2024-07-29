@@ -51,7 +51,7 @@ paths:
                 name: John Doe
                 lifeRole: Student
                 gender: male
-                birthday: "1990-01-01"
+                birthday: '1990-01-01'
                 email: johndoe@example.com
                 password: mypassword123
                 links: []
@@ -77,7 +77,57 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginUserResponse'
       security:
-          - bearerAuth: []
+        - bearerAuth: []
+  /user/avatar:
+    post:
+      tags:
+        - User
+      summary: Upload user avatar
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - avatar
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Upload avatar successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Upload avatar successfully'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
+        '400':
+          description: Invalid file type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'File must be an image'
+      security:
+        - bearerAuth: []
 components:
   securitySchemes:
     bearerAuth:
@@ -93,28 +143,28 @@ components:
           properties:
             accessToken:
               type: string
-              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1IiwiaWF0IjoxNzIxNDY2ODk3LCJleHAiOjE3MjE1NTMyOTd9.RtvpdPUgSh00UyvtHhQbB8wib-tjguHWsVk-RAExOJY"
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1IiwiaWF0IjoxNzIxNDY2ODk3LCJleHAiOjE3MjE1NTMyOTd9.RtvpdPUgSh00UyvtHhQbB8wib-tjguHWsVk-RAExOJY'
             accessExpired:
               type: string
-              example: "86400"
+              example: '86400'
             user:
               type: object
               properties:
                 id:
                   type: string
-                  example: "15"
+                  example: '15'
                 provider:
                   type: string
-                  example: "native"
+                  example: 'native'
                 realName:
                   type: string
-                  example: "John Doe"
+                  example: 'John Doe'
                 accountName:
                   type: string
-                  example: "johndoe"
+                  example: 'johndoe'
                 email:
                   type: string
-                  example: "johndoe@example.com"
+                  example: 'johndoe@example.com'
                 avatar:
                   type: string
                   nullable: true
@@ -126,19 +176,19 @@ components:
           properties:
             id:
               type: string
-              example: "15"
+              example: '15'
             provider:
               type: string
-              example: "native"
+              example: 'native'
             realName:
               type: string
-              example: "John Doe"
+              example: 'John Doe'
             accountName:
               type: string
-              example: "johndoe"
+              example: 'johndoe'
             email:
               type: string
-              example: "johndoe@example.com"
+              example: 'johndoe@example.com'
             avatar:
               type: string
               nullable: true
@@ -152,4 +202,4 @@ components:
             properties:
               error:
                 type: string
-                example: "Email already exists."
+                example: 'Email already exists.'

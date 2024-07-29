@@ -14,11 +14,9 @@ export const errorMsg = {
     res.status(403).json({ error: 'Client error - Invalid token' });
   },
   inputEmpty: (res: Response<oError>) => {
-    res
-      .status(400)
-      .json({
-        error: 'Client error - Input feild (images?) should not be empty',
-      });
+    res.status(400).json({
+      error: 'Client error - Input feild (images?) should not be empty',
+    });
   },
   emailFormat: (res: Response<oError>) => {
     res.status(403).json({ error: 'Email format problem' });
