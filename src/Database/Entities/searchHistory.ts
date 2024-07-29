@@ -11,7 +11,6 @@ import {
 import { User } from './user.js';
 
 @Entity({ name: 'SearchHistory' })
-@Index(['userId'])
 export class SearchHistory extends BaseEntity {
   @PrimaryColumn({ type: 'bigint', unsigned: true, nullable: false })
   userId!: number;
