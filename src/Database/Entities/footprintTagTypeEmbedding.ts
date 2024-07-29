@@ -12,7 +12,7 @@ import { FootprintTagType } from './footprintTagType.js';
 @Entity({ name: 'FootprintEmbedding' })
 export class FootprintTagTypeEmbedding extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  id!: string;
 
   @Column({ type: 'json', nullable: false })
   contentEmbedding!: number[];
