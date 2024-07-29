@@ -51,8 +51,8 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   selfIntro!: string | null;
 
-  @Column({ type: 'int', nullable: true })
-  isActive!: number | null;
+  @Column({ type: 'boolean', default: true })
+  isActive!: boolean;
 
   @Column({
     type: 'datetime',
