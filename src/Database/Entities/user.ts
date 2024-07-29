@@ -38,8 +38,12 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: false })
   avatar!: string;
 
-  @Column({ type: 'int', nullable: false })
-  gender!: number;
+  @Column({
+    type: 'enum',
+    enum: ['male', 'female', 'nonbinary', 'notdisclosed'],
+    nullable: false,
+  })
+  gender!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   phone!: string | null;
@@ -61,7 +65,7 @@ export class User extends BaseEntity {
   footprints?: Relation<Footprint[]>;
 
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
-  links?: Relation<Link[]>;
+  links!: Relation<Link[]>;
 
   @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
   userRoles?: Relation<UserRole[]>;

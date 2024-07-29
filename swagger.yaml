@@ -20,36 +20,72 @@ paths:
             schema:
               type: object
               required:
-              - realName
-              - accountName
-              - email
-              - password
+                - name
+                - lifeRole
+                - gender
+                - birthday
+                - email
+                - password
+                - links
               properties:
-              realName:
-                type: string
-              accountName:
-                type: string
-              email:
-                type: string
-              password:
-                type: string
+                name:
+                  type: string
+                lifeRole:
+                  type: string
+                gender:
+                  type: string
+                  enum:
+                    - male
+                    - female
+                    - nonbinary
+                    - notdisclosed
+                birthday:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                links:
+                  type: array
               example:
-                realName: John Doe
-                accountName: johndoe
+                name: John Doe
+                lifeRole: Student
+                gender: male
+                birthday: "1990-01-01"
                 email: johndoe@example.com
-                password: password123
+                password: mypassword123
+                links: []
       responses:
         '200':
-          description: The spacecraft corresponding to the provided `spacecraftId`
+          description: Sign up successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/LoginUserResponse'
         403:
           $ref: '#/components/errors/EmailExistsError'
+  /user/info:
+    get:
+      tags:
+        - User
+      summary: Get user personal information
+      responses:
+        '200':
+          description: Sign up successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+      security:
+          - bearerAuth: []
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
-    UserResponse:
+    LoginUserResponse:
       type: object
       properties:
         data:
@@ -82,6 +118,30 @@ components:
                 avatar:
                   type: string
                   nullable: true
+    UserInfoResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "15"
+            provider:
+              type: string
+              example: "native"
+            realName:
+              type: string
+              example: "John Doe"
+            accountName:
+              type: string
+              example: "johndoe"
+            email:
+              type: string
+              example: "johndoe@example.com"
+            avatar:
+              type: string
+              nullable: true
   errors:
     EmailExistsError:
       description: Email already exists
