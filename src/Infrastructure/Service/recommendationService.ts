@@ -189,7 +189,5 @@ export const recommendationService = {
       collection_name: 'user_intervals_embedding',
       data: userWeightedIntervalsEmbedding,
     });
-
-    console.log('Insert user data to Milvus is finished.');
   },
 };

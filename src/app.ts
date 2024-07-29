@@ -52,16 +52,6 @@ async function usingMilvusExample() {
   for (const user of fakeUsers) {
     await recommendationService.addUserDataToMilvus(user, 3);
   }
-
-  console.log(fakeUsers[0]);
-
-  const similarUsers = await recommendationService.getSimilarUsers(
-    1,
-    'data scientist',
-    5,
-  );
-
-  console.log(similarUsers);
 }
 
 Database.initialize()
