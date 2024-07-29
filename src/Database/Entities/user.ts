@@ -33,20 +33,20 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', default: 'native' })
   provider!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: false })
   avatar!: string;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', nullable: false })
   gender!: number;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  phone!: string;
+  phone!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  selfIntro!: string;
+  selfIntro!: string | null;
 
   @Column({ type: 'int', nullable: true })
-  isActive!: number;
+  isActive!: number | null;
 
   @Column({
     type: 'datetime',
