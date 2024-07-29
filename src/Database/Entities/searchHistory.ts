@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   ManyToOne,
   Relation,
-  Index,
   Column,
 } from 'typeorm';
 import { User } from './user.js';
