@@ -1,5 +1,5 @@
-import { userService } from '../../../../../Infrastructure/Service/userService.js';
-import { minioService } from '../../../../../Infrastructure/Service/minioService.js';
+import { userService } from '../../../../Infrastructure/Service/userService.js';
+import { minioService } from '../../../../Infrastructure/Service/minioService.js';
 import { getUserInfoRes } from './getUserInfoRes.js';
 import { GetUserInfo } from './Types/api.js';
 

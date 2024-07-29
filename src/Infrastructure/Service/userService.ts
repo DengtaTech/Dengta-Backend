@@ -4,9 +4,9 @@ import { userCredentialRepo } from '../Repository/userCredentialRepo.js';
 import { linkRepo } from '../Repository/linkRepo.js';
 import { EmailExistsError, UserNotFoundError } from '../../Errors/errors.js';
 import { User } from '../../Database/Entities/user.js';
-import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
+import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
-import { Signin } from '../../Application/Features/User/Commands/SignIn/Types/api.js';
+import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
 
 export const userService = {
   signUp: async (

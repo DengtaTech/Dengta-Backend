@@ -1,8 +1,8 @@
-import { userService } from '../../../../../Infrastructure/Service/userService.js';
-import { minioService } from '../../../../../Infrastructure/Service/minioService.js';
+import { userService } from '../../../../Infrastructure/Service/userService.js';
+import { minioService } from '../../../../Infrastructure/Service/minioService.js';
 import { uploadAvatarRes } from './uploadAvatarRes.js';
 import { UploadAvatar } from './Types/api.js';
-import { UploadAvatarError } from '../../../../../Errors/errors.js';
+import { UploadAvatarError } from '../../../../Errors/errors.js';
 
 export const uploadAvatarHandler = {
   handle: async (
@@ -18,7 +18,7 @@ export const uploadAvatarHandler = {
 
     const presignedAvatarUrl =
       await minioService.getPresignedAvatarUrl(filename);
-      
+
     const response = await uploadAvatarRes.customize(
       filename,
       presignedAvatarUrl,

@@ -1,9 +1,9 @@
-import { userService } from '../../../../../Infrastructure/Service/userService.js';
-import { tool } from '../../../../../utils/tool.js';
-import { auth } from '../../../../../utils/jwt.js';
+import { userService } from '../../../../Infrastructure/Service/userService.js';
+import { tool } from '../../../../utils/tool.js';
+import { auth } from '../../../../utils/jwt.js';
 import { signInRes } from './signInRes.js';
 import { Signin } from './Types/api.js';
-import { WrongPasswordError } from '../../../../../Errors/errors.js';
+import { WrongPasswordError } from '../../../../Errors/errors.js';
 
 export const signInHandler = {
   handle: async (

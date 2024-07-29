@@ -1,4 +1,4 @@
-import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
+import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { EntityManager } from 'typeorm';
 export const linkRepo = {

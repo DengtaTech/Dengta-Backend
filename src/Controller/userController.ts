@@ -1,4 +1,4 @@
-import { signUpHandler } from '../Application/Features/User/Commands/SignUp/signUpHandler.js';
+import { signUpHandler } from '../Application/Features/User/SignUp/signUpHandler.js';
 import { Request, Response } from 'express';
 import { tool } from '../utils/tool.js';
 import {
@@ -6,10 +6,10 @@ import {
   InputEmptyError,
   NoTokenError,
 } from '../Errors/errors.js';
-import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
-import { signInHandler } from '../Application/Features/User/Commands/SignIn/signInHandler.js';
-import { uploadAvatarHandler } from '../Application/Features/User/Commands/UploadAvatar/uploadAvatarHandler.js';
-import { getUserInfoHandler } from '../Application/Features/User/Queries/GetUserInfo/getUserInfoHandler.js';
+import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
+import { signInHandler } from '../Application/Features/User/SignIn/signInHandler.js';
+import { uploadAvatarHandler } from '../Application/Features/User/UploadAvatar/uploadAvatarHandler.js';
+import { getUserInfoHandler } from '../Application/Features/User/GetUserInfo/getUserInfoHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
