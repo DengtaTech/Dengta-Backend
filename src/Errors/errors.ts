@@ -29,7 +29,7 @@ export class WrongTokenError extends BaseError {
 
 export class InputEmptyError extends BaseError {
   constructor() {
-    super('Client error - Input field (images?) should not be empty', 400);
+    super('Client error - Input field should not be empty', 400);
   }
 }
 
