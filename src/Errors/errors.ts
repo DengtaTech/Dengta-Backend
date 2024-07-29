@@ -52,6 +52,12 @@ export class EmailFormatError extends BaseError {
   }
 }
 
+export class UploadAvatarError extends BaseError {
+  constructor() {
+    super('Failed to upload avatar', 500);
+  }
+}
+
 export class DatabaseError extends BaseError {
   constructor() {
     super('Database Error', 500);

@@ -8,8 +8,8 @@ import {
 } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/Commands/SignUp/Types/api.js';
 import { signInHandler } from '../Application/Features/User/Commands/SignIn/signInHandler.js';
-import { userService } from '../Infrastructure/Service/userService.js';
-import minioService from '../Infrastructure/Service/avatarService.js';
+import { uploadAvatarHandler } from '../Application/Features/User/Commands/UploadAvatar/uploadAvatarHandler.js';
+import { getUserInfoHandler } from '../Application/Features/User/Queries/GetUserInfo/getUserInfoHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -40,7 +40,7 @@ export const userController = {
     if (!email || !password) {
       throw new InputEmptyError();
     }
-    const response = await signInHandler.handle(email, password,provider);
+    const response = await signInHandler.handle(email, password, provider);
     res.status(200).json(response);
   },
   getUserInfo: async (req: Request, res: Response): Promise<void> => {
@@ -49,14 +49,9 @@ export const userController = {
     }
     const { id: userId } = req.decodedToken;
 
-    const user = await userService.getUserInfo(userId);
-    const presignedAvatarUrl = await minioService.getPresignedAvatarUrl(
-      user.avatar,
-    );
-    if (presignedAvatarUrl) user.avatar = presignedAvatarUrl;
-    res.status(200).json({ data: { ...user } });
+    const response = await getUserInfoHandler.handle(userId);
+    res.status(200).json(response);
   },
-
   uploadAvatar: async (req: Request, res: Response): Promise<void> => {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
@@ -69,18 +64,7 @@ export const userController = {
       res.status(400).send({ message: 'Please upload an image file.' });
       return;
     }
-
-    const filename = await minioService.uploadAvatar(userId, file);
-    if (filename) {
-      await userService.updateAvatar(userId, filename);
-      const presignedAvatarUrl =
-        await minioService.getPresignedAvatarUrl(filename);
-      res.status(200).send({
-        message: 'Avatar uploaded successfully',
-        data: { filename, url: presignedAvatarUrl },
-      });
-    } else {
-      res.status(500).send({ message: 'Failed to upload avatar' });
-    }
+    const response = await uploadAvatarHandler.handle(userId, file);
+    res.status(200).json(response);
   },
 };
