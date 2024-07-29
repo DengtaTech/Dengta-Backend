@@ -1,5 +1,5 @@
 import { Signup } from './Types/api.js';
-import { Dengta } from '../../../../../Types/common.js';
+import { Dengta } from '../../../../Types/common.js';
 
 export const signUpRes = {
   customize: async (

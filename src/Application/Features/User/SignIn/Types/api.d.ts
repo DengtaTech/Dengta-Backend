@@ -1,4 +1,4 @@
-import { User, UserCredential } from './entities';
+import { User, UserCredential } from './entities.ts';
 
 declare namespace Signin {
   type ILink = Pick<Link, 'type' | 'url'>;
