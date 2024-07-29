@@ -10,7 +10,7 @@ services:
       - ETCD_QUOTA_BACKEND_BYTES=4294967296
       - ETCD_SNAPSHOT_COUNT=50000
     volumes:
-      - dengta_milvus_volume:/var/lib/etcd:/etcd
+      - dengta_milvus_etcd_volume:/etcd
     command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
     healthcheck:
       test: ['CMD', 'etcdctl', 'endpoint', 'health']
@@ -28,7 +28,7 @@ services:
       - '9001:9001'
       - '9002:9000'
     volumes:
-      - dengta_milvus_volume:/minio:/minio_data
+      - dengta_milvus_minio_volume:/minio_data
     command: minio server /minio_data --console-address ":9001"
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9002/minio/health/live']
@@ -40,8 +40,6 @@ services:
     container_name: milvus-standalone
     image: milvusdb/milvus:v2.4.6
     command: ['milvus', 'run', 'standalone']
-    security_opt:
-      - seccomp:unconfined
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: minio:9000
