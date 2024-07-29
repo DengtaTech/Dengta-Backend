@@ -2,7 +2,7 @@ import { Database } from '../../Database/data-source.js';
 import { searchHistoryRepo } from '../Repository/searchHistoryRepo.js';
 import { SearchHistoryRetrieve } from '../../Application/Features/SearchHistory/Queries/GetHistory/Types/api.js';
 import { userRepo } from '../Repository/userRepo.js';
-import { WrongTokenError } from '../../Errors/errors.js';
+import { UserNotFoundError } from '../../Errors/errors.js';
 import { SearchHistory } from '../../Database/Entities/searchHistory.js';
 import { Search } from '../../Application/Features/SearchHistory/Commands/Search/Types/api.js';
 import { EntityManager } from 'typeorm';
@@ -18,7 +18,7 @@ export const searchHistoryService = {
           transactionManager,
         );
         if (!checkUserExist) {
-          throw new WrongTokenError();
+          throw new UserNotFoundError();
         }
         const searchHistory = await searchHistoryRepo.getByUserId(
           searchInfoObj.id,
@@ -40,7 +40,7 @@ export const searchHistoryService = {
           transactionManager,
         );
         if (!checkUserExist) {
-          throw new WrongTokenError();
+          throw new UserNotFoundError();
         }
         const clearResult = await searchHistoryRepo.deleteByUserId(
           searchInfoObj.id,
@@ -67,7 +67,7 @@ export const searchHistoryService = {
           transactionManager,
         );
         if (!checkUserExist) {
-          throw new WrongTokenError();
+          throw new UserNotFoundError();
         }
         const newSearchHistory = await searchHistoryRepo.insertNewSearchHistory(
           searchInfo,
