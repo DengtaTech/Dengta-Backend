@@ -1,13 +1,11 @@
-import { User } from "../../../../../Database/Entities/user.js";
-import { GetUserInfo } from "./Types/api.js";
+import { User } from '../../../../../Database/Entities/user.js';
+import { GetUserInfo } from './Types/api.js';
 
 export const getUserInfoRes = {
-  customize: async (
-    user: User
-  ): Promise<GetUserInfo.IGetUserInfoResponse> => {
+  customize: async (user: User): Promise<GetUserInfo.IGetUserInfoResponse> => {
     const response: GetUserInfo.IGetUserInfoResponse = {
       data: {
-        user
+        user,
       },
     };
     return response;

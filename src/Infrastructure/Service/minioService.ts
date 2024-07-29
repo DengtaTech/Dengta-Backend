@@ -1,4 +1,7 @@
-import { minioClient, avatarBucket } from '../../Database/FileServer/minioClient.js';
+import {
+  minioClient,
+  avatarBucket,
+} from '../../Database/FileServer/minioClient.js';
 
 export const minioService = {
   uploadAvatar: async (
@@ -39,5 +42,4 @@ export const minioService = {
       return null;
     }
   },
-
-}
+};

@@ -1,4 +1,4 @@
-import { UploadAvatar } from "./Types/api.js";
+import { UploadAvatar } from './Types/api.js';
 
 export const uploadAvatarRes = {
   customize: async (

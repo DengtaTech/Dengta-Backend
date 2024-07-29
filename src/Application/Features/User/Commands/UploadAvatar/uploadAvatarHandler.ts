@@ -9,15 +9,15 @@ export const uploadAvatarHandler = {
     userId: string,
     file: Express.Multer.File,
   ): Promise<UploadAvatar.IUploadAvatarResponse> => {
-
     const filename = await minioService.uploadAvatar(userId, file);
     if (!filename) {
-        throw new UploadAvatarError();
+      throw new UploadAvatarError();
     }
 
     await userService.updateAvatar(userId, filename);
 
-    const presignedAvatarUrl = await minioService.getPresignedAvatarUrl(filename);
+    const presignedAvatarUrl =
+      await minioService.getPresignedAvatarUrl(filename);
     const response = await uploadAvatarRes.customize(
       filename,
       presignedAvatarUrl as string,
