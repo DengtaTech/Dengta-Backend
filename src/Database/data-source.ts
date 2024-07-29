@@ -28,7 +28,7 @@ export const Database = new DataSource({
   port: MYSQL_PORT ? Number(MYSQL_PORT) : undefined,
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE,
-  synchronize: false,
+  synchronize: true,
   entities: [
     User,
     Footprint,
