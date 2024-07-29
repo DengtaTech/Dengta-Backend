@@ -62,6 +62,7 @@ Database.initialize()
 
     await initMilvus(true);
     await usingMilvusExample();
+    console.log('Milvus initialized successfully');
 
     app.listen(port, () => {
       console.log(`App listening on port: ${port}`);

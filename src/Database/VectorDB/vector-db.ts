@@ -7,7 +7,6 @@ const dropCollection = async () => {
     await milvusClient.dropCollection({
       collection_name: 'user_intervals_embedding',
     });
-    console.log('Drop collection is finished');
   } catch (error) {
     console.error('Failed to drop collection:', error);
   }
@@ -49,8 +48,6 @@ const createCollection = async () => {
         },
       ],
     });
-
-    console.log('Create collection is finished.');
   } catch (error) {
     console.error('Failed to create collection:', error);
   }
