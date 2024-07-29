@@ -47,9 +47,9 @@ services:
       - dengta_milvus_volume:/var/lib/milvus
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9091/healthz']
-      interval: 30s
+      interval: 10s
       start_period: 90s
-      timeout: 20s
+      timeout: 5s
       retries: 3
     ports:
       - '${MILVUS_GRPC_PORT}:19530'
