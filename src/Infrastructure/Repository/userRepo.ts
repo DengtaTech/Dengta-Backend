@@ -40,4 +40,53 @@ export const userRepo = {
       throw error;
     }
   },
+  findByNameAndTag: async (
+    keywords: string,
+    transactionManager?: EntityManager,
+  ): Promise<User[]> => {
+    try {
+      if (transactionManager) {
+        const users = await transactionManager
+          .getRepository(User)
+          .createQueryBuilder('user')
+          .leftJoinAndSelect('user.profileHashTags', 'user_hashTag')
+          .leftJoinAndSelect('user_hashTag.profileTagType', 'hashTag')
+          .where(
+            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+          )
+          .orWhere(
+            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+          )
+          .addSelect(
+            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            'relevance_score',
+          )
+          .orderBy('relevance_score', 'DESC')
+          .setParameter('keywords', keywords)
+          .getMany();
+        return users;
+      } else {
+        const users = await User.createQueryBuilder('user')
+          .leftJoinAndSelect('user.profileHashTags', 'user_hashTag')
+          .leftJoinAndSelect('user_hashTag.profileTagType', 'hashTag')
+          .where(
+            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+          )
+          .orWhere(
+            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+          )
+          .addSelect(
+            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            'relevance_score',
+          )
+          .orderBy('relevance_score', 'DESC')
+          .setParameter('keywords', keywords)
+          .getMany();
+        return users;
+      }
+    } catch (error) {
+      console.error('Error finding user by name and tag:');
+      throw error;
+    }
+  },
 };

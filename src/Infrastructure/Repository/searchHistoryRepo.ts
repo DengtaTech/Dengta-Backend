@@ -1,4 +1,4 @@
-import { SearchHistoryRetrieve } from '../../Application/Features/SearchHistory/Queries/GetHistory/Types/api.js';
+import { Search } from '../../Application/Features/SearchHistory/Commands/Search/Types/api.js';
 import { SearchHistory } from '../../Database/Entities/searchHistory.js';
 import {
   EntityManager,
@@ -8,28 +8,6 @@ import {
 } from 'typeorm';
 
 export const searchHistoryRepo = {
-  insertNewSearchHistory: async (
-    user: SearchHistoryRetrieve.IUserDto,
-    searchContent: string,
-    transactionManager?: EntityManager,
-  ): Promise<SearchHistory> => {
-    try {
-      const newSearchHistory = new SearchHistory();
-      newSearchHistory.userId = user.id;
-      newSearchHistory.content = searchContent;
-      if (transactionManager) {
-        const savedSearchHistory =
-          await transactionManager.save(newSearchHistory);
-        return savedSearchHistory;
-      } else {
-        const savedSearchHistory = await newSearchHistory.save();
-        return savedSearchHistory;
-      }
-    } catch (error) {
-      console.error('Failed to save search history:');
-      throw error;
-    }
-  },
   getByUserId: async (
     userId: number,
     topKRecent: number,
@@ -76,6 +54,29 @@ export const searchHistoryRepo = {
       }
     } catch (error) {
       console.error('Error deleting search history by user id:');
+      throw error;
+    }
+  },
+  insertNewSearchHistory: async (
+    { userId, searchContent }: Search.ISearchInfoDto,
+    transactionManager?: EntityManager,
+  ): Promise<SearchHistory> => {
+    try {
+      const newSearchHistory = new SearchHistory();
+      newSearchHistory.userId = userId;
+      newSearchHistory.content = searchContent;
+      if (transactionManager) {
+        const savedSearchHistory = await transactionManager.save(
+          newSearchHistory,
+          { reload: false }, // https://github.com/typeorm/typeorm/issues/7643
+        );
+        return savedSearchHistory;
+      } else {
+        const savedSearchHistory = await newSearchHistory.save();
+        return savedSearchHistory;
+      }
+    } catch (error) {
+      console.error('Failed to save search history:');
       throw error;
     }
   },

@@ -17,4 +17,6 @@ router.delete(
   wrapAsync(searchHistoryController.clearSearchHistory),
 );
 
+router.post('/', auth.verifyToken, wrapAsync(searchHistoryController.search));
+
 export default router;

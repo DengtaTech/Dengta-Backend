@@ -5,6 +5,7 @@ import {
   BaseEntity,
   OneToMany,
   Relation,
+  Index,
 } from 'typeorm';
 import { ProfileHashTag } from './profileHashTag.js';
 
@@ -14,6 +15,7 @@ export class ProfileTagType extends BaseEntity {
   id!: number;
 
   @Column({ type: 'varchar' })
+  @Index({ fulltext: true, parser: 'ngram' })
   content!: string;
 
   @Column({

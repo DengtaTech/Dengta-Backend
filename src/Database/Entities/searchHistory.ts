@@ -6,6 +6,7 @@ import {
   ManyToOne,
   Relation,
   Index,
+  Column,
 } from 'typeorm';
 import { User } from './user.js';
 
@@ -15,10 +16,10 @@ export class SearchHistory extends BaseEntity {
   @PrimaryColumn({ type: 'bigint', unsigned: true, nullable: false })
   userId!: number;
 
-  @PrimaryColumn({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false })
   content!: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ primary: true })
   searchAt!: Date;
 
   @ManyToOne(() => User)

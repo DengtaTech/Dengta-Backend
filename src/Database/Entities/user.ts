@@ -6,6 +6,7 @@ import {
   OneToMany,
   Relation,
   OneToOne,
+  Index,
 } from 'typeorm';
 import { Footprint } from './footprint.js';
 import { UserCredential } from './userCredential.js';
@@ -22,6 +23,7 @@ export class User extends BaseEntity {
   id!: number;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
+  @Index({ fulltext: true, parser: 'ngram' })
   name!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
