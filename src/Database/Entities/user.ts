@@ -65,7 +65,7 @@ export class User extends BaseEntity {
   footprints?: Relation<Footprint[]>;
 
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
-  links!: Relation<Link[]>;
+  links?: Relation<Link[]>;
 
   @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
   userRoles?: Relation<UserRole[]>;
