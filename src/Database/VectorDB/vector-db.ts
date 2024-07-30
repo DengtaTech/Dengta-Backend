@@ -81,7 +81,7 @@ const loadCollection = async () => {
 
 const initMilvus = async (resetDB: boolean) => {
   milvusClient = new MilvusClient({
-    address: `${process.env.MILVUS_HOST}:${process.env.MILVUS_PORT}`,
+    address: `${process.env.MILVUS_HOST}:${process.env.MILVUS_GRPC_PORT}`,
   });
 
   const hasCollection = await milvusClient.hasCollection({
