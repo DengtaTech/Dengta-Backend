@@ -104,7 +104,7 @@ const initMilvus = async (resetDB: boolean) => {
   return milvusClient;
 };
 
-async function logAllMilvusData() {
+async function getAllMilvusData() {
   try {
     const milvusClient = getMilvusClient();
     const res = await milvusClient.query({
@@ -113,7 +113,7 @@ async function logAllMilvusData() {
       output_fields: ['id', 'userId', 'startFootprintId', 'endFootprintId'],
     });
 
-    console.log('Milvus data:', res.data);
+    return res.data;
   } catch (error) {
     console.error('Failed to log Milvus data:', error);
   }
@@ -127,4 +127,4 @@ const getMilvusClient = () => {
   return milvusClient;
 };
 
-export { initMilvus, getMilvusClient, logAllMilvusData };
+export { initMilvus, getMilvusClient, getAllMilvusData };
