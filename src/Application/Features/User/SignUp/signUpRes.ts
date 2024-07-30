@@ -1,9 +1,10 @@
-import { Signup } from "./Types/api.js";
+import { Signup } from './Types/api.js';
+import { Dengta } from '../../../../Types/common.js';
 
 export const signUpRes = {
   customize: async (
-    result: Signup.IUserDto,
-    accessTokenInfoObj: Signup.IJwtTokenObject,
+    result: Signup.ISignUpDto,
+    accessTokenInfoObj: Dengta.IJwtTokenObject,
   ): Promise<Signup.ISignUpResponse> => {
     const response: Signup.ISignUpResponse = {
       data: {
