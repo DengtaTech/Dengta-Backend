@@ -115,7 +115,7 @@ async function getAllMilvusData() {
 
     return res.data;
   } catch (error) {
-    console.error('Failed to log Milvus data:', error);
+    console.error('Failed to get Milvus data:', error);
   }
 }
 
