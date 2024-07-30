@@ -12,7 +12,7 @@ export const recommendationService = {
     return sentences;
   },
   getSimilarUsers: async (
-    userId: number,
+    userId: string,
     goal: string,
     limit: number,
   ): Promise<GetSimilarUser.ISimilarUser[]> => {
@@ -32,7 +32,7 @@ export const recommendationService = {
     const milvusClient = getMilvusClient();
     const res = await milvusClient.search({
       collection_name: 'user_intervals_embedding',
-      filter: 'userId != ' + userId,
+      filter: `userId != '${userId}'`,
       group_by_field: 'userId',
       vector: mixedEmbedding,
       limit,
@@ -62,12 +62,12 @@ export const recommendationService = {
     return data.embeddings;
   },
   getLastIntervelEmbeddingByUserId: async (
-    userId: number,
+    userId: string,
   ): Promise<number[]> => {
     const milvusClient = getMilvusClient();
     const res = await milvusClient.query({
       collection_name: 'user_intervals_embedding',
-      filter: 'userId == ' + userId,
+      filter: `userId == '${userId}'`,
       output_fields: ['endFootprintId', 'embedding'],
     });
 

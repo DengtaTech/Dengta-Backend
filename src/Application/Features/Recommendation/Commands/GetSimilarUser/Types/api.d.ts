@@ -1,10 +1,10 @@
 declare namespace GetSimilarUser {
   interface IGetSimilarUserReq {
-    userId: number;
+    userId: string;
     goal: string;
   }
   interface ISimilarUser {
-    userId: number;
+    userId: string;
     similarity: number;
     startFootprintId: string;
     endFootprintId: string;
@@ -18,36 +18,37 @@ declare namespace GetSimilarUser {
     embeddings: number[][];
   }
   interface IEmbeddingFootprint {
-    footPrintId: number;
+    footPrintId: string;
     title: string;
     tags: string[];
     description: string;
   }
   interface IEmbeddingUserData {
-    userId: number;
+    userId: string;
     selfIntro: string;
     goal: string;
     profileTags: string[];
     footPrints: IEmbeddingFootprint[];
   }
   interface IEmbeddingFootprintVector {
-    footPrintId: number;
+    footPrintId: string;
     title: number[];
     tags: number[][];
     description: number[];
   }
   interface IEmbeddingUserVector {
-    userId: number;
+    userId: string;
     selfIntro: number[];
     goal: number[];
     profileTags: number[][];
     footprints: IEmbeddingFootprintVector[];
   }
   interface IIntervalEmbedding {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
-    userId: number;
-    startFootprintId: number;
-    endFootprintId: number;
+    userId: string;
+    startFootprintId: string;
+    endFootprintId: string;
     embedding: number[];
   }
 }

@@ -28,17 +28,20 @@ const createCollection = async () => {
         {
           name: 'userId',
           description: 'User ID',
-          data_type: DataType.Int64,
+          data_type: DataType.VarChar,
+          max_length: 64,
         },
         {
           name: 'startFootprintId',
           description: 'Start Footprint ID',
-          data_type: DataType.Int64,
+          data_type: DataType.VarChar,
+          max_length: 64,
         },
         {
           name: 'endFootprintId',
           description: 'End Footprint ID',
-          data_type: DataType.Int64,
+          data_type: DataType.VarChar,
+          max_length: 64,
         },
         {
           name: 'embedding',
@@ -106,7 +109,7 @@ async function logAllMilvusData() {
     const milvusClient = getMilvusClient();
     const res = await milvusClient.query({
       collection_name: 'user_intervals_embedding',
-      filter: 'userId > 0',
+      filter: "userId != '0'",
       output_fields: ['id', 'userId', 'startFootprintId', 'endFootprintId'],
     });
 
