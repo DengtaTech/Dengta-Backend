@@ -16,6 +16,7 @@ import YAML from 'yaml';
 // using redis example
 import { User as CacheUser } from './Database/Cache/Entities/user.js';
 import { errorHandler } from './Middlewares/errorHandler.js';
+import { multerErrorHandling } from './Middlewares/multer.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
@@ -28,6 +29,7 @@ app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
 });
 
+app.use(multerErrorHandling);
 app.use(errorHandler);
 
 const file = fs.readFileSync('./swagger.yaml', 'utf8');
