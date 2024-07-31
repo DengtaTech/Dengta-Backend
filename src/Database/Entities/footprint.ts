@@ -7,10 +7,12 @@ import {
   JoinColumn,
   Relation,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { User } from './user.js';
 import { FootprintReaction } from './footprintReaction.js';
 import { FootprintHashTag } from './footprintHashTag.js';
+import { FootprintEmbedding } from './footprintEmbedding.js';
 
 @Entity({ name: 'Footprints' })
 export class Footprint extends BaseEntity {
@@ -65,4 +67,9 @@ export class Footprint extends BaseEntity {
     { cascade: true },
   )
   footprintHashTags?: Relation<FootprintHashTag[]>;
+
+  @OneToOne(() => FootprintEmbedding, (embedding) => embedding.footprint, {
+    onDelete: 'CASCADE',
+  })
+  embedding?: Relation<FootprintEmbedding>;
 }

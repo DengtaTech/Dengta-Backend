@@ -1,7 +1,13 @@
 import express, { Request, Response } from 'express';
 import 'reflect-metadata';
 import { Database } from './Database/data-source.js';
+import { initMilvus } from './Database/VectorDB/vector-db.js';
+import fakeUsers from './Test/mockData/fakeUsers.json' assert { type: 'json' };
+
+import { recommendationService } from './Infrastructure/Service/recommendationService.js';
+
 import userRouter from './Routers/userRouter.js';
+import recommendationRouter from './Routers/recommendationRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
 import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
@@ -17,6 +23,7 @@ const port = process.env.EXPRESS_PORT;
 
 app.use(express.json());
 app.use('/api/1.0/user', userRouter);
+app.use('/api/1.0/recommendation', recommendationRouter);
 
 app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
@@ -43,11 +50,22 @@ async function usingRedisExample() {
   }
 }
 
+async function usingMilvusExample() {
+  for (const user of fakeUsers) {
+    await recommendationService.addUserDataToMilvus(user, 3);
+  }
+}
+
 Database.initialize()
-  .then(() => {
+  .then(async () => {
     initDbCache();
     console.log('all database initialized successfully');
     usingRedisExample();
+
+    await initMilvus(true);
+    await usingMilvusExample();
+    console.log('Milvus initialized successfully');
+
     app.listen(port, () => {
       console.log(`App listening on port: ${port}`);
     });

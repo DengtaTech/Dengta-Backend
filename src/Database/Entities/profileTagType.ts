@@ -5,8 +5,10 @@ import {
   BaseEntity,
   OneToMany,
   Relation,
+  OneToOne,
 } from 'typeorm';
 import { ProfileHashTag } from './profileHashTag.js';
+import { ProfileTagTypeEmbedding } from './profileTagTypeEmbedding.js';
 
 @Entity({ name: 'ProfileTagType' })
 export class ProfileTagType extends BaseEntity {
@@ -29,4 +31,11 @@ export class ProfileTagType extends BaseEntity {
     { cascade: true },
   )
   profileHashTags?: Relation<ProfileHashTag[]>;
+
+  @OneToOne(
+    () => ProfileTagTypeEmbedding,
+    (profileTagTypeEmbedding) => profileTagTypeEmbedding.profileTagType,
+    { cascade: true },
+  )
+  embedding?: Relation<ProfileTagTypeEmbedding>;
 }
