@@ -5,6 +5,7 @@ import {
   BaseEntity,
   Relation,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { Footprint } from './footprint.js';
@@ -23,5 +24,6 @@ export class FootprintEmbedding extends BaseEntity {
   @OneToOne(() => Footprint, (footprint) => footprint.embedding, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'footprintId' })
   footprint?: Relation<Footprint>;
 }

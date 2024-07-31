@@ -8,10 +8,10 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { FootprintTagType } from './footprintTagType.js';
+import { ProfileTagType } from './profileTagType.js';
 
-@Entity({ name: 'FootprintEmbedding' })
-export class FootprintTagTypeEmbedding extends BaseEntity {
+@Entity({ name: 'ProfileTagType' })
+export class ProfileTagTypeEmbedding extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id!: string;
 
@@ -19,12 +19,12 @@ export class FootprintTagTypeEmbedding extends BaseEntity {
   contentEmbedding!: number[];
 
   @OneToOne(
-    () => FootprintTagType,
-    (footprintTagType) => footprintTagType.embedding,
+    () => ProfileTagType,
+    (profileTagType) => profileTagType.embedding,
     {
       onDelete: 'CASCADE',
     },
   )
-  @JoinColumn({ name: 'footprintTagTypeId' })
-  footprintTagType?: Relation<FootprintTagType>;
+  @JoinColumn({ name: 'profileTagTypeId' })
+  profileTagType?: Relation<ProfileTagType>;
 }

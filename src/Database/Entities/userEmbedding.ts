@@ -5,6 +5,7 @@ import {
   BaseEntity,
   Relation,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { User } from './user.js';
@@ -15,10 +16,11 @@ export class UserEmbedding extends BaseEntity {
   id!: string;
 
   @Column({ type: 'json', nullable: false })
-  profileEmbedding!: number[];
+  selfIntroEmbedding!: number[];
 
   @OneToOne(() => User, (user) => user.selfIntroEmbedding, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'userId' })
   user?: Relation<User>;
 }
