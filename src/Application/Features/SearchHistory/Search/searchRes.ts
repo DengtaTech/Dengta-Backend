@@ -1,4 +1,4 @@
-import { User } from '../../../../../Database/Entities/user.js';
+import { User } from '../../../../Database/Entities/user.js';
 import { Search } from './Types/api.js';
 
 export const searchRes = {

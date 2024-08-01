@@ -1,4 +1,4 @@
-import { searchHistoryService } from '../../../../../Infrastructure/Service/searchHistoryService.js';
+import { searchHistoryService } from '../../../../Infrastructure/Service/searchHistoryService.js';
 import { SearchHistoryRetrieve } from './Types/api.js';
 
 export const getSearchHistoryHandler = {

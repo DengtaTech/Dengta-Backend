@@ -1,4 +1,4 @@
-import { searchHistoryService } from '../../../../../Infrastructure/Service/searchHistoryService.js';
+import { searchHistoryService } from '../../../../Infrastructure/Service/searchHistoryService.js';
 import { SearchHistoryClear } from './Types/api.js';
 
 export const clearSearchHistoryHandler = {

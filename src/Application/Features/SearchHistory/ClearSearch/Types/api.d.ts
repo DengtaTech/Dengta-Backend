@@ -1,4 +1,4 @@
-import { User } from '../../../../../../Database/Entities/user.ts';
+import { User } from '../../../../../Database/Entities/user.ts';
 
 declare namespace SearchHistoryClear {
   interface ISearchHistoryClearReq {

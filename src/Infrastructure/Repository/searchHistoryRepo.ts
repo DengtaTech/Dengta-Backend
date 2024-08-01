@@ -1,4 +1,4 @@
-import { Search } from '../../Application/Features/SearchHistory/Commands/Search/Types/api.js';
+import { Search } from '../../Application/Features/SearchHistory/Search/Types/api.js';
 import { SearchHistory } from '../../Database/Entities/searchHistory.js';
 import {
   EntityManager,

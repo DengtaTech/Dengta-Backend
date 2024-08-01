@@ -1,4 +1,4 @@
-import { searchHistoryService } from '../../../../../Infrastructure/Service/searchHistoryService.js';
+import { searchHistoryService } from '../../../../Infrastructure/Service/searchHistoryService.js';
 import { Search } from './Types/api.js';
 import { searchRes } from './searchRes.js';
 

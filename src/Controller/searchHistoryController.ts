@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { getSearchHistoryHandler } from '../Application/Features/SearchHistory/Queries/GetHistory/GetHistoryHandler.js';
+import { getSearchHistoryHandler } from '../Application/Features/SearchHistory/GetHistory/GetHistoryHandler.js';
 import {
   InputEmptyError,
   NoTokenError,
   WrongTokenError,
 } from '../Errors/errors.js';
-import { clearSearchHistoryHandler } from '../Application/Features/SearchHistory/Commands/ClearSearch/clearHistoryHandler.js';
-import { searchHandler } from '../Application/Features/SearchHistory/Commands/Search/searchHandler.js';
+import { clearSearchHistoryHandler } from '../Application/Features/SearchHistory/ClearSearch/clearHistoryHandler.js';
+import { searchHandler } from '../Application/Features/SearchHistory/Search/searchHandler.js';
 
 export const searchHistoryController = {
   getSearchHistory: async (req: Request, res: Response): Promise<void> => {

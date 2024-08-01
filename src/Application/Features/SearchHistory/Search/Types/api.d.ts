@@ -1,6 +1,6 @@
-import { Link } from '../../../../../../Database/Entities/link.ts';
-import { ProfileHashTag } from '../../../../../../Database/Entities/profileHashTag.ts';
-import { User } from '../../../../../../Database/Entities/user.ts';
+import { Link } from '../../../../../Database/Entities/link.ts';
+import { ProfileHashTag } from '../../../../../Database/Entities/profileHashTag.ts';
+import { User } from '../../../../../Database/Entities/user.ts';
 
 declare namespace Search {
   interface ISearchReq {

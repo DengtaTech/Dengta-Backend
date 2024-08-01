@@ -1,9 +1,9 @@
 import { Database } from '../../Database/data-source.js';
 import { searchHistoryRepo } from '../Repository/searchHistoryRepo.js';
-import { SearchHistoryRetrieve } from '../../Application/Features/SearchHistory/Queries/GetHistory/Types/api.js';
+import { SearchHistoryRetrieve } from '../../Application/Features/SearchHistory/GetHistory/Types/api.js';
 import { userRepo } from '../Repository/userRepo.js';
 import { UserNotFoundError } from '../../Errors/errors.js';
-import { Search } from '../../Application/Features/SearchHistory/Commands/Search/Types/api.js';
+import { Search } from '../../Application/Features/SearchHistory/Search/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 
 export const searchHistoryService = {
