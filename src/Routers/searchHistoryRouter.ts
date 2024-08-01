@@ -1,22 +1,22 @@
 import express from 'express';
 import { searchHistoryController } from '../Controller/searchHistoryController.js';
 import wrapAsync from '../utils/wrapAsync.js';
-import { verifyToken } from '../Middlewares/auth.js';
+import { jwtAuthentication } from '../Middlewares/auth.js';
 
 const router = express.Router();
 
 router.get(
   '/',
-  verifyToken,
+  jwtAuthentication,
   wrapAsync(searchHistoryController.getSearchHistory),
 );
 
 router.delete(
   '/',
-  verifyToken,
+  jwtAuthentication,
   wrapAsync(searchHistoryController.clearSearchHistory),
 );
 
-router.post('/', verifyToken, wrapAsync(searchHistoryController.search));
+router.post('/', jwtAuthentication, wrapAsync(searchHistoryController.search));
 
 export default router;

@@ -1,4 +1,4 @@
-import { recommendationService } from '../../../../../Infrastructure/Service/recommendationService.js';
+import { recommendationService } from '../../../../Infrastructure/Service/recommendationService.js';
 import { getSimilarUserRes } from './getSimilarUserRes.js';
 
 export const getSimilarUserHandler = {

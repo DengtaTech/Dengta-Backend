@@ -36,6 +36,7 @@ export const userController = {
     res.status(200).json(response);
   },
   signIn: async (req: Request, res: Response): Promise<void> => {
+
     const { provider, email, password } = req.body;
     if (!email || !password) {
       throw new InputEmptyError();
