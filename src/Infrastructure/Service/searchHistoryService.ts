@@ -10,26 +10,15 @@ export const searchHistoryService = {
   getSearchHistory: async (
     searchInfoObj: SearchHistoryRetrieve.IUserDto,
   ): Promise<SearchHistoryRetrieve.ISearchHistoryDto> => {
-    return Database.transaction(async (transactionManager) => {
-      try {
-        const checkUserExist = await userRepo.findById(
-          searchInfoObj.id,
-          transactionManager,
-        );
-        if (!checkUserExist) {
-          throw new UserNotFoundError();
-        }
-        const searchHistory = await searchHistoryRepo.getByUserId(
-          searchInfoObj.id,
-          15,
-          transactionManager,
-        );
-        return searchHistory.map((hist) => hist.content);
-      } catch (error) {
-        console.error('Error in DB ->', error);
-        throw error;
-      }
-    });
+    const checkUserExist = await userRepo.findById(searchInfoObj.id);
+    if (!checkUserExist) {
+      throw new UserNotFoundError();
+    }
+    const searchHistory = await searchHistoryRepo.getByUserId(
+      searchInfoObj.id,
+      15,
+    );
+    return searchHistory.map((hist) => hist.content);
   },
   clearSearchHistory: async (searchInfoObj: SearchHistoryRetrieve.IUserDto) => {
     return Database.transaction(async (transactionManager) => {
@@ -52,9 +41,7 @@ export const searchHistoryService = {
       }
     });
   },
-  search: async (
-    searchInfoObj: Search.ISearchInfoDto
-  ): Promise<User[]> => {
+  search: async (searchInfoObj: Search.ISearchInfoDto): Promise<User[]> => {
     return Database.transaction(async (transactionManager) => {
       try {
         await searchHistoryRepo.insertNewSearchHistory(

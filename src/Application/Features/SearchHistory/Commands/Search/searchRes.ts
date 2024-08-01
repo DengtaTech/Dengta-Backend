@@ -1,6 +1,5 @@
-import { User } from "../../../../../Database/Entities/user.js";
-import { Search } from "./Types/api.js";
-
+import { User } from '../../../../../Database/Entities/user.js';
+import { Search } from './Types/api.js';
 
 export const searchRes = {
   customize: async (

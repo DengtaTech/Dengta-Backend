@@ -102,7 +102,7 @@ export class User extends BaseEntity {
     cascade: true,
   })
   selfIntroEmbedding?: Relation<UserEmbedding>;
-  
+
   @OneToMany(() => SearchHistory, (history) => history.user, { cascade: true })
   searchHistories?: Relation<SearchHistory[]>;
 }

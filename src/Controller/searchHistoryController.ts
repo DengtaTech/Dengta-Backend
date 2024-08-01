@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { getSearchHistoryHandler } from '../Application/Features/SearchHistory/Queries/GetHistory/GetHistoryHandler.js';
-import { InputEmptyError, NoTokenError, WrongTokenError } from '../Errors/errors.js';
+import {
+  InputEmptyError,
+  NoTokenError,
+  WrongTokenError,
+} from '../Errors/errors.js';
 import { clearSearchHistoryHandler } from '../Application/Features/SearchHistory/Commands/ClearSearch/clearHistoryHandler.js';
 import { searchHandler } from '../Application/Features/SearchHistory/Commands/Search/searchHandler.js';
 
