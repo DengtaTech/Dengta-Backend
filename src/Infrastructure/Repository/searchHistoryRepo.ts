@@ -1,4 +1,4 @@
-import { Search } from '../../Application/Features/SearchHistory/Commands/Search/Types/api.js';
+import { Search } from '../../Application/Features/SearchHistory/Search/Types/api.js';
 import { SearchHistory } from '../../Database/Entities/searchHistory.js';
 import {
   EntityManager,
@@ -9,7 +9,7 @@ import {
 
 export const searchHistoryRepo = {
   getByUserId: async (
-    userId: number,
+    userId: string,
     topKRecent: number,
     transactionManager?: EntityManager,
   ): Promise<SearchHistory[]> => {
@@ -35,7 +35,7 @@ export const searchHistoryRepo = {
     }
   },
   deleteByUserId: async (
-    userId: number,
+    userId: string,
     transactionManager?: EntityManager,
   ) => {
     try {
@@ -60,20 +60,18 @@ export const searchHistoryRepo = {
   insertNewSearchHistory: async (
     { userId, searchContent }: Search.ISearchInfoDto,
     transactionManager?: EntityManager,
-  ): Promise<SearchHistory> => {
+  ): Promise<void> => {
     try {
       const newSearchHistory = new SearchHistory();
       newSearchHistory.userId = userId;
       newSearchHistory.content = searchContent;
       if (transactionManager) {
-        const savedSearchHistory = await transactionManager.save(
+        await transactionManager.save(
           newSearchHistory,
           { reload: false }, // https://github.com/typeorm/typeorm/issues/7643
         );
-        return savedSearchHistory;
       } else {
-        const savedSearchHistory = await newSearchHistory.save();
-        return savedSearchHistory;
+        await newSearchHistory.save();
       }
     } catch (error) {
       console.error('Failed to save search history:');

@@ -1,4 +1,4 @@
-import { Signup } from '../../Application/Features/User/Commands/SignUp/Types/api.js';
+import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { EntityManager } from 'typeorm';
 export const userRepo = {
@@ -22,7 +22,7 @@ export const userRepo = {
     }
   },
   findById: async (
-    userId: number,
+    userId: string,
     transactionManager?: EntityManager,
   ): Promise<User | null> => {
     try {

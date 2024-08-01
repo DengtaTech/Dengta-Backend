@@ -15,12 +15,13 @@ import { Followship } from './followship.js';
 import { ProfileHashTag } from './profileHashTag.js';
 import { FootprintReaction } from './footprintReaction.js';
 import { Link } from './link.js';
+import { UserEmbedding } from './userEmbedding.js';
 import { SearchHistory } from './searchHistory.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  id!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   @Index({ fulltext: true, parser: 'ngram' })
@@ -96,6 +97,11 @@ export class User extends BaseEntity {
     cascade: true,
   })
   userCredential?: Relation<UserCredential>;
+
+  @OneToOne(() => UserEmbedding, (userEmbedding) => userEmbedding.user, {
+    cascade: true,
+  })
+  selfIntroEmbedding?: Relation<UserEmbedding>;
 
   @OneToMany(() => SearchHistory, (history) => history.user, { cascade: true })
   searchHistories?: Relation<SearchHistory[]>;

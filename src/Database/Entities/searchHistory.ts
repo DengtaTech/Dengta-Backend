@@ -12,7 +12,7 @@ import { User } from './user.js';
 @Entity({ name: 'SearchHistory' })
 export class SearchHistory extends BaseEntity {
   @PrimaryColumn({ type: 'bigint', unsigned: true, nullable: false })
-  userId!: number;
+  userId!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   content!: string;

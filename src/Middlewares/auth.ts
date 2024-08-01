@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import { NoTokenError } from '../Errors/errors.js';
+import { isTJwtTokenPayload } from '../utils/jwt.js';
 const { TokenExpiredError, NotBeforeError, JsonWebTokenError } = jwt;
 
-export const verifyToken = async (
+export const jwtAuthentication = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -18,7 +19,11 @@ export const verifyToken = async (
       pureToken,
       process.env.JWT_SECRET as string,
     );
-    req.body.decodedToken = decodedToken;
+    if (isTJwtTokenPayload(decodedToken)) {
+      req.decodedToken = decodedToken;
+    } else {
+      throw new JsonWebTokenError('Invalid token');
+    }
     next();
   } catch (err) {
     if (err instanceof NoTokenError) {

@@ -12,6 +12,10 @@ import { FootprintHashTag } from './Entities/footprintHashTag.js';
 import { ReactionType } from './Entities/reactionType.js';
 import { FootprintReaction } from './Entities/footprintReaction.js';
 import { Link } from './Entities/link.js';
+import { FootprintEmbedding } from './Entities/footprintEmbedding.js';
+import { FootprintTagTypeEmbedding } from './Entities/footprintTagTypeEmbedding.js';
+import { UserEmbedding } from './Entities/userEmbedding.js';
+import { ProfileTagTypeEmbedding } from './Entities/profileTagTypeEmbedding.js';
 import { SearchHistory } from './Entities/searchHistory.js';
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
@@ -41,6 +45,10 @@ export const Database = new DataSource({
     ReactionType,
     FootprintReaction,
     Link,
+    FootprintEmbedding,
+    FootprintTagTypeEmbedding,
+    UserEmbedding,
+    ProfileTagTypeEmbedding,
     SearchHistory,
   ],
 });
