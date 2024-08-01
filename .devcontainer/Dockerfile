@@ -7,7 +7,7 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y bash curl sudo ncat \
     # -sLf --> Without the -1 option, curl is free to negotiate HTTP/2 if it's available, which can provide performance benefits such as reduced latency and header compression
     && curl -sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' \
-       | bash \
+    | bash \
     && apt-get update \
     && apt-get install -y infisical \
     && rm -rf /var/lib/apt/lists/*
@@ -22,4 +22,4 @@ COPY socat_cache /etc/init.d/socat_cache
 
 USER node
 
-EXPOSE 3000
+EXPOSE 3001

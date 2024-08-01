@@ -16,6 +16,7 @@ import { FootprintEmbedding } from './Entities/footprintEmbedding.js';
 import { FootprintTagTypeEmbedding } from './Entities/footprintTagTypeEmbedding.js';
 import { UserEmbedding } from './Entities/userEmbedding.js';
 import { ProfileTagTypeEmbedding } from './Entities/profileTagTypeEmbedding.js';
+import { SearchHistory } from './Entities/searchHistory.js';
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
@@ -48,5 +49,6 @@ export const Database = new DataSource({
     FootprintTagTypeEmbedding,
     UserEmbedding,
     ProfileTagTypeEmbedding,
+    SearchHistory,
   ],
 });

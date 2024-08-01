@@ -6,6 +6,7 @@ import {
   OneToMany,
   Relation,
   OneToOne,
+  Index,
 } from 'typeorm';
 import { Footprint } from './footprint.js';
 import { UserCredential } from './userCredential.js';
@@ -15,6 +16,7 @@ import { ProfileHashTag } from './profileHashTag.js';
 import { FootprintReaction } from './footprintReaction.js';
 import { Link } from './link.js';
 import { UserEmbedding } from './userEmbedding.js';
+import { SearchHistory } from './searchHistory.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
@@ -22,6 +24,7 @@ export class User extends BaseEntity {
   id!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
+  @Index({ fulltext: true, parser: 'ngram' })
   name!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
@@ -33,23 +36,23 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', default: 'native' })
   provider!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: false })
   avatar!: string;
 
   @Column({
     type: 'enum',
     enum: ['male', 'female', 'nonbinary', 'notdisclosed'],
-    nullable: true,
+    nullable: false,
   })
   gender!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  phone!: string;
+  phone!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  selfIntro!: string;
+  selfIntro!: string | null;
 
-  @Column({ type: 'boolean', nullable: true })
+  @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
   @Column({
@@ -63,7 +66,7 @@ export class User extends BaseEntity {
   footprints?: Relation<Footprint[]>;
 
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
-  links!: Relation<Link[]>;
+  links?: Relation<Link[]>;
 
   @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
   userRoles?: Relation<UserRole[]>;
@@ -99,4 +102,7 @@ export class User extends BaseEntity {
     cascade: true,
   })
   selfIntroEmbedding?: Relation<UserEmbedding>;
+  
+  @OneToMany(() => SearchHistory, (history) => history.user, { cascade: true })
+  searchHistories?: Relation<SearchHistory[]>;
 }
