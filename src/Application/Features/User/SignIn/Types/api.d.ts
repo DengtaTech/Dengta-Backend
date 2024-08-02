@@ -1,11 +1,6 @@
-import { User, UserCredential } from './entities.ts';
-
+import { User } from '../../../../../Database/Entities/user.js';
 declare namespace Signin {
-  type ILink = Pick<Link, 'type' | 'url'>;
-
-  type SigninInput = Pick<UserCredential, 'email' | 'password'>;
-
-  interface ISignInDto extends Pick<User, 'id'>, Pick<UserCredential, 'email'> {
+  interface ISignInDto extends Pick<User, 'id' | 'email'> {
     password?: string;
   }
 

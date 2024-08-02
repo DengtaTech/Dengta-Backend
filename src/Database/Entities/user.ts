@@ -10,22 +10,31 @@ import {
 } from 'typeorm';
 import { Footprint } from './footprint.js';
 import { UserCredential } from './userCredential.js';
-import { UserRole } from './userRole.js';
+import { User_Role } from './userRole.js';
 import { Followship } from './followship.js';
-import { ProfileHashTag } from './profileHashTag.js';
-import { FootprintReaction } from './footprintReaction.js';
+import { User_Footprint_Reaction } from './users_footprints_reactions.js';
 import { Link } from './link.js';
 import { UserEmbedding } from './userEmbedding.js';
 import { SearchHistory } from './searchHistory.js';
+import { User_ProfileHashTag } from './users_profileHashTags.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
+
+  @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
+  email!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   @Index({ fulltext: true, parser: 'ngram' })
-  name!: string;
+  fullName!: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  firstName!: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  lastName!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   lifeRole!: string;
@@ -55,8 +64,11 @@ export class User extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  clerkId!: string | null;
+
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
@@ -68,20 +80,24 @@ export class User extends BaseEntity {
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
   links?: Relation<Link[]>;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
-  userRoles?: Relation<UserRole[]>;
-
-  @OneToMany(() => ProfileHashTag, (profileHashTag) => profileHashTag.user, {
-    cascade: true,
-  })
-  profileHashTags?: Relation<ProfileHashTag[]>;
+  @OneToMany(() => User_Role, (user_role) => user_role.user, { cascade: true })
+  user_role?: Relation<User_Role[]>;
 
   @OneToMany(
-    () => FootprintReaction,
-    (footprintReaction) => footprintReaction.user,
+    () => User_ProfileHashTag,
+    (user_profileHashTag) => user_profileHashTag.user,
+    {
+      cascade: true,
+    },
+  )
+  user_profileHashTag?: Relation<User_ProfileHashTag[]>;
+
+  @OneToMany(
+    () => User_Footprint_Reaction,
+    (user_footprint_reaction) => user_footprint_reaction.user,
     { cascade: true },
   )
-  footprintReactions?: Relation<FootprintReaction[]>;
+  user_footprint_reaction?: Relation<User_Footprint_Reaction[]>;
 
   @OneToMany(() => Followship, (followship) => followship.follower, {
     cascade: true,

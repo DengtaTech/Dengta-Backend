@@ -1,41 +1,43 @@
 import {
   Entity,
-  PrimaryColumn,
-  ManyToOne,
-  JoinColumn,
-  Relation,
+  PrimaryGeneratedColumn,
   Column,
   BaseEntity,
+  OneToMany,
+  Relation,
+  OneToOne,
+  Index,
 } from 'typeorm';
-import { User } from './user.js';
-import { ProfileTagType } from './profileTagType.js';
+import { User_ProfileHashTag } from './users_profileHashTags.js';
+import { ProfileHashTagEmbedding } from './profileHashTagEmbedding.js';
 
 @Entity({ name: 'ProfileHashTags' })
 export class ProfileHashTag extends BaseEntity {
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  userId!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  profileTagTypeId!: number;
+  @Column({ type: 'varchar', nullable: false })
+  @Index({ fulltext: true, parser: 'ngram' })
+  content!: string;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.profileHashTags, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'userId' })
-  user?: Relation<User>;
-
-  @ManyToOne(
-    () => ProfileTagType,
-    (profileTagType) => profileTagType.profileHashTags,
-    { onDelete: 'CASCADE' },
+  @OneToMany(
+    () => User_ProfileHashTag,
+    (user_profileHashTag) => user_profileHashTag.profileHashTag,
+    { cascade: true },
   )
-  @JoinColumn({ name: 'profileTagTypeId' })
-  profileTagType?: Relation<ProfileTagType>;
+  user_profileHashTag?: Relation<User_ProfileHashTag[]>;
+
+  @OneToOne(
+    () => ProfileHashTagEmbedding,
+    (profileHashTagEmbedding) => profileHashTagEmbedding.profileHashTag,
+    { cascade: true },
+  )
+  embedding?: Relation<ProfileHashTagEmbedding>;
 }

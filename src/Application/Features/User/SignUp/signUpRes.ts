@@ -12,7 +12,7 @@ export const signUpRes = {
         accessExpired: accessTokenInfoObj.expire,
         user: {
           id: result.id,
-          name: result.name,
+          fullName: result.fullName,
           lifeRole: result.lifeRole,
           email: result.email,
           links: result.links,

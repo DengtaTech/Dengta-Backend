@@ -12,7 +12,7 @@ import { User } from './user.js';
 
 @Entity({ name: 'UserEmbedding' })
 export class UserEmbedding extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column({ type: 'json', nullable: false })

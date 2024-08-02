@@ -12,7 +12,7 @@ import { Footprint } from './footprint.js';
 
 @Entity({ name: 'FootprintEmbedding' })
 export class FootprintEmbedding extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column({ type: 'json', nullable: false })

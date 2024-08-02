@@ -3,19 +3,21 @@ import { User } from './Entities/user.js';
 import { Footprint } from './Entities/footprint.js';
 import { UserCredential } from './Entities/userCredential.js';
 import { Role } from './Entities/role.js';
-import { UserRole } from './Entities/userRole.js';
+import { User_Role } from './Entities/userRole.js';
 import { Followship } from './Entities/followship.js';
-import { ProfileTagType } from './Entities/profileTagType.js';
+import { User_ProfileHashTag } from './Entities/users_profileHashTags.js';
 import { ProfileHashTag } from './Entities/profileHashTag.js';
-import { FootprintTagType } from './Entities/footprintTagType.js';
+
 import { FootprintHashTag } from './Entities/footprintHashTag.js';
 import { ReactionType } from './Entities/reactionType.js';
-import { FootprintReaction } from './Entities/footprintReaction.js';
+import { User_Footprint_Reaction } from './Entities/users_footprints_reactions.js';
 import { Link } from './Entities/link.js';
 import { FootprintEmbedding } from './Entities/footprintEmbedding.js';
-import { FootprintTagTypeEmbedding } from './Entities/footprintTagTypeEmbedding.js';
+import { FootprintHashTagEmbedding } from './Entities/footprintHashTagEmbedding.js';
+import { Footprint_FootprintHashTag } from './Entities/footprints_footprintHashTags.js';
+
 import { UserEmbedding } from './Entities/userEmbedding.js';
-import { ProfileTagTypeEmbedding } from './Entities/profileTagTypeEmbedding.js';
+import { ProfileHashTagEmbedding } from './Entities/profileHashTagEmbedding.js';
 import { SearchHistory } from './Entities/searchHistory.js';
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
@@ -36,19 +38,19 @@ export const Database = new DataSource({
     Footprint,
     UserCredential,
     Role,
-    UserRole,
+    User_Role,
     Followship,
-    ProfileTagType,
+    User_ProfileHashTag,
     ProfileHashTag,
-    FootprintTagType,
+    FootprintHashTagEmbedding,
     FootprintHashTag,
     ReactionType,
-    FootprintReaction,
+    User_Footprint_Reaction,
     Link,
     FootprintEmbedding,
-    FootprintTagTypeEmbedding,
+    Footprint_FootprintHashTag,
     UserEmbedding,
-    ProfileTagTypeEmbedding,
+    ProfileHashTagEmbedding,
     SearchHistory,
   ],
 });

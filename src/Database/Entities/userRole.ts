@@ -9,26 +9,26 @@ import {
 import { User } from './user.js';
 import { Role } from './role.js';
 
-@Entity({ name: 'UserRoles' })
-export class UserRole {
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  userId!: number;
+@Entity({ name: 'Users_Roles' })
+export class User_Role {
+  @PrimaryColumn('uuid')
+  userId!: string;
 
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  roleId!: number;
+  @PrimaryColumn('uuid')
+  roleId!: string;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.userRoles, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.user_role, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user?: Relation<User>;
 
-  @ManyToOne(() => Role, (role) => role.userRoles)
+  @ManyToOne(() => Role, (role) => role.user_role)
   @JoinColumn({ name: 'roleId' })
   role?: Relation<Role>;
 }

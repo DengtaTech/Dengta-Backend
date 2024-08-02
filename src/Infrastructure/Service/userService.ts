@@ -13,9 +13,7 @@ export const userService = {
     userInfoObj: Signup.ISignUpReq,
   ): Promise<Signup.ISignUpDto> => {
     // try {
-    const checkUserExist = await userCredentialRepo.findByEmail(
-      userInfoObj.email,
-    );
+    const checkUserExist = await userRepo.findByEmail(userInfoObj.email);
 
     if (checkUserExist) {
       throw new EmailExistsError();
@@ -28,9 +26,9 @@ export const userService = {
           userInfoObj,
           transactionManager,
         );
-        const newUserCredential = await userCredentialRepo.insertNewUser(
+        await userCredentialRepo.insertNewUser(
           newUser,
-          userInfoObj,
+          userInfoObj.password,
           transactionManager,
         );
         let initLinks: Link[] = [];
@@ -43,9 +41,9 @@ export const userService = {
         }
         return {
           id: newUser.id,
-          name: newUser.name,
+          fullName: newUser.fullName,
           lifeRole: newUser.lifeRole,
-          email: newUserCredential.email,
+          email: newUser.email,
           links: initLinks,
         } as Signup.ISignUpDto;
       } catch (error) {
@@ -55,14 +53,14 @@ export const userService = {
     });
   },
   signIn: async (email: string): Promise<Signin.ISignInDto> => {
-    const checkUserExist = await userCredentialRepo.findByEmail(email);
-    if (!checkUserExist) {
+    const checkUserExist = await userRepo.findByEmail(email);
+    if (!checkUserExist || !checkUserExist.userCredential) {
       throw new UserNotFoundError();
     }
     return {
-      id: checkUserExist.userId,
+      id: checkUserExist.id,
       email: checkUserExist.email,
-      password: checkUserExist.password,
+      password: checkUserExist.userCredential.password,
     };
   },
 
