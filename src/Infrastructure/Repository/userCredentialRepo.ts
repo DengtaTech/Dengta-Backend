@@ -17,5 +17,5 @@ export const userCredentialRepo = {
       console.error('Failed to save user credential:');
       throw error;
     }
-  }
+  },
 };

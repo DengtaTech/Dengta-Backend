@@ -13,8 +13,17 @@ import { getUserInfoHandler } from '../Application/Features/User/GetUserInfo/get
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
-    const { firstName, fullName, lastName, lifeRole, gender, birthday, email, password, links } =
-      req.body;
+    const {
+      firstName,
+      fullName,
+      lastName,
+      lifeRole,
+      gender,
+      birthday,
+      email,
+      password,
+      links,
+    } = req.body;
     if (
       !firstName ||
       !fullName ||

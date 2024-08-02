@@ -1,7 +1,7 @@
 import { User } from '../../../../../Database/Entities/user.js';
 import { UserCredential } from '../../../../../Database/Entities/userCredential.js';
 declare namespace Signup {
-  type ILink = Pick<Link, 'sourceName' | 'url'>;  
+  type ILink = Pick<Link, 'sourceName' | 'url'>;
 
   type SignupUserInput = Pick<
     User,
