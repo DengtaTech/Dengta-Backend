@@ -12,7 +12,7 @@ export function errorHandler(
     console.error('Error catched ->', err);
     res.status(err.statusCode).send({ error: err.message });
   } else {
-    console.error('Error catched ->', err);
+    console.error('Unknown error catched ->', err);
     res.status(501).send({ error: 'Internal Server Error' });
   }
 }

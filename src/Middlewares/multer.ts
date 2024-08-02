@@ -38,6 +38,8 @@ const multerErrorHandling = (
     if (err.code === 'LIMIT_UNEXPECTED_FILE') {
       return res.status(400).send({ error: 'File must be an image' });
     }
+  } else {
+    next(err);
   }
 };
 

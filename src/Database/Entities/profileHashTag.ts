@@ -5,12 +5,13 @@ import {
   JoinColumn,
   Relation,
   Column,
+  BaseEntity,
 } from 'typeorm';
 import { User } from './user.js';
 import { ProfileTagType } from './profileTagType.js';
 
 @Entity({ name: 'ProfileHashTags' })
-export class ProfileHashTag {
+export class ProfileHashTag extends BaseEntity {
   @PrimaryColumn({ type: 'bigint', unsigned: true })
   userId!: number;
 

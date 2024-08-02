@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { InputEmptyError, NoTokenError } from '../Errors/errors.js';
-import { getSimilarUserHandler } from '../Application/Features/Recommendation/Commands/GetSimilarUser/getSimilarUserHandler.js';
+import { getSimilarUserHandler } from '../Application/Features/Recommendation/GetSimilarUser/getSimilarUserHandler.js';
 
 export const recommendationController = {
   getSimilarUsers: async (req: Request, res: Response): Promise<void> => {
