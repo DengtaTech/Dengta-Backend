@@ -26,6 +26,11 @@ services:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: standalone
 
+  embeddings_server:
+    extends:
+      file: docker-compose.yml
+      service: embeddings_server
+
 volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}
