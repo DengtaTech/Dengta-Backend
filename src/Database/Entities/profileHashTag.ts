@@ -8,7 +8,7 @@ import {
   OneToOne,
   Index,
 } from 'typeorm';
-import { User_ProfileHashTag } from './users_profileHashTags.js';
+import { MUserProfileHashTag } from './mUserProfileHashTag.js';
 import { ProfileHashTagEmbedding } from './profileHashTagEmbedding.js';
 
 @Entity({ name: 'ProfileHashTags' })
@@ -28,11 +28,11 @@ export class ProfileHashTag extends BaseEntity {
   createdAt!: Date;
 
   @OneToMany(
-    () => User_ProfileHashTag,
-    (user_profileHashTag) => user_profileHashTag.profileHashTag,
+    () => MUserProfileHashTag,
+    (mUserProfileHashTag) => mUserProfileHashTag.profileHashTag,
     { cascade: true },
   )
-  user_profileHashTag?: Relation<User_ProfileHashTag[]>;
+  mUserProfileHashTag?: Relation<MUserProfileHashTag[]>;
 
   @OneToOne(
     () => ProfileHashTagEmbedding,

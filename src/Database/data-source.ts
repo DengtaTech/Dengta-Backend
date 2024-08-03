@@ -3,18 +3,18 @@ import { User } from './Entities/user.js';
 import { Footprint } from './Entities/footprint.js';
 import { UserCredential } from './Entities/userCredential.js';
 import { Role } from './Entities/role.js';
-import { User_Role } from './Entities/userRole.js';
+import { MUserRole } from './Entities/mUserRole.js';
 import { Followship } from './Entities/followship.js';
-import { User_ProfileHashTag } from './Entities/users_profileHashTags.js';
+import { MUserProfileHashTag } from './Entities/mUserProfileHashTag.js';
 import { ProfileHashTag } from './Entities/profileHashTag.js';
 
 import { FootprintHashTag } from './Entities/footprintHashTag.js';
 import { ReactionType } from './Entities/reactionType.js';
-import { User_Footprint_Reaction } from './Entities/users_footprints_reactions.js';
+import { MUserFootprintReaction } from './Entities/mUserFootprintReaction.js';
 import { Link } from './Entities/link.js';
 import { FootprintEmbedding } from './Entities/footprintEmbedding.js';
 import { FootprintHashTagEmbedding } from './Entities/footprintHashTagEmbedding.js';
-import { Footprint_FootprintHashTag } from './Entities/footprints_footprintHashTags.js';
+import { MFootprintFootprintHashTag } from './Entities/mFootprintFootprintHashTag.js';
 
 import { UserEmbedding } from './Entities/userEmbedding.js';
 import { ProfileHashTagEmbedding } from './Entities/profileHashTagEmbedding.js';
@@ -38,17 +38,17 @@ export const Database = new DataSource({
     Footprint,
     UserCredential,
     Role,
-    User_Role,
+    MUserRole,
     Followship,
-    User_ProfileHashTag,
+    MUserProfileHashTag,
     ProfileHashTag,
     FootprintHashTagEmbedding,
     FootprintHashTag,
     ReactionType,
-    User_Footprint_Reaction,
+    MUserFootprintReaction,
     Link,
     FootprintEmbedding,
-    Footprint_FootprintHashTag,
+    MFootprintFootprintHashTag,
     UserEmbedding,
     ProfileHashTagEmbedding,
     SearchHistory,

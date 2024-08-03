@@ -1,4 +1,4 @@
-import { User_ProfileHashTag } from '../../../../../Database/Entities/users_profileHashTags.ts';
+import { User_ProfileHashTag } from '../../../../../Database/Entities/mUserProfileHashTag.ts';
 import { User } from '../../../../../Database/Entities/User.js';
 import { Link } from '../../../../../Database/Entities/Link.js';
 declare namespace Search {
@@ -27,7 +27,7 @@ declare namespace Search {
     selfIntro: typeof User.prototype.selfIntro;
     profileHashTags: NonNullable<
       NonNullable<
-        typeof User.prototype.user_profileHashTag
+        typeof User.prototype.mUserProfileHashTag
       >[number]['profileHashTag']
     >['content'][];
   }>;

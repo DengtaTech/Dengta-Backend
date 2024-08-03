@@ -10,8 +10,8 @@ import {
 import { User } from './user.js';
 import { ProfileHashTag } from './profileHashTag.js';
 
-@Entity({ name: 'Users_ProfileHashTags' })
-export class User_ProfileHashTag extends BaseEntity {
+@Entity({ name: 'MUserProfileHashTag' })
+export class MUserProfileHashTag extends BaseEntity {
   @PrimaryColumn('uuid')
   userId!: string;
 
@@ -25,7 +25,7 @@ export class User_ProfileHashTag extends BaseEntity {
   })
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.user_profileHashTag, {
+  @ManyToOne(() => User, (user) => user.mUserProfileHashTag, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })
@@ -33,7 +33,7 @@ export class User_ProfileHashTag extends BaseEntity {
 
   @ManyToOne(
     () => ProfileHashTag,
-    (profileHashTag) => profileHashTag.user_profileHashTag,
+    (profileHashTag) => profileHashTag.mUserProfileHashTag,
     { onDelete: 'CASCADE' },
   )
   @JoinColumn({ name: 'profileHashTagId' })

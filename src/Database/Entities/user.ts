@@ -10,13 +10,13 @@ import {
 } from 'typeorm';
 import { Footprint } from './footprint.js';
 import { UserCredential } from './userCredential.js';
-import { User_Role } from './userRole.js';
+import { MUserRole } from './mUserRole.js';
 import { Followship } from './followship.js';
-import { User_Footprint_Reaction } from './users_footprints_reactions.js';
+import { MUserFootprintReaction } from './mUserFootprintReaction.js';
 import { Link } from './link.js';
 import { UserEmbedding } from './userEmbedding.js';
 import { SearchHistory } from './searchHistory.js';
-import { User_ProfileHashTag } from './users_profileHashTags.js';
+import { MUserProfileHashTag } from './mUserProfileHashTag.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
@@ -80,24 +80,24 @@ export class User extends BaseEntity {
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
   links?: Relation<Link[]>;
 
-  @OneToMany(() => User_Role, (user_role) => user_role.user, { cascade: true })
-  user_role?: Relation<User_Role[]>;
+  @OneToMany(() => MUserRole, (mUserRole) => mUserRole.user, { cascade: true })
+  mUserRole?: Relation<MUserRole[]>;
 
   @OneToMany(
-    () => User_ProfileHashTag,
-    (user_profileHashTag) => user_profileHashTag.user,
+    () => MUserProfileHashTag,
+    (mUserProfileHashTag) => mUserProfileHashTag.user,
     {
       cascade: true,
     },
   )
-  user_profileHashTag?: Relation<User_ProfileHashTag[]>;
+  mUserProfileHashTag?: Relation<MUserProfileHashTag[]>;
 
   @OneToMany(
-    () => User_Footprint_Reaction,
-    (user_footprint_reaction) => user_footprint_reaction.user,
+    () => MUserFootprintReaction,
+    (mUserFootprintReaction) => mUserFootprintReaction.user,
     { cascade: true },
   )
-  user_footprint_reaction?: Relation<User_Footprint_Reaction[]>;
+  mUserFootprintReaction?: Relation<MUserFootprintReaction[]>;
 
   @OneToMany(() => Followship, (followship) => followship.follower, {
     cascade: true,

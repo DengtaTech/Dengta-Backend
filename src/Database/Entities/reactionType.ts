@@ -6,7 +6,7 @@ import {
   OneToMany,
   Relation,
 } from 'typeorm';
-import { User_Footprint_Reaction } from './users_footprints_reactions.js';
+import { MUserFootprintReaction } from './mUserFootprintReaction.js';
 
 @Entity({ name: 'ReactionType' })
 export class ReactionType extends BaseEntity {
@@ -24,9 +24,9 @@ export class ReactionType extends BaseEntity {
   createdAt!: Date;
 
   @OneToMany(
-    () => User_Footprint_Reaction,
-    (user_footprint_reaction) => user_footprint_reaction.reactionType,
+    () => MUserFootprintReaction,
+    (mUserFootprintReaction) => mUserFootprintReaction.reactionType,
     { cascade: true },
   )
-  user_footprint_reaction?: Relation<User_Footprint_Reaction[]>;
+  mUserFootprintReaction?: Relation<MUserFootprintReaction[]>;
 }

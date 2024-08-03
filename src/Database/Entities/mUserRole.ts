@@ -9,8 +9,8 @@ import {
 import { User } from './user.js';
 import { Role } from './role.js';
 
-@Entity({ name: 'Users_Roles' })
-export class User_Role {
+@Entity({ name: 'MUserRole' })
+export class MUserRole {
   @PrimaryColumn('uuid')
   userId!: string;
 
@@ -24,11 +24,11 @@ export class User_Role {
   })
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.user_role, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.mUserRole, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user?: Relation<User>;
 
-  @ManyToOne(() => Role, (role) => role.user_role)
+  @ManyToOne(() => Role, (role) => role.mUserRole)
   @JoinColumn({ name: 'roleId' })
   role?: Relation<Role>;
 }

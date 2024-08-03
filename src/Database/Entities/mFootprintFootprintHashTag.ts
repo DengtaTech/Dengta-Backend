@@ -9,8 +9,8 @@ import {
 import { FootprintHashTag } from './footprintHashTag.js';
 import { Footprint } from './footprint.js';
 
-@Entity({ name: 'Footprints_FootprintHashTags' })
-export class Footprint_FootprintHashTag {
+@Entity({ name: 'MFootprintFootprintHashTag' })
+export class MFootprintFootprintHashTag {
   @PrimaryColumn('uuid')
   footprintId!: string;
 
@@ -26,7 +26,7 @@ export class Footprint_FootprintHashTag {
 
   @ManyToOne(
     () => Footprint,
-    (footprint) => footprint.footprint_footprintHashTag,
+    (footprint) => footprint.mFootprintFootprintHashTag,
     {
       onDelete: 'CASCADE',
     },
@@ -36,7 +36,7 @@ export class Footprint_FootprintHashTag {
 
   @ManyToOne(
     () => FootprintHashTag,
-    (footprintHashTag) => footprintHashTag.footprint_footprintHashTag,
+    (footprintHashTag) => footprintHashTag.mFootprintFootprintHashTag,
     { onDelete: 'CASCADE' },
   )
   @JoinColumn({ name: 'footprintHashTagId' })

@@ -15,7 +15,7 @@ export const searchRes = {
           lifeRole: usr.lifeRole,
           avatar: usr.avatar,
           selfIntro: usr.selfIntro,
-          profileHashTags: usr.user_profileHashTag!.map(
+          profileHashTags: usr.mUserProfileHashTag!.map(
             (hashTag) => hashTag.profileHashTag!.content,
           ),
         })),

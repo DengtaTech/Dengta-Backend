@@ -10,9 +10,9 @@ import {
   OneToOne,
 } from 'typeorm';
 import { User } from './user.js';
-import { User_Footprint_Reaction } from './users_footprints_reactions.js';
+import { MUserFootprintReaction } from './mUserFootprintReaction.js';
 import { FootprintEmbedding } from './footprintEmbedding.js';
-import { Footprint_FootprintHashTag } from './footprints_footprintHashTags.js';
+import { MFootprintFootprintHashTag } from './mFootprintFootprintHashTag.js';
 
 @Entity({ name: 'Footprints' })
 export class Footprint extends BaseEntity {
@@ -56,18 +56,18 @@ export class Footprint extends BaseEntity {
   user?: Relation<User>;
 
   @OneToMany(
-    () => User_Footprint_Reaction,
-    (user_footprint_reaction) => user_footprint_reaction.footprint,
+    () => MUserFootprintReaction,
+    (mUserFootprintReaction) => mUserFootprintReaction.footprint,
     { cascade: true },
   )
-  user_footprint_reaction?: Relation<User_Footprint_Reaction[]>;
+  mUserFootprintReaction?: Relation<MUserFootprintReaction[]>;
 
   @OneToMany(
-    () => Footprint_FootprintHashTag,
-    (footprint_footprintHashTag) => footprint_footprintHashTag.footprint,
+    () => MFootprintFootprintHashTag,
+    (mFootprintFootprintHashTag) => mFootprintFootprintHashTag.footprint,
     { cascade: true },
   )
-  footprint_footprintHashTag?: Relation<Footprint_FootprintHashTag[]>;
+  mFootprintFootprintHashTag?: Relation<MFootprintFootprintHashTag[]>;
 
   @OneToOne(() => FootprintEmbedding, (embedding) => embedding.footprint, {
     onDelete: 'CASCADE',

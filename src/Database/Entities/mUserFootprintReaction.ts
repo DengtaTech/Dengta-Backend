@@ -10,8 +10,8 @@ import { User } from './user.js';
 import { Footprint } from './footprint.js';
 import { ReactionType } from './reactionType.js';
 
-@Entity({ name: 'Users_Footprints_Reactions' })
-export class User_Footprint_Reaction extends BaseEntity {
+@Entity({ name: 'MUserFootprintReaction' })
+export class MUserFootprintReaction extends BaseEntity {
   @PrimaryColumn('uuid')
   userId!: string;
 
@@ -21,25 +21,21 @@ export class User_Footprint_Reaction extends BaseEntity {
   @PrimaryColumn('uuid')
   reactionTypeId!: string;
 
-  @ManyToOne(() => User, (user) => user.user_footprint_reaction, {
+  @ManyToOne(() => User, (user) => user.mUserFootprintReaction, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })
   user?: Relation<User>;
 
-  @ManyToOne(
-    () => Footprint,
-    (footprint) => footprint.user_footprint_reaction,
-    {
-      onDelete: 'CASCADE',
-    },
-  )
+  @ManyToOne(() => Footprint, (footprint) => footprint.mUserFootprintReaction, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'footprintId' })
   footprint?: Relation<Footprint>;
 
   @ManyToOne(
     () => ReactionType,
-    (reactionType) => reactionType.user_footprint_reaction,
+    (reactionType) => reactionType.mUserFootprintReaction,
     {
       onDelete: 'CASCADE',
     },

@@ -64,7 +64,7 @@ export const userRepo = {
         const users = await transactionManager
           .getRepository(User)
           .createQueryBuilder('user')
-          .leftJoinAndSelect('user.user_profileHashTag', 'user_hashTag')
+          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
           .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
           .where(
             'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
@@ -82,7 +82,7 @@ export const userRepo = {
         return users;
       } else {
         const users = await User.createQueryBuilder('user')
-          .leftJoinAndSelect('user.user_profileHashTag', 'user_hashTag')
+          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
           .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
           .where(
             'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
