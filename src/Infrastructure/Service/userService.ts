@@ -54,7 +54,7 @@ export const userService = {
   },
   signIn: async (email: string): Promise<Signin.ISignInDto> => {
     const checkUserExist = await userRepo.findByEmail(email);
-    if (!checkUserExist || !checkUserExist.userCredential) {
+    if (!checkUserExist?.userCredential) {
       throw new UserNotFoundError();
     }
     return {
