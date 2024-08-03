@@ -38,6 +38,8 @@ RUN apt-get update \
         curl \
         # deps for building python deps
         build-essential
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN curl -sSL https://install.python-poetry.org | python
@@ -51,6 +53,12 @@ RUN poetry install --no-dev
 
 # `production` image used for runtime
 FROM python-base AS production
+
+# create a nonroot user
+RUN useradd -m nonroot
+RUN mkdir /app && chown -R nonroot:nonroot /app
+USER nonroot
+
 COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 COPY ./embeddings_server /app/embeddings_server
 WORKDIR /app
