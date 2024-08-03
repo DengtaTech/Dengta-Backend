@@ -12,6 +12,7 @@ declare namespace Signup {
     | 'birthday'
     | 'gender'
     | 'email'
+    | 'clerkId'
   > & {
     links: ILink[];
   };

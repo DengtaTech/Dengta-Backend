@@ -18,6 +18,7 @@ export const signUpHandler = {
       email,
       password,
       links,
+      clerkId
     } = body;
 
     const hashedPassword = await tool.generateHashPassword(password);
@@ -33,6 +34,7 @@ export const signUpHandler = {
       provider: provider,
       avatar: '',
       links: links,
+      clerkId,
     };
     const result = await userService.signUp(userInfoObj);
     const tokenInfo = await auth.generateAccessToken(result.id);

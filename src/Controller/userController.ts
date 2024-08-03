@@ -23,6 +23,7 @@ export const userController = {
       email,
       password,
       links,
+      clerkId
     } = req.body;
     if (
       !firstName ||
@@ -32,7 +33,8 @@ export const userController = {
       !gender ||
       !birthday ||
       !email ||
-      !password
+      !password ||
+      !clerkId
     ) {
       throw new InputEmptyError();
     }
@@ -50,6 +52,7 @@ export const userController = {
       email,
       password,
       links,
+      clerkId
     };
     const response = await signUpHandler.handle(userDto);
 
