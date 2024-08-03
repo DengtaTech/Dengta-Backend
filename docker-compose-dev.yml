@@ -27,9 +27,14 @@ services:
       service: standalone
 
   embeddings_server:
-    extends:
-      file: docker-compose.yml
-      service: embeddings_server
+    build:
+      context: ./src/EmbeddingsServer/
+      dockerfile: Dockerfile
+    ports:
+      - ${EMBEDDING_SERVER_PORT}:5001
+    container_name: embeddings_server
+    networks:
+      - backend_network
 
 volumes:
   dengta_mysql_volume:
