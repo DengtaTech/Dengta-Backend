@@ -8,6 +8,35 @@ servers:
   - url: 'http://localhost:3001/api/1.0'
 
 paths:
+  /user/signin:
+    post:
+      tags:
+        - User
+      summary: Sign in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                email: johndoe@example.com
+                password: mypassword123
+      responses:
+        '200':
+          description: Sign in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
   /user/signup:
     post:
       tags:
@@ -20,13 +49,16 @@ paths:
             schema:
               type: object
               required:
-                - name
+                - firtName
+                - lastName
+                - fullName
                 - lifeRole
                 - gender
                 - birthday
                 - email
                 - password
                 - links
+                - clerkId
               properties:
                 name:
                   type: string
@@ -48,12 +80,15 @@ paths:
                 links:
                   type: array
               example:
-                name: John Doe
+                firstName: John
+                lastName: Doe
+                fullName: John Doe
                 lifeRole: Student
                 gender: male
                 birthday: '1990-01-01'
                 email: johndoe@example.com
                 password: mypassword123
+                clerkId: '1934719234'
                 links: []
       responses:
         '200':
@@ -76,6 +111,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginUserResponse'
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - User
+      summary: Update user personal information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lifeRole:
+                  type: string
+                fullName:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                birthday:
+                  type: string
+                gender:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+                selfIntro:
+                  type: string
+                links:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      sourceName:
+                        type: string
+                      url:
+                        type: string
+              example:
+                lifeRole: Student222
+                fullName: John222 Doe222
+                firstName: John222
+                lastName: Doe222
+                birthday: '2000-01-10'
+                links:
+                  [
+                    {
+                      sourceName: 'Facebook',
+                      url: 'https://www.facebook.com/johndoe',
+                    },
+                  ]
+      responses:
+        '200':
+          description: Update user personal information successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
       security:
         - bearerAuth: []
   /user/avatar:

@@ -44,10 +44,14 @@ export const userRepo = {
       if (transactionManager) {
         const user = transactionManager.findOne(User, {
           where: { id: userId },
+          relations: ['links'],
         });
         return user;
       } else {
-        const user = await User.findOne({ where: { id: userId } });
+        const user = await User.findOne({
+          where: { id: userId },
+          relations: ['links'],
+        });
         return user;
       }
     } catch (error) {

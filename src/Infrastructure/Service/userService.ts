@@ -7,6 +7,7 @@ import { User } from '../../Database/Entities/user.js';
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
+import { PatchUserInfo } from '../../Application/Features/User/PatchUserInfo/Types/api.js';
 
 export const userService = {
   signUp: async (
@@ -78,6 +79,38 @@ export const userService = {
       throw new Error('User not found');
     }
     user.avatar = filename;
+    await user.save();
+  },
+
+  updateUserInfo: async (
+    userId: string,
+    updateFields: PatchUserInfo.PatchUserInfoReqBody,
+  ): Promise<void> => {
+    const user = await userRepo.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const { links, ...otherFields } = updateFields;
+
+    Object.assign(user, otherFields);
+
+    user.links = user.links || [];
+
+    const linksMap = new Map(user.links.map((link) => [link.sourceName, link]));
+
+    if (links) {
+      links.forEach(({ sourceName, url }) => {
+        const existingLink = linksMap.get(sourceName);
+        if (existingLink) {
+          existingLink.url = url;
+        } else {
+          const newLink = Link.create({ sourceName, url, userId: user.id });
+          if (user.links) user.links.push(newLink);
+        }
+      });
+    }
+
     await user.save();
   },
 };

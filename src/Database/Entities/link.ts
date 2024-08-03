@@ -27,6 +27,13 @@ export class Link extends BaseEntity {
   })
   createdAt!: Date;
 
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  updatedAt!: Date;
+
   @Column('uuid')
   userId!: string;
 
