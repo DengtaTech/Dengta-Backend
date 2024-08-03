@@ -23,7 +23,7 @@ export const userController = {
       email,
       password,
       links,
-      clerkId
+      clerkId,
     } = req.body;
     if (
       !firstName ||
@@ -52,7 +52,7 @@ export const userController = {
       email,
       password,
       links,
-      clerkId
+      clerkId,
     };
     const response = await signUpHandler.handle(userDto);
 

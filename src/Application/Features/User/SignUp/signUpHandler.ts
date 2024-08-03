@@ -18,7 +18,7 @@ export const signUpHandler = {
       email,
       password,
       links,
-      clerkId
+      clerkId,
     } = body;
 
     const hashedPassword = await tool.generateHashPassword(password);
