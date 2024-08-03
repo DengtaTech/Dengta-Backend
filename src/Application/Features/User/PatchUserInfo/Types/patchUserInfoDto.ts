@@ -6,10 +6,9 @@ import {
   IsDateString,
   IsEnum,
   ValidateNested,
+  validate,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-
-import { validate } from 'class-validator';
 
 export const validatePatchUserInfoReqBody = async (
   body: Record<string, unknown>,
