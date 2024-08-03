@@ -8,6 +8,7 @@ export const recommendationController = {
       if (req.decodedToken === undefined) {
         throw new NoTokenError();
       }
+      // 現在改成uuid了 假資料測試的話可能這邊要寫死id
       const { id: userId } = req.decodedToken;
 
       const { goal } = req.body;

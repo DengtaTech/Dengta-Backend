@@ -10,63 +10,64 @@ import {
   OneToOne,
 } from 'typeorm';
 import { User } from './user.js';
-import { FootprintReaction } from './footprintReaction.js';
-import { FootprintHashTag } from './footprintHashTag.js';
+import { MUserFootprintReaction } from './mUserFootprintReaction.js';
 import { FootprintEmbedding } from './footprintEmbedding.js';
+import { MFootprintFootprintHashTag } from './mFootprintFootprintHashTag.js';
 
 @Entity({ name: 'Footprints' })
 export class Footprint extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   title!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  subtitle!: string;
-
   @Column({ type: 'text', nullable: true })
-  content!: string;
+  content!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  titleImage!: string;
+  titleImage!: string | null;
 
   @Column({ type: 'int', default: 0 })
   totalLike!: number;
 
-  @Column({ type: 'varchar', length: 50, default: 'draft' }) // should be changed to enum
+  @Column({
+    type: 'enum',
+    enum: ['draft', 'published', 'invisible'],
+    nullable: false,
+  })
   status!: string;
 
   @Column({ type: 'boolean', nullable: false, default: false }) // in mysql, boolean is tinyint(1)
   milestone!: boolean;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
-  @Column({ type: 'bigint', nullable: false, unsigned: true })
-  userId!: number;
+  @Column('uuid')
+  userId!: string;
 
   @ManyToOne(() => User, (user) => user.footprints, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user?: Relation<User>;
 
   @OneToMany(
-    () => FootprintReaction,
-    (footprintReaction) => footprintReaction.footprint,
+    () => MUserFootprintReaction,
+    (mUserFootprintReaction) => mUserFootprintReaction.footprint,
     { cascade: true },
   )
-  reactions?: Relation<FootprintReaction[]>;
+  mUserFootprintReaction?: Relation<MUserFootprintReaction[]>;
 
   @OneToMany(
-    () => FootprintHashTag,
-    (footprintHashTag) => footprintHashTag.footprint,
+    () => MFootprintFootprintHashTag,
+    (mFootprintFootprintHashTag) => mFootprintFootprintHashTag.footprint,
     { cascade: true },
   )
-  footprintHashTags?: Relation<FootprintHashTag[]>;
+  mFootprintFootprintHashTag?: Relation<MFootprintFootprintHashTag[]>;
 
   @OneToOne(() => FootprintEmbedding, (embedding) => embedding.footprint, {
     onDelete: 'CASCADE',

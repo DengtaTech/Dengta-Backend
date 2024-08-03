@@ -2,13 +2,28 @@ import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { EntityManager } from 'typeorm';
 export const userRepo = {
+  findByEmail: async (email: string): Promise<User | null> => {
+    try {
+      const user = await User.findOne({
+        where: { email: email },
+        relations: ['userCredential'],
+      });
+      return user;
+    } catch (error) {
+      console.error('Error finding user by email:');
+      throw error;
+    }
+  },
   insertNewUser: async (
     userInfoObj: Signup.ISignUpReq,
     transactionManager: EntityManager,
   ): Promise<User> => {
     try {
       const newUser = new User();
-      newUser.name = userInfoObj.name;
+      newUser.email = userInfoObj.email;
+      newUser.fullName = userInfoObj.fullName;
+      newUser.firstName = userInfoObj.firstName;
+      newUser.lastName = userInfoObj.lastName;
       newUser.lifeRole = userInfoObj.lifeRole;
       newUser.birthday = userInfoObj.birthday;
       newUser.provider = userInfoObj.provider as string;
@@ -49,16 +64,16 @@ export const userRepo = {
         const users = await transactionManager
           .getRepository(User)
           .createQueryBuilder('user')
-          .leftJoinAndSelect('user.profileHashTags', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileTagType', 'hashTag')
+          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
           .where(
-            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
           )
           .orWhere(
             'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
           )
           .addSelect(
-            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
             'relevance_score',
           )
           .orderBy('relevance_score', 'DESC')
@@ -67,16 +82,16 @@ export const userRepo = {
         return users;
       } else {
         const users = await User.createQueryBuilder('user')
-          .leftJoinAndSelect('user.profileHashTags', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileTagType', 'hashTag')
+          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
           .where(
-            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
           )
           .orWhere(
             'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
           )
           .addSelect(
-            'MATCH(user.name) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
             'relevance_score',
           )
           .orderBy('relevance_score', 'DESC')

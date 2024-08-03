@@ -11,23 +11,23 @@ import { User } from './user.js';
 
 @Entity({ name: 'Links' })
 export class Link extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  type!: string;
+  sourceName!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  url!: string;
+  url!: string | null;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
-  @Column({ type: 'bigint', nullable: false, unsigned: true })
+  @Column('uuid')
   userId!: string;
 
   @ManyToOne(() => User, (user) => user.links, { onDelete: 'CASCADE' })

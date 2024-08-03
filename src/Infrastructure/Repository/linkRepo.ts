@@ -10,7 +10,7 @@ export const linkRepo = {
     try {
       const linkEntities = links.map((link) => {
         const newLink = new Link();
-        newLink.type = link.type;
+        newLink.sourceName = link.sourceName;
         newLink.url = link.url;
         newLink.userId = userId;
         return newLink;

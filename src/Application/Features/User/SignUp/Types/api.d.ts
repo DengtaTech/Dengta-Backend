@@ -1,16 +1,23 @@
-import { User, UserCredential } from './entities';
-
+import { User } from '../../../../../Database/Entities/user.js';
+import { UserCredential } from '../../../../../Database/Entities/userCredential.js';
 declare namespace Signup {
-  type ILink = Pick<Link, 'type' | 'url'>;
+  type ILink = Pick<Link, 'sourceName' | 'url'>;
 
   type SignupUserInput = Pick<
     User,
-    'name' | 'lifeRole' | 'birthday' | 'gender'
+    | 'fullName'
+    | 'firstName'
+    | 'lastName'
+    | 'lifeRole'
+    | 'birthday'
+    | 'gender'
+    | 'email'
+    | 'clerkId'
   > & {
     links: ILink[];
   };
 
-  type SignupCredentialsInput = Pick<UserCredential, 'email' | 'password'>;
+  type SignupCredentialsInput = Pick<UserCredential, 'password'>;
 
   interface ISignUpReq extends SignupUserInput, SignupCredentialsInput {
     provider?: string;
@@ -18,8 +25,7 @@ declare namespace Signup {
   }
   //Dto專門用於Service層組資料，回傳給Handler用
   interface ISignUpDto
-    extends Pick<User, 'id' | 'name' | 'lifeRole'>,
-      Pick<UserCredential, 'email'> {
+    extends Pick<User, 'id' | 'fullName' | 'lifeRole' | 'email'> {
     links: ILink[];
   }
   interface ISignUpResponse {

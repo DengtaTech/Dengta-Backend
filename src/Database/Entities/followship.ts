@@ -11,14 +11,14 @@ import { User } from './user.js';
 
 @Entity({ name: 'Followship' })
 export class Followship extends BaseEntity {
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  followerId!: number;
+  @PrimaryColumn('uuid')
+  followerId!: string;
 
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  followeeId!: number;
+  @PrimaryColumn('uuid')
+  followeeId!: string;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })

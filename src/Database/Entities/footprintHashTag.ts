@@ -1,40 +1,41 @@
 import {
   Entity,
-  PrimaryColumn,
-  ManyToOne,
-  JoinColumn,
-  Relation,
+  PrimaryGeneratedColumn,
   Column,
+  BaseEntity,
+  OneToMany,
+  Relation,
+  OneToOne,
 } from 'typeorm';
-import { FootprintTagType } from './footprintTagType.js';
-import { Footprint } from './footprint.js';
+import { MFootprintFootprintHashTag } from './mFootprintFootprintHashTag.js';
+import { FootprintHashTagEmbedding } from './footprintHashTagEmbedding.js';
 
 @Entity({ name: 'FootprintHashTags' })
-export class FootprintHashTag {
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  footprintId!: number;
+export class FootprintHashTag extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  @PrimaryColumn({ type: 'bigint', unsigned: true })
-  footprintTagTypeId!: number;
+  @Column({ type: 'varchar', nullable: false })
+  content!: string;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
-  @ManyToOne(() => Footprint, (footprint) => footprint.footprintHashTags, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'footprintId' })
-  footprint?: Relation<Footprint>;
-
-  @ManyToOne(
-    () => FootprintTagType,
-    (footprintTagType) => footprintTagType.footprintHashTags,
-    { onDelete: 'CASCADE' },
+  @OneToMany(
+    () => MFootprintFootprintHashTag,
+    (mFootprintFootprintHashTag) => mFootprintFootprintHashTag.footprintHashTag,
+    { cascade: true },
   )
-  @JoinColumn({ name: 'footprintTagTypeId' })
-  footprintTagType?: Relation<FootprintTagType>;
+  mFootprintFootprintHashTag?: Relation<MFootprintFootprintHashTag[]>;
+
+  @OneToOne(
+    () => FootprintHashTagEmbedding,
+    (embedding) => embedding.footprintHashTag,
+    { cascade: true },
+  )
+  embedding?: Relation<FootprintHashTagEmbedding>;
 }

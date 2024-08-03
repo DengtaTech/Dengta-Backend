@@ -1,0 +1,540 @@
+[
+  {
+    "userId": "1",
+    "selfIntro": "我是程式設計初學者，我想學習 Python 和機器學習。",
+    "goal": "我想成為一名數據科學家。",
+    "profileTags": ["python", "機器學習", "數據科學家"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "開始學習 Python",
+        "tags": ["python", "程式設計"],
+        "description": "我想學習 Python，因為它是一種流行的程式設計語言。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "開始學習物件導向程式設計",
+        "tags": ["程式設計"],
+        "description": "我想學習物件導向程式設計，因為它是一種流行的程式設計範式。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "開始學習數據結構",
+        "tags": ["程式設計"],
+        "description": "我想學習數據結構，因為它對程式設計很重要。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "開始學習算法",
+        "tags": ["程式設計"],
+        "description": "我想學習算法，因為它對程式設計很重要。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "開始學習機器學習",
+        "tags": ["機器學習"],
+        "description": "我想學習機器學習，因為它是一個流行的領域。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "開始做一個專案",
+        "tags": ["專案"],
+        "description": "我想做一個關於股票價格預測的專案。"
+      }
+    ]
+  },
+  {
+    "userId": "2",
+    "selfIntro": "目前是高中物理老師，努力轉職中",
+    "goal": "我想成為一名後端軟體工程師。",
+    "profileTags": ["高中物理", "教學", "後端軟體工程師"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "教高中物理課",
+        "tags": ["教學", "高中物理"],
+        "description": "我教高中物理課，幫助學生理解基本概念。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "設計物理實驗",
+        "tags": ["教學", "實驗"],
+        "description": "我設計了一系列物理實驗來幫助學生更好地理解課堂理論。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "參加物理教師培訓",
+        "tags": ["培訓", "教學"],
+        "description": "我參加了物理教師培訓課程以提升我的教學技巧。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "撰寫物理教材",
+        "tags": ["教材", "教學"],
+        "description": "我撰寫了一本物理教材供學生使用。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "指導學生參加物理競賽",
+        "tags": ["指導", "競賽"],
+        "description": "我指導學生參加全國物理競賽。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "自學後端開發",
+        "tags": ["自學", "後端開發"],
+        "description": "我利用空閒時間自學後端開發技術。"
+      }
+    ]
+  },
+  {
+    "userId": "3",
+    "selfIntro": "我從事數位行銷工作，喜歡創作引人入勝的內容。",
+    "goal": "我想成為行銷經理。",
+    "profileTags": ["行銷", "數位行銷", "內容創作"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "創建行銷活動",
+        "tags": ["行銷", "活動"],
+        "description": "我為一個新產品創建了行銷活動。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "分析市場趨勢",
+        "tags": ["市場分析", "趨勢"],
+        "description": "我分析了當前的市場趨勢以調整我們的策略。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "優化 SEO",
+        "tags": ["SEO", "優化"],
+        "description": "我優化了我們網站的 SEO。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "設計社交媒體內容",
+        "tags": ["社交媒體", "內容"],
+        "description": "我為我們的社交媒體頻道設計了引人入勝的內容。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "運行 PPC 活動",
+        "tags": ["PPC", "廣告"],
+        "description": "我運行了一個成功的 PPC 廣告活動。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "參加行銷會議",
+        "tags": ["會議", "人脈"],
+        "description": "我參加了一個行銷會議以結識其他專業人士。"
+      }
+    ]
+  },
+  {
+    "userId": "4",
+    "selfIntro": "我是一名經驗豐富的軟體工程師，熱愛後端開發。",
+    "goal": "我想成為技術主管。",
+    "profileTags": ["軟體工程", "後端開發", "技術主管"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "開發新 API",
+        "tags": ["API", "開發"],
+        "description": "我為我們的應用程式開發了一個新 API。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "優化數據庫查詢",
+        "tags": ["數據庫", "優化"],
+        "description": "我優化了數據庫查詢以提升性能。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "實施緩存",
+        "tags": ["緩存", "性能"],
+        "description": "我實施了緩存以減少加載時間。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "代碼審查",
+        "tags": ["代碼審查", "協作"],
+        "description": "我進行了代碼審查以保持代碼質量。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "撰寫單元測試",
+        "tags": ["測試", "質量保證"],
+        "description": "我撰寫了單元測試以確保我們代碼的可靠性。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "指導初級開發者",
+        "tags": ["指導", "開發"],
+        "description": "我指導了初級開發者以幫助他們成長。"
+      }
+    ],
+    "questionnaire": [
+      {
+        "question": "工作領域",
+        "answer": "資訊技術"
+      },
+      {
+        "question": "工作職稱",
+        "answer": "軟體工程師"
+      }
+    ]
+  },
+  {
+    "userId": "5",
+    "selfIntro": "我是一名健身教練，熱愛幫助人們達成他們的健身目標。",
+    "goal": "我想開設自己的健身房。",
+    "profileTags": ["健身", "訓練", "健身房"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "設計鍛鍊計劃",
+        "tags": ["鍛鍊", "健身"],
+        "description": "我為一位客戶設計了一個個性化的鍛鍊計劃。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "進行健身評估",
+        "tags": ["評估", "健身"],
+        "description": "我進行了一次健身評估來追蹤進展。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "帶領團體課程",
+        "tags": ["團體課程", "健身"],
+        "description": "我在本地健身房帶領了一堂團體健身課程。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "參加營養工作坊",
+        "tags": ["營養", "工作坊"],
+        "description": "我參加了一個關於營養和飲食計劃的工作坊。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "創建健身博客",
+        "tags": ["博客", "健身"],
+        "description": "我開始寫一個博客來分享健身技巧和建議。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "準備健身比賽",
+        "tags": ["比賽", "健身"],
+        "description": "我正在為即將到來的健身比賽做準備。"
+      }
+    ]
+  },
+  {
+    "userId": "6",
+    "selfIntro": "我是一名廚師，熱愛創作新食譜和探索全球美食。",
+    "goal": "我想寫自己的食譜書。",
+    "profileTags": ["烹飪", "食譜", "全球美食"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "創作新食譜",
+        "tags": ["食譜", "烹飪"],
+        "description": "我創作了一道融合菜的新食譜。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "參加烹飪學校",
+        "tags": ["烹飪學校", "烹飪"],
+        "description": "我參加了一門烹飪學校的課程以提升我的技能。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "在餐廳工作",
+        "tags": ["餐廳", "烹飪"],
+        "description": "我在一家知名餐廳擔任廚師。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "探索全球美食",
+        "tags": ["全球美食", "烹飪"],
+        "description": "我去不同的國家旅行以學習他們的美食。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "參加烹飪比賽",
+        "tags": ["比賽", "烹飪"],
+        "description": "我參加了一個全國烹飪比賽。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "開設美食博客",
+        "tags": ["博客", "烹飪"],
+        "description": "我開始寫一個博客來分享我的食譜和烹飪經歷。"
+      }
+    ]
+  },
+  {
+    "userId": "7",
+    "selfIntro": "我是一名數據分析師，喜歡解讀數據以提供商業洞察。",
+    "goal": "我想成為數據科學家。",
+    "profileTags": ["數據分析", "商業洞察", "數據科學家"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "分析銷售數據",
+        "tags": ["數據分析", "銷售"],
+        "description": "我分析了銷售數據以識別趨勢和模式。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "創建數據可視化",
+        "tags": ["數據可視化", "數據分析"],
+        "description": "我創建了數據可視化來展示發現。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "進行市場研究",
+        "tags": ["市場研究", "數據分析"],
+        "description": "我進行了市場研究以支持商業決策。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "處理大數據",
+        "tags": ["大數據", "數據分析"],
+        "description": "我使用大數據技術來處理大型數據集。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "參加數據科學工作坊",
+        "tags": ["數據科學", "工作坊"],
+        "description": "我參加了一個工作坊以學習數據科學技術。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "實施機器學習模型",
+        "tags": ["機器學習", "數據分析"],
+        "description": "我實施了一個機器學習模型來預測銷售。"
+      }
+    ]
+  },
+  {
+    "userId": "8",
+    "selfIntro": "我是一名自由撰稿人，喜歡在各種主題上創作引人入勝的內容。",
+    "goal": "我想出版自己的書。",
+    "profileTags": ["寫作", "內容創作", "出版"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "寫博客文章",
+        "tags": ["寫作", "博客"],
+        "description": "我寫了一篇關於故事講述重要性的博客文章。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "自由寫作專案",
+        "tags": ["寫作", "自由職業"],
+        "description": "我完成了一個客戶的自由寫作專案。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "參加寫作工作坊",
+        "tags": ["工作坊", "寫作"],
+        "description": "我參加了一個寫作工作坊以提升我的技能。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "開始寫小說",
+        "tags": ["寫作", "小說"],
+        "description": "我開始寫我的第一部小說。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "探索不同的體裁",
+        "tags": ["寫作", "體裁"],
+        "description": "我探索了不同的寫作體裁以找到我的定位。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "發表文章",
+        "tags": ["寫作", "出版"],
+        "description": "我在一個知名雜誌上發表了一篇文章。"
+      }
+    ]
+  },
+  {
+    "userId": "9",
+    "selfIntro": "我是一名前端工程師，熱衷於構建互動式網頁應用程式。",
+    "goal": "我想成為高級前端開發者。",
+    "profileTags": ["前端開發", "網頁應用程式", "UI/UX"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "學習 React",
+        "tags": ["React", "前端"],
+        "description": "我正在學習 React 以構建現代網頁應用程式。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "實施響應式設計",
+        "tags": ["響應式設計", "UI/UX"],
+        "description": "我在我的最新專案中實施了響應式設計。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "優化網頁性能",
+        "tags": ["性能", "網頁開發"],
+        "description": "我優化了我們網頁應用程式的性能。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "參加前端會議",
+        "tags": ["會議", "前端"],
+        "description": "我參加了一個會議以了解最新的前端趨勢。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "探索新 CSS 框架",
+        "tags": ["CSS", "前端"],
+        "description": "我探索了新的 CSS 框架以提升我的樣式技能。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "創建設計系統",
+        "tags": ["設計系統", "UI/UX"],
+        "description": "我為我們公司的網頁應用程式創建了一個設計系統。"
+      }
+    ]
+  },
+  {
+    "userId": "10",
+    "selfIntro": "我是一名硬體工程師，熱愛設計和測試電子電路。",
+    "goal": "我想成為首席硬體工程師。",
+    "profileTags": ["硬體工程", "電子電路", "測試"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "設計新電路板",
+        "tags": ["電路設計", "硬體"],
+        "description": "我為一個客戶專案設計了一個新電路板。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "測試電子元件",
+        "tags": ["測試", "硬體"],
+        "description": "我測試了電子元件以確保它們符合規格。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "參加硬體工程工作坊",
+        "tags": ["工作坊", "硬體"],
+        "description": "我參加了一個工作坊以學習高級硬體設計技術。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "優化電路佈局",
+        "tags": ["優化", "硬體"],
+        "description": "我優化了電路板的佈局以提升性能。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "探索新微控制器",
+        "tags": ["微控制器", "硬體"],
+        "description": "我探索了新的微控制器以尋找更好的解決方案。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "與軟體團隊合作",
+        "tags": ["合作", "硬體", "軟體"],
+        "description": "我與軟體團隊合作以確保無縫整合。"
+      }
+    ]
+  },
+  {
+    "userId": "11",
+    "selfIntro": "我是一名專業畫家。我喜歡創作藝術和探索新技法。",
+    "goal": "我想舉辦自己的藝術展覽。",
+    "profileTags": ["繪畫", "藝術", "展覽"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "開始畫風景",
+        "tags": ["繪畫", "風景"],
+        "description": "我喜歡畫風景以捕捉大自然的美麗。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "試驗水彩技法",
+        "tags": ["水彩", "藝術"],
+        "description": "我想試驗水彩技法。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "參加藝術工作坊",
+        "tags": ["工作坊", "藝術"],
+        "description": "我參加了一個藝術工作坊來向其他藝術家學習。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "創作新藝術作品",
+        "tags": ["藝術", "創作"],
+        "description": "我正在為我的作品集創作一件新作品。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "探索抽象藝術",
+        "tags": ["抽象", "藝術"],
+        "description": "我正在探索抽象藝術以擴展我的風格。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "為展覽做準備",
+        "tags": ["展覽", "藝術"],
+        "description": "我正在為即將到來的展覽準備我的藝術作品。"
+      }
+    ]
+  },
+  {
+    "userId": "12",
+    "selfIntro": "我是一名從高中物理老師轉行的軟體工程師，正在努力往更高職位發展中",
+    "goal": "我想成為科技主管。",
+    "profileTags": ["軟體工程", "後端開發", "科技主管"],
+    "footPrints": [
+      {
+        "footPrintId": "1",
+        "title": "教高中物理課",
+        "tags": ["教學", "高中物理"],
+        "description": "我教高中物理課，幫助學生理解基本概念。"
+      },
+      {
+        "footPrintId": "2",
+        "title": "參加物理教師培訓",
+        "tags": ["培訓", "教學"],
+        "description": "我參加了物理教師培訓課程以提升我的教學技巧。"
+      },
+      {
+        "footPrintId": "3",
+        "title": "學習程式設計",
+        "tags": ["程式設計", "後端開發"],
+        "description": "我開始學習程式設計，從基礎開始逐漸深入後端開發。"
+      },
+      {
+        "footPrintId": "4",
+        "title": "參加軟體開發培訓",
+        "tags": ["培訓", "軟體開發"],
+        "description": "我參加了一個專業軟體開發培訓課程，學習了後端技術。"
+      },
+      {
+        "footPrintId": "5",
+        "title": "獲得後端工程師職位",
+        "tags": ["後端開發", "職業"],
+        "description": "我成功獲得了一個後端工程師的職位，開始了我的新職業生涯。"
+      },
+      {
+        "footPrintId": "6",
+        "title": "學習領導技巧",
+        "tags": ["領導", "科技主管"],
+        "description": "我開始學習領導技巧，以便未來能成為一名科技主管。"
+      }
+    ]
+  }
+]

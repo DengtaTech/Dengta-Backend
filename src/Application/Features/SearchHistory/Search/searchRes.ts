@@ -11,12 +11,12 @@ export const searchRes = {
         keyword,
         searchResult: result.map((usr) => ({
           id: usr.id,
-          name: usr.name,
+          fullName: usr.fullName,
           lifeRole: usr.lifeRole,
           avatar: usr.avatar,
           selfIntro: usr.selfIntro,
-          profileHashTags: usr.profileHashTags!.map(
-            (hashTag) => hashTag.profileTagType!.content,
+          profileHashTags: usr.mUserProfileHashTag!.map(
+            (hashTag) => hashTag.profileHashTag!.content,
           ),
         })),
       },

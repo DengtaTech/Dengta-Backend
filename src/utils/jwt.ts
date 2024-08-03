@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Dengta } from '../Types/common.js';
 
 type JwtPayload = {
-  id: number;
+  id: string;
 };
 
 export function isTJwtTokenPayload(
@@ -22,7 +22,7 @@ export function isTJwtTokenPayload(
 
 export const auth = {
   generateAccessToken: async (
-    userId: number,
+    userId: string,
   ): Promise<Dengta.IJwtTokenObject> => {
     const secretKey = process.env.JWT_SECRET as string;
     const payload: JwtPayload = { id: userId };
