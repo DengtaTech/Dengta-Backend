@@ -46,6 +46,12 @@ export class InputEmptyError extends BaseError {
   }
 }
 
+export class InvalidInputError extends BaseError {
+  constructor(message: string) {
+    super(`Client error - Invalid input: ${message}`, 400);
+  }
+}
+
 export class EmailFormatError extends BaseError {
   constructor() {
     super('Email format problem', 403);

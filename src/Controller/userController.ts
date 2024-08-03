@@ -5,6 +5,7 @@ import {
   EmailFormatError,
   InputEmptyError,
   NoTokenError,
+  InvalidInputError,
 } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 import { signInHandler } from '../Application/Features/User/SignIn/signInHandler.js';
@@ -12,6 +13,7 @@ import { uploadAvatarHandler } from '../Application/Features/User/UploadAvatar/u
 import { getUserInfoHandler } from '../Application/Features/User/GetUserInfo/getUserInfoHandler.js';
 import { PatchUserInfo } from '../Application/Features/User/PatchUserInfo/Types/api.js';
 import { patchUserInfoHandler } from '../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
+import { validatePatchUserInfoReqBody } from '../Application/Features/User/PatchUserInfo/Types/patchUserInfoDto.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -105,6 +107,11 @@ export const userController = {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(req.body).filter(([_, value]) => value !== undefined),
     );
+
+    const validationErrors = await validatePatchUserInfoReqBody(req.body);
+    if (validationErrors.length > 0) {
+      throw new InvalidInputError(validationErrors.join(', '));
+    }
 
     const response = await patchUserInfoHandler.handle(userId, updateFields);
     res.status(200).json(response);

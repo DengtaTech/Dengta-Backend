@@ -64,9 +64,9 @@ Database.initialize()
     console.log('all database initialized successfully');
     usingRedisExample();
 
-    await initMilvus(true);
-    await usingMilvusExample();
-    console.log('Milvus initialized successfully');
+    // await initMilvus(true);
+    // await usingMilvusExample();
+    // console.log('Milvus initialized successfully');
 
     app.listen(port, () => {
       console.log(`App listening on port: ${port}`);

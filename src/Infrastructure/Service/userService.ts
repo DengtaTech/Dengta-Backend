@@ -98,18 +98,33 @@ export const userService = {
     user.links = user.links || [];
 
     const linksMap = new Map(user.links.map((link) => [link.sourceName, link]));
+    const updatedSourceNames = new Set(links?.map((link) => link.sourceName));
 
+    // Update or add new links
     if (links) {
       links.forEach(({ sourceName, url }) => {
         const existingLink = linksMap.get(sourceName);
         if (existingLink) {
-          existingLink.url = url;
+          existingLink.url = url; // Update existing link
         } else {
           const newLink = Link.create({ sourceName, url, userId: user.id });
-          if (user.links) user.links.push(newLink);
+          if (user.links) user.links.push(newLink); // Add new link
         }
       });
     }
+
+    // Collect links that need to be removed
+    const linksToRemove = user.links.filter(
+      (link) => !updatedSourceNames.has(link.sourceName),
+    );
+
+    for (const link of linksToRemove) {
+      await Link.remove(link);
+    }
+
+    user.links = user.links.filter((link) =>
+      updatedSourceNames.has(link.sourceName),
+    );
 
     await user.save();
   },
