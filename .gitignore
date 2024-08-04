@@ -6,3 +6,4 @@ node_modules
 /nginx.conf
 /coverage
 
+**__pycache__/

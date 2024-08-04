@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "embeddings-server"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["standard"], version = "^0.112.0"}
+sentence-transformers = "^3.0.1"
+torch = "^2.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "embeddings_server.main:start"
