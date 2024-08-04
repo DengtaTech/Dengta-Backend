@@ -9,6 +9,7 @@ SERVICES=(
     "9091 milvus 9091 Milvus-HTTP"
     "9001 minio 9001 Minio-API"
     "9002 minio 9000 Minio-Console"
+    "5001 embeddings_server 5001 embeddings-server"
     # Add more services as needed in the format "local_port remote_host remote_port friendly_name"
 )
 
