@@ -11,7 +11,7 @@
   "dockerComposeFile": "docker-compose.devcontainer.yml",
   "service": "dengta_backend",
   // "runServices": [],
-  "overrideCommand": true,
+  "overrideCommand": false,
 
   // ## Environment ##
   "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
@@ -23,8 +23,8 @@
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
       "packages": "bash,vim,curl,git",
       "upgradePackages": true
-    },
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    }
+    // "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   // "runArgs": [
   // "--gpus",
@@ -49,8 +49,7 @@
   "postCreateCommand": "cd ${containerWorkspaceFolder} && npm install --legacy-peer-deps",
   // "postStartCommand": "",
   "postAttachCommand": {
-    "mysql port forwarding": "service socat_mysql start",
-    "cache port forwarding": "service socat_cache start"
+    "port forwarding": "service socat start"
   },
 
   // ## Tool-specific properties ##
@@ -58,8 +57,8 @@
     "vscode": {
       "extensions": ["esbenp.prettier-vscode"]
     }
-  },
+  }
 
   // ## User in the container. More info: https://aka.ms/dev-containers-non-root. ##
-  "remoteUser": "node"
+  // "remoteUser": "node"
 }
