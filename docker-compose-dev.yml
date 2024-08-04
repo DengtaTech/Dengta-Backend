@@ -26,6 +26,16 @@ services:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: standalone
 
+  embeddings_server:
+    build:
+      context: ./src/EmbeddingsServer/
+      dockerfile: Dockerfile
+    ports:
+      - ${EMBEDDING_SERVER_PORT}:5001
+    container_name: embeddings_server
+    networks:
+      - backend_network
+
 volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}

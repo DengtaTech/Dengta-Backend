@@ -10,6 +10,11 @@ router.post('/signup', wrapAsync(userController.signUp));
 router.post('/signin', wrapAsync(userController.signIn));
 
 router.get('/info', jwtAuthentication, wrapAsync(userController.getUserInfo));
+router.patch(
+  '/info',
+  jwtAuthentication,
+  wrapAsync(userController.patchUserInfo),
+);
 
 router.post(
   '/avatar',
