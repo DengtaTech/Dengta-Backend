@@ -103,17 +103,15 @@ export const userController = {
     }
     const { id: userId } = req.decodedToken;
 
-    const updateFields: PatchUserInfo.PatchUserInfoReqBody = Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      Object.entries(req.body).filter(([_, value]) => value !== undefined),
-    );
-
     const validationErrors = await validatePatchUserInfoReqBody(req.body);
     if (validationErrors.length > 0) {
       throw new InvalidInputError(validationErrors.join(', '));
     }
 
-    const response = await patchUserInfoHandler.handle(userId, updateFields);
+    const response = await patchUserInfoHandler.handle(
+      userId,
+      req.body as PatchUserInfo.PatchUserInfoReqBody,
+    );
     res.status(200).json(response);
   },
 };
