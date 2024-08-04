@@ -5,11 +5,15 @@ import {
   EmailFormatError,
   InputEmptyError,
   NoTokenError,
+  InvalidInputError,
 } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 import { signInHandler } from '../Application/Features/User/SignIn/signInHandler.js';
 import { uploadAvatarHandler } from '../Application/Features/User/UploadAvatar/uploadAvatarHandler.js';
 import { getUserInfoHandler } from '../Application/Features/User/GetUserInfo/getUserInfoHandler.js';
+import { PatchUserInfo } from '../Application/Features/User/PatchUserInfo/Types/api.js';
+import { patchUserInfoHandler } from '../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
+import { validatePatchUserInfoReqBody } from '../Application/Features/User/PatchUserInfo/Types/patchUserInfoDto.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -66,6 +70,7 @@ export const userController = {
     const response = await signInHandler.handle(email, password, provider);
     res.status(200).json(response);
   },
+
   getUserInfo: async (req: Request, res: Response): Promise<void> => {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
@@ -75,6 +80,7 @@ export const userController = {
     const response = await getUserInfoHandler.handle(userId);
     res.status(200).json(response);
   },
+
   uploadAvatar: async (req: Request, res: Response): Promise<void> => {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
@@ -88,6 +94,24 @@ export const userController = {
       return;
     }
     const response = await uploadAvatarHandler.handle(userId, file);
+    res.status(200).json(response);
+  },
+
+  patchUserInfo: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+
+    const validationErrors = await validatePatchUserInfoReqBody(req.body);
+    if (validationErrors.length > 0) {
+      throw new InvalidInputError(validationErrors.join(', '));
+    }
+
+    const response = await patchUserInfoHandler.handle(
+      userId,
+      req.body as PatchUserInfo.PatchUserInfoReqBody,
+    );
     res.status(200).json(response);
   },
 };

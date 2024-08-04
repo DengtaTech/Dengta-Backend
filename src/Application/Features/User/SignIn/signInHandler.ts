@@ -9,6 +9,7 @@ export const signInHandler = {
   handle: async (
     email: string,
     password: string,
+    // 我覺得登入不用加 provider，都用 email 登入判斷就好
     provider: string,
   ): Promise<Signin.ISignInResponse> => {
     //先沒考慮第三方
