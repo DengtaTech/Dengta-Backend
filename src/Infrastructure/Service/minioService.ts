@@ -13,7 +13,8 @@ export const minioService = {
       if (!exists) {
         throw new Error('Bucket does not exist');
       }
-      const filename = `${userId}-avatar`;
+      const fileExtension = sourceFile.mimetype.split('/')[1];
+      const filename = `${userId}-avatar.${fileExtension}`;
       await minioClient.putObject(
         avatarBucket,
         filename,
@@ -31,6 +32,7 @@ export const minioService = {
   },
   getPresignedAvatarUrl: async (filename: string): Promise<string | null> => {
     try {
+      // the first part of the path is the bucket name, may have multiple parts
       const presignedUrl = await minioClient.presignedGetObject(
         avatarBucket,
         filename,
