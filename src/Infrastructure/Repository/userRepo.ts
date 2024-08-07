@@ -21,7 +21,6 @@ export const userRepo = {
     try {
       const newUser = new User();
       newUser.email = userInfoObj.email;
-      newUser.fullName = userInfoObj.fullName;
       newUser.firstName = userInfoObj.firstName;
       newUser.lastName = userInfoObj.lastName;
       newUser.lifeRole = userInfoObj.lifeRole;

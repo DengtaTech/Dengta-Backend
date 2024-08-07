@@ -7,6 +7,8 @@ import {
   Relation,
   OneToOne,
   Index,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { Footprint } from './footprint.js';
 import { UserCredential } from './userCredential.js';
@@ -35,6 +37,12 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   lastName!: string;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  setFullName() {
+    this.fullName = `${this.firstName} ${this.lastName}`;
+  }
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   lifeRole!: string;

@@ -33,6 +33,7 @@ export const Database = new DataSource({
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE,
   synchronize: true,
+  logging: false,
   entities: [
     User,
     Footprint,
