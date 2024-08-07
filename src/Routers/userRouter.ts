@@ -15,6 +15,11 @@ router.patch(
   jwtAuthentication,
   wrapAsync(userController.patchUserInfo),
 );
+router.get(
+  '/:userId/info',
+  jwtAuthentication, // 還是驗證 token
+  wrapAsync(userController.getOthersInfo),
+);
 
 router.post(
   '/avatar',

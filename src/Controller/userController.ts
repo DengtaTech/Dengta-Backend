@@ -114,4 +114,14 @@ export const userController = {
     );
     res.status(200).json(response);
   },
+  getOthersInfo: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const { userId: queryUserId } = req.params;
+
+    const response = await getUserInfoHandler.handle(queryUserId);
+    res.status(200).json(response);
+  },
 };
