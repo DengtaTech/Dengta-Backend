@@ -32,10 +32,6 @@ export class LinkDto {
 export class PatchUserInfoReqBodyDto {
   @IsOptional()
   @IsString()
-  fullName?: string;
-
-  @IsOptional()
-  @IsString()
   firstName?: string;
 
   @IsOptional()

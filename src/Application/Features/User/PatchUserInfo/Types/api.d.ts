@@ -6,7 +6,6 @@ declare namespace PatchUserInfo {
   type PatchUserInfoReqBody = Partial<
     Pick<
       User,
-      | 'fullName'
       | 'firstName'
       | 'lastName'
       | 'lifeRole'
