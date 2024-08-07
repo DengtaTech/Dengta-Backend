@@ -25,6 +25,13 @@ export class Footprint extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   content!: string | null;
 
+  @Column({
+    type: 'enum',
+    enum: ['life', 'career', 'other'],
+    nullable: false,
+  })
+  category!: string;
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   titleImage!: string | null;
 
