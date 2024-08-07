@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Taipei
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y bash curl sudo ncat \
+    && apt-get install -y bash curl socat ncat \
     # -sLf --> Without the -1 option, curl is free to negotiate HTTP/2 if it's available, which can provide performance benefits such as reduced latency and header compression
     && curl -sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' \
     | bash \
@@ -17,9 +17,13 @@ RUN apt-get update && apt-get upgrade -y \
 RUN mkdir -p /etc/sudoers.d \
     && echo "node ALL=(ALL:ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/node
 
-COPY socat_mysql /etc/init.d/socat_mysql
-COPY socat_cache /etc/init.d/socat_cache
+COPY socat /etc/init.d/socat
+COPY entrypoint.sh /entrypoint.sh
 
-USER node
+USER root
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+STOPSIGNAL SIGTERM
 
 EXPOSE 3001
