@@ -10,7 +10,6 @@ export const signUpHandler = {
     const provider: string = 'native';
     const {
       firstName,
-      fullName,
       lastName,
       lifeRole,
       gender,
@@ -24,7 +23,6 @@ export const signUpHandler = {
     const hashedPassword = await tool.generateHashPassword(password);
     const userInfoObj: Signup.ISignUpReq = {
       firstName: firstName,
-      fullName: fullName,
       lastName: lastName,
       lifeRole: lifeRole,
       gender: gender,

@@ -16,6 +16,12 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      etcd:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      milvus:
+        condition: service_healthy
 
   mysql:
     extends:
@@ -27,9 +33,41 @@ services:
       file: ../docker-compose-dev.yml
       service: cache
 
+  etcd:
+    extends:
+      file: ../docker-compose-dev.yml
+      service: etcd
+    networks:
+      - backend_network
+
+  minio:
+    extends:
+      file: ../docker-compose-dev.yml
+      service: minio
+    networks:
+      - backend_network
+
+  milvus:
+    extends:
+      file: ../docker-compose-dev.yml
+      service: milvus
+    networks:
+      - backend_network
+
+  embeddings_server:
+    extends:
+      file: ../docker-compose-dev.yml
+      service: embeddings_server
+
 volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}
+  dengta_milvus_etcd_volume:
+    name: ${MILVUS_VOLUME_PATH}_etcd
+  dengta_milvus_minio_volume:
+    name: ${MILVUS_VOLUME_PATH}_minio
+  dengta_milvus_volume:
+    name: ${MILVUS_VOLUME_PATH}
 
 networks:
   backend_network:

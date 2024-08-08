@@ -19,7 +19,6 @@ export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
     const {
       firstName,
-      fullName,
       lastName,
       lifeRole,
       gender,
@@ -31,7 +30,6 @@ export const userController = {
     } = req.body;
     if (
       !firstName ||
-      !fullName ||
       !lastName ||
       !lifeRole ||
       !gender ||
@@ -48,7 +46,6 @@ export const userController = {
     const birthdayDate = new Date(birthday);
     const userDto: Signup.ISignUpReq = {
       firstName,
-      fullName,
       lastName,
       lifeRole,
       gender,
@@ -112,6 +109,16 @@ export const userController = {
       userId,
       req.body as PatchUserInfo.PatchUserInfoReqBody,
     );
+    res.status(200).json(response);
+  },
+  getOthersInfo: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const { userId: queryUserId } = req.params;
+
+    const response = await getUserInfoHandler.handle(queryUserId);
     res.status(200).json(response);
   },
 };

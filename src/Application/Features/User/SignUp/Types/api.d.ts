@@ -5,7 +5,6 @@ declare namespace Signup {
 
   type SignupUserInput = Pick<
     User,
-    | 'fullName'
     | 'firstName'
     | 'lastName'
     | 'lifeRole'

@@ -1,4 +1,3 @@
-import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { UserCredential } from '../../Database/Entities/userCredential.js';
 import { EntityManager } from 'typeorm';
