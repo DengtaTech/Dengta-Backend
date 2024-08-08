@@ -10,7 +10,7 @@
     "dev:run": "nodemon --exec node --enable-source-maps --no-warnings=ExperimentalWarning --loader ts-node/esm --env-file=./.env.dev ./src/app.ts",
     "dev": "npm run dev:setenv && npm run dev:run",
     "devi:setenv": "docker compose -f ./docker-compose-dev.yml --env-file ./.env.dev up -d --build",
-    "devi": "infisical run --env=dev --path=/share -- concurrently 'npx tsc --watch' 'nodemon -q dist/src/app.js'",
+    "devi": "infisical run --env=dev --path=/share -- concurrently -c 'blue.bold,red.bold' 'npx tsc --watch' 'nodemon -q dist/src/app.js'",
     "test": "infisical run --env=dev --path=/share -- jest --runInBand --coverage --forceExit",
     "staging": "docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
     "lint": "npx eslint .",

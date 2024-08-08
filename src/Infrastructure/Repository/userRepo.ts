@@ -1,6 +1,8 @@
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
-import { EntityManager } from 'typeorm';
+import { EntityManager, Relation } from 'typeorm';
+import { Link } from '../../Database/Entities/link.js';
+
 export const userRepo = {
   findByEmail: async (email: string): Promise<User | null> => {
     try {
@@ -41,16 +43,28 @@ export const userRepo = {
   ): Promise<User | null> => {
     try {
       if (transactionManager) {
-        const user = transactionManager.findOne(User, {
+        const user = await transactionManager.findOne(User, {
           where: { id: userId },
           relations: ['links'],
         });
+        if (user?.links) {
+          user.links = user.links.map((link) => {
+            const { sourceName, url } = link;
+            return { sourceName, url };
+          }) as Relation<Link[]>;
+        }
         return user;
       } else {
         const user = await User.findOne({
           where: { id: userId },
           relations: ['links'],
         });
+        if (user?.links) {
+          user.links = user.links.map((link) => {
+            const { sourceName, url } = link;
+            return { sourceName, url };
+          }) as Relation<Link[]>;
+        }
         return user;
       }
     } catch (error) {
