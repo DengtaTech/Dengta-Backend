@@ -1,10 +1,11 @@
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { EntityManager } from 'typeorm';
+import { User } from '../../Database/Entities/user.js';
 export const linkRepo = {
   initLink: async (
     links: Signup.ILink[],
-    userId: string,
+    user: User,
     transactionManager: EntityManager,
   ): Promise<Link[]> => {
     try {
@@ -12,7 +13,7 @@ export const linkRepo = {
         const newLink = new Link();
         newLink.sourceName = link.sourceName;
         newLink.url = link.url;
-        newLink.userId = userId;
+        newLink.user = user;
         return newLink;
       });
       // 批量插入

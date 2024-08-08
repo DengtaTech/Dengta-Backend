@@ -36,7 +36,7 @@ export const userService = {
         if (userInfoObj.links.length !== 0) {
           initLinks = await linkRepo.initLink(
             userInfoObj.links,
-            newUser.id,
+            newUser,
             transactionManager,
           );
         }

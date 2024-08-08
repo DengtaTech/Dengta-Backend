@@ -3,7 +3,6 @@ import { footprintController } from '../Controller/footprintController.js';
 import wrapAsync from '../utils/wrapAsync.js';
 import { jwtAuthentication } from '../Middlewares/auth.js';
 
-
 const router = express.Router();
 
 router.post(

@@ -19,6 +19,6 @@ export const signInHandler = {
       throw new WrongPasswordError();
 
     const tokenInfo = await auth.generateAccessToken(result.id);
-    return signInRes.customize(result, tokenInfo);
+    return await signInRes.customize(result, tokenInfo);
   },
 };
