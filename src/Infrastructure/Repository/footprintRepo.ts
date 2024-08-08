@@ -13,7 +13,7 @@ export const footprintRepo = {
       footprint.user = user;
       const savedFootprint = await footprint.save();
       return {
-        id: savedFootprint.id
+        id: savedFootprint.id,
       };
     } catch (error) {
       console.error('Failed to init footprint:');

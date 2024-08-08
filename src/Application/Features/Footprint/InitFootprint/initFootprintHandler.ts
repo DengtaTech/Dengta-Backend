@@ -1,7 +1,6 @@
 import { footprintService } from '../../../../Infrastructure/Service/footprintService.js';
 import { initFootprintRes } from './initFootprintRes.js';
 
-
 import { InitFootprint } from './Types/api.js';
 
 export const initFootprintHandler = {
