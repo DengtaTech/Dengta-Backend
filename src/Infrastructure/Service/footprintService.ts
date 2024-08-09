@@ -1,6 +1,11 @@
 import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
-import { UserNotFoundError } from '../../Errors/errors.js';
+import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
+import { Database } from '../../Database/data-source.js';
+import { FootprintHashTag } from '../../Database/Entities/footprintHashTag.js';
+import { FootprintNotFoundError, UserNotFoundError } from '../../Errors/errors.js';
+import { footprintHashTagRepo } from '../Repository/footprintHashTagRepo.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
+import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprintHashTagRepo.js';
 import { userRepo } from '../Repository/userRepo.js';
 
 export const footprintService = {
@@ -14,5 +19,45 @@ export const footprintService = {
     }
     const result = await footprintRepo.initFootprint(user, status);
     return result;
+  },
+  publish: async (
+    userId: string,
+    reqBody: PublishFootprint.IPublishFootprintReqBody,
+  ): Promise<PublishFootprint.IPublishFootprintDto> => {
+    const user = await userRepo.findById(userId);
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+    const footprint = await footprintRepo.findByFootprintId(reqBody.footprintId);
+    if (!footprint) {
+      throw new FootprintNotFoundError();
+    }
+    // transaction begin
+    return Database.transaction(async (transactionManager) => {
+        try {
+            await footprintRepo.updateFootprint(footprint, reqBody, transactionManager);
+            for (const tagContent of reqBody.tags) {
+                let footprintHashTag = await footprintHashTagRepo.findByContent(tagContent);
+                if (!footprintHashTag) {
+                    footprintHashTag = await footprintHashTagRepo.insertNewFootprintHashTag(tagContent, transactionManager);
+                }
+                await mFootprintFootprintHashTagRepo.insertNewRecord(footprint, footprintHashTag as FootprintHashTag, transactionManager);
+            }
+            return {
+                id: footprint.id,
+            };
+        } catch (error) {
+          console.error('Error in DB ->', error);
+          throw error;
+        }
+      });
+  },
+  updateFootprintHeadImg: async (footprintId: string, permanentURL: string): Promise<void> => {
+    const footprint = await footprintRepo.findByFootprintId(footprintId);
+    if (!footprint) {
+      throw new Error('Footprint not found');
+    }
+    footprint.titleImage = permanentURL;
+    await footprint.save();
   },
 };

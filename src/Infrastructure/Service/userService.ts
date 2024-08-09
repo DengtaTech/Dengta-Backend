@@ -73,12 +73,12 @@ export const userService = {
     return userInfo;
   },
 
-  updateAvatar: async (userId: string, filename: string): Promise<void> => {
+  updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
     const user = await userRepo.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
-    user.avatar = filename;
+    user.avatar = permanentURL;
     await user.save();
   },
 
@@ -93,6 +93,7 @@ export const userService = {
 
     const { links, ...otherFields } = updateFields;
 
+    // 這之後會不會需要一個transaction
     Object.assign(user, otherFields);
 
     user.links = user.links || [];
@@ -102,13 +103,14 @@ export const userService = {
 
     // Update or add new links
     if (links) {
-      links.forEach(({ sourceName, url }) => {
+      links.forEach(async ({ sourceName, url }) => {
         const existingLink = linksMap.get(sourceName);
         if (existingLink) {
           existingLink.url = url; // Update existing link
         } else {
-          const newLink = Link.create({ sourceName, url, userId: user.id });
-          if (user.links) user.links.push(newLink); // Add new link
+          const newLink = await linkRepo.insertNewLink(user, sourceName as string, url as string);
+          // const newLink = Link.create({ sourceName, url, userId: user.id });
+          if (user.links) user.links.push(newLink);
         }
       });
     }

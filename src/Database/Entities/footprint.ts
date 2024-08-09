@@ -55,8 +55,15 @@ export class Footprint extends BaseEntity {
   })
   createdAt!: Date;
 
-  @Column('uuid')
-  userId!: string;
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  occurAt!: Date;
+
+  // @Column('uuid')
+  // userId!: string;
 
   @ManyToOne(() => User, (user) => user.footprints, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

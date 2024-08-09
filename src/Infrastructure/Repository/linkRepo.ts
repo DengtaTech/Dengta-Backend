@@ -24,4 +24,31 @@ export const linkRepo = {
       throw error;
     }
   },
+  insertNewLink: async (
+    user: User,
+    sourceName: string,
+    url: string,
+    transactionManager?: EntityManager,
+  ): Promise<Link> => {
+    try {
+      if (transactionManager) {
+        const link = new Link();
+        link.sourceName = sourceName;
+        link.url = url;
+        link.user = user;
+        const savedLink = await transactionManager.save(link);
+        return savedLink;
+      } else {
+        const link = new Link();
+        link.sourceName = sourceName;
+        link.url = url;
+        link.user = user;
+        const savedLink = await link.save();
+        return savedLink;
+      }
+    } catch (error) {
+      console.error('Error finding user by id:');
+      throw error;
+    }
+  },
 };

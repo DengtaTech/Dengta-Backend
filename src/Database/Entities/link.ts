@@ -34,8 +34,8 @@ export class Link extends BaseEntity {
   })
   updatedAt!: Date;
 
-  @Column('uuid')
-  userId!: string;
+  // @Column('uuid')
+  // userId!: string;
 
   @ManyToOne(() => User, (user) => user.links, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

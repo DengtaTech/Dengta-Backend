@@ -21,6 +21,11 @@ export class UserNotFoundError extends BaseError {
     super('Email not signed up', 403);
   }
 }
+export class FootprintNotFoundError extends BaseError {
+  constructor() {
+    super('Footprint not found', 403);
+  }
+}
 
 export class NoTokenError extends BaseError {
   constructor() {
@@ -58,11 +63,6 @@ export class EmailFormatError extends BaseError {
   }
 }
 
-export class UploadAvatarError extends BaseError {
-  constructor() {
-    super('Failed to upload avatar', 500);
-  }
-}
 
 export class DatabaseError extends BaseError {
   constructor() {
