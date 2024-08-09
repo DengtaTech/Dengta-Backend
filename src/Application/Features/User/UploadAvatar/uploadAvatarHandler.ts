@@ -15,9 +15,7 @@ export const uploadAvatarHandler = {
 
     await userService.updateAvatar(userId, permanentURL);
 
-    const response = await uploadAvatarRes.customize(
-      permanentURL
-    );
+    const response = await uploadAvatarRes.customize(permanentURL);
     return response;
   },
 };

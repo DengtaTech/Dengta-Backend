@@ -1,5 +1,4 @@
-import { UploadFootprintHeadImg } from "./Types/api.js";
-
+import { UploadFootprintHeadImg } from './Types/api.js';
 
 export const uploadFootprintHeadImgRes = {
   customize: async (

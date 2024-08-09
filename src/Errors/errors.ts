@@ -63,7 +63,6 @@ export class EmailFormatError extends BaseError {
   }
 }
 
-
 export class DatabaseError extends BaseError {
   constructor() {
     super('Database Error', 500);

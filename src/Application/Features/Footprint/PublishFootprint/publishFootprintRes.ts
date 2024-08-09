@@ -1,4 +1,4 @@
-import { PublishFootprint } from "./Types/api.js";
+import { PublishFootprint } from './Types/api.js';
 
 export const publishFootprintRes = {
   customize: async (

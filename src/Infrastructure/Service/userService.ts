@@ -108,7 +108,11 @@ export const userService = {
         if (existingLink) {
           existingLink.url = url; // Update existing link
         } else {
-          const newLink = await linkRepo.insertNewLink(user, sourceName as string, url as string);
+          const newLink = await linkRepo.insertNewLink(
+            user,
+            sourceName as string,
+            url as string,
+          );
           // const newLink = Link.create({ sourceName, url, userId: user.id });
           if (user.links) user.links.push(newLink);
         }

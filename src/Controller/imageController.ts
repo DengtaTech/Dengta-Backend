@@ -11,11 +11,11 @@ export const imageController = {
       throw new Error('Missing bucketName or key parameter');
     }
     const imgStream = await minioService.getImg(bucketName, key);
-    
+
     if (imgStream) {
-        const contentType = mime.lookup(key) || 'application/octet-stream';
-        res.setHeader('Content-Type', contentType);
-        imgStream.pipe(res);
+      const contentType = mime.lookup(key) || 'application/octet-stream';
+      res.setHeader('Content-Type', contentType);
+      imgStream.pipe(res);
     } else {
       throw new Error('Error get image');
     }

@@ -60,7 +60,10 @@ export const minioService = {
       return null;
     }
   },
-  getPresignedImgUrl: async (bucketName: string, filename: string): Promise<string | null> => {
+  getPresignedImgUrl: async (
+    bucketName: string,
+    filename: string,
+  ): Promise<string | null> => {
     try {
       // the first part of the path is the bucket name, may have multiple parts
       const presignedUrl = await minioClient.presignedGetObject(

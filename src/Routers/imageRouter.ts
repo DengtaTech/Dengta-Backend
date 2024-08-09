@@ -4,9 +4,6 @@ import { imageController } from '../Controller/imageController.js';
 
 const router = express.Router();
 
-router.get(
-  '/:bucketName/*',
-  wrapAsync(imageController.getImage),
-);
+router.get('/:bucketName/*', wrapAsync(imageController.getImage));
 
 export default router;
