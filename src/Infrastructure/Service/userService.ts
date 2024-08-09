@@ -103,18 +103,13 @@ export const userService = {
 
     // Update or add new links
     if (links) {
-      links.forEach(async ({ sourceName, url }) => {
+      links.forEach(({ sourceName, url }) => {
         const existingLink = linksMap.get(sourceName);
         if (existingLink) {
           existingLink.url = url; // Update existing link
         } else {
-          const newLink = await linkRepo.insertNewLink(
-            user,
-            sourceName as string,
-            url as string,
-          );
-          // const newLink = Link.create({ sourceName, url, userId: user.id });
-          if (user.links) user.links.push(newLink);
+          const newLink = Link.create({ sourceName, url, user: user });
+          if (user.links) user.links.push(newLink); // Add new link
         }
       });
     }

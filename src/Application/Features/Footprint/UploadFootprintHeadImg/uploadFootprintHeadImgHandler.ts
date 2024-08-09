@@ -1,5 +1,4 @@
 import { minioService } from '../../../../Infrastructure/Service/minioService.js';
-import { footprintBucket } from '../../../../Database/FileServer/minioClient.js';
 
 import { UploadFootprintHeadImg } from './Types/api.js';
 import { footprintService } from '../../../../Infrastructure/Service/footprintService.js';
