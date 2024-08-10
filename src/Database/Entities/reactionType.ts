@@ -7,7 +7,10 @@ import {
   Relation,
 } from 'typeorm';
 import { MUserFootprintReaction } from './mUserFootprintReaction.js';
-import { nativeReactions, type NativeReaction } from '../../Application/Features/Footprint/Reaction/Types/reactions.js';
+import {
+  nativeReactions,
+  type NativeReaction,
+} from '../../Application/Features/Footprint/Reaction/Types/reactions.js';
 
 @Entity({ name: 'ReactionType' })
 export class ReactionType extends BaseEntity {

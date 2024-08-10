@@ -19,6 +19,6 @@ declare namespace Reaction {
   type IReactionRes = {
     data: {
       reaction: NativeReaction | 'empty';
-    }
-  }
+    };
+  };
 }

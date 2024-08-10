@@ -50,7 +50,9 @@ export const footprintService = {
       }
     });
   },
-  removeReaction: async (reaction: Reaction.IRevokeReactionDto): Promise<void> => {
+  removeReaction: async (
+    reaction: Reaction.IRevokeReactionDto,
+  ): Promise<void> => {
     return Database.transaction(async (transactionManager) => {
       try {
         if (
@@ -72,12 +74,18 @@ export const footprintService = {
         console.error('Error in DB ->', error);
         throw error;
       }
-      const reactionObj = await mUserFootprintReactionRepo.findByIds(reaction, transactionManager);
+      const reactionObj = await mUserFootprintReactionRepo.findByIds(
+        reaction,
+        transactionManager,
+      );
       if (reactionObj === null) {
         // ignore on inexistent reaction
         return;
       }
-      await mUserFootprintReactionRepo.deleteReaction(reactionObj, transactionManager);
+      await mUserFootprintReactionRepo.deleteReaction(
+        reactionObj,
+        transactionManager,
+      );
     });
   },
 };

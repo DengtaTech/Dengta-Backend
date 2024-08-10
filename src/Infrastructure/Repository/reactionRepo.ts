@@ -11,5 +11,5 @@ export const reactionRepo = {
     } else {
       return await ReactionType.findOne({ where: { id } });
     }
-  }
+  },
 };

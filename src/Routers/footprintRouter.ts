@@ -5,6 +5,10 @@ import { jwtAuthentication } from '../Middlewares/auth.js';
 
 const router = express.Router();
 
-router.put('/emotion', jwtAuthentication, wrapAsync(footprintController.emotion));
+router.put(
+  '/emotion',
+  jwtAuthentication,
+  wrapAsync(footprintController.emotion),
+);
 
 export default router;

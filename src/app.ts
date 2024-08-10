@@ -67,21 +67,21 @@ try {
 }
 
 await initFixedDbData();
-    initDbCache();
-    console.log('all database initialized successfully');
+initDbCache();
+console.log('all database initialized successfully');
 await Promise.all([
   usingRedisExample(),
   Promise.resolve([
     initMilvus(true),
     usingMilvusExample(),
     async () => {
-    console.log('Milvus initialized successfully');
+      console.log('Milvus initialized successfully');
     },
   ]),
 ]);
 
-    app.listen(port, () => {
-      console.log(`App listening on port: ${port}`);
-  });
+app.listen(port, () => {
+  console.log(`App listening on port: ${port}`);
+});
 
 export default app; // Export for testing

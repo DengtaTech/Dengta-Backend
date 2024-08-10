@@ -3,9 +3,7 @@ import { ReactionType } from '../../Database/Entities/reactionType.js';
 import { reactionTypeRepo } from '../Repository/reactionTypeRepo.js';
 
 export const reactionTypeService = {
-  findByName: async (
-    name: NativeReaction,
-  ): Promise<ReactionType | null> => {
+  findByName: async (name: NativeReaction): Promise<ReactionType | null> => {
     return reactionTypeRepo.findByName(name);
   },
 };

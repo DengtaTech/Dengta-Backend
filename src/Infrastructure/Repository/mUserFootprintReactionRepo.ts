@@ -23,7 +23,10 @@ export const mUserFootprintReactionRepo = {
     }
   },
   expressReaction: async (
-    reaction: Pick<MUserFootprintReaction, 'userId' | 'footprintId' | 'reactionTypeId'>,
+    reaction: Pick<
+      MUserFootprintReaction,
+      'userId' | 'footprintId' | 'reactionTypeId'
+    >,
     transactionManager?: EntityManager,
   ) => {
     const newReaction = new MUserFootprintReaction();
