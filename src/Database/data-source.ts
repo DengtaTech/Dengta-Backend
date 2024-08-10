@@ -59,12 +59,12 @@ export const Database = new DataSource({
 });
 
 export async function initFixedDbData() {
-  nativeReactions.forEach(async (reaction) => {
+  for (const reaction of nativeReactions) {
     const maybeExistReaction = await reactionTypeRepo.findByName(reaction);
     if (maybeExistReaction === null) {
       const newReaction = new ReactionType();
       newReaction.name = reaction;
       await newReaction.save();
     }
-  });
+  }
 }
