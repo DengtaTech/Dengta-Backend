@@ -71,13 +71,11 @@ initDbCache();
 console.log('all database initialized successfully');
 await Promise.all([
   usingRedisExample(),
-  Promise.resolve([
-    initMilvus(true),
-    usingMilvusExample(),
-    async () => {
-      console.log('Milvus initialized successfully');
-    },
-  ]),
+  (async () => {
+    await initMilvus(true);
+    await usingMilvusExample();
+    console.log('Milvus initialized successfully');
+  })(),
 ]);
 
 app.listen(port, () => {
