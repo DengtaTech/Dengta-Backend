@@ -20,6 +20,7 @@ import { UserEmbedding } from './Entities/userEmbedding.js';
 import { ProfileHashTagEmbedding } from './Entities/profileHashTagEmbedding.js';
 import { SearchHistory } from './Entities/searchHistory.js';
 import { nativeReactions } from '../Application/Features/Footprint/Reaction/Types/reactions.js';
+import { reactionTypeRepo } from '../Infrastructure/Repository/reactionTypeRepo.js';
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
@@ -59,8 +60,11 @@ export const Database = new DataSource({
 
 export async function initFixedDbData() {
   nativeReactions.forEach(async (reaction) => {
-    const newReaction = new ReactionType();
-    newReaction.name = reaction;
-    await newReaction.save();
+    const maybeExistReaction = await reactionTypeRepo.findByName(reaction);
+    if (maybeExistReaction === null) {
+      const newReaction = new ReactionType();
+      newReaction.name = reaction;
+      await newReaction.save();
+    }
   });
 }
