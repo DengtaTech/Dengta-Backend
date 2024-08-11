@@ -27,4 +27,10 @@ router.post(
   wrapAsync(userController.uploadAvatar),
 );
 
+router.post(
+  '/:followeeId/follow',
+  jwtAuthentication,
+  wrapAsync(userController.follow),
+);
+
 export default router;
