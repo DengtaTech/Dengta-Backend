@@ -15,6 +15,7 @@ import { PatchUserInfo } from '../Application/Features/User/PatchUserInfo/Types/
 import { patchUserInfoHandler } from '../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
 import { validatePatchUserInfoReqBody } from '../Application/Features/User/PatchUserInfo/Types/patchUserInfoDto.js';
 import { followHandler } from '../Application/Features/User/Follow/followHandler.js';
+import { unFollowHandler } from '../Application/Features/User/UnFollow/unFollowHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -134,6 +135,23 @@ export const userController = {
     }
 
     const response = await followHandler.handle({ followerId, followeeId });
+    res.status(200).json(response);
+  },
+  unFollow: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: followerId } = req.decodedToken;
+    const { followeeId } = req.params;
+
+    if (!followeeId) {
+      throw new InvalidInputError('followeeId is inlegal');
+    }
+
+    const response = await unFollowHandler.handle({
+      followerId,
+      followeeId,
+    });
     res.status(200).json(response);
   },
 };

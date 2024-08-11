@@ -33,4 +33,10 @@ router.post(
   wrapAsync(userController.follow),
 );
 
+router.delete(
+  '/:followeeId/follow',
+  jwtAuthentication,
+  wrapAsync(userController.unFollow),
+);
+
 export default router;
