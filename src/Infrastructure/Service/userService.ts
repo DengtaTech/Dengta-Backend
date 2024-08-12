@@ -111,7 +111,6 @@ export const userService = {
         if (existingLink) {
           console.log('existingLink', existingLink);
           existingLink.url = url; // Update existing link
-          
         } else {
           // 發現create()要save才會真的進db
           const newLink = Link.create({ sourceName, url, user });
