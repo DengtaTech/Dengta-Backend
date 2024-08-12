@@ -45,7 +45,10 @@ export const userService = {
           fullName: newUser.fullName,
           lifeRole: newUser.lifeRole,
           email: newUser.email,
-          links: initLinks,
+          links: initLinks.map((link) => {
+            const { sourceName, url } = link;
+            return { sourceName, url };
+          }),
         } as Signup.ISignUpDto;
       } catch (error) {
         console.error('Error in DB ->', error);

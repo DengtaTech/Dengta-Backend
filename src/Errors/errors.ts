@@ -18,12 +18,12 @@ export class EmailExistsError extends BaseError {
 
 export class UserNotFoundError extends BaseError {
   constructor() {
-    super('Email not signed up', 403);
+    super('Email not signed up', 404);
   }
 }
 export class FootprintNotFoundError extends BaseError {
   constructor() {
-    super('Footprint not found', 403);
+    super('Footprint not found', 404);
   }
 }
 

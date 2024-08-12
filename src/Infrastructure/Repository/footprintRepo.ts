@@ -24,16 +24,16 @@ export const footprintRepo = {
   },
   updateFootprint: async (
     footprint: Footprint,
-    reqBody: PublishFootprint.IPublishFootprintReqBody,
+    footprintObj: PublishFootprint.IPublishFootprintReqBody,
     transactionManager: EntityManager,
   ): Promise<void> => {
     try {
-      footprint.title = reqBody.title;
-      footprint.content = reqBody.content;
-      footprint.category = reqBody.category;
-      footprint.milestone = reqBody.milestone;
-      footprint.occurAt = reqBody.occurAt;
-      footprint.status = reqBody.status;
+      footprint.title = footprintObj.title;
+      footprint.content = footprintObj.content;
+      footprint.category = footprintObj.category;
+      footprint.milestone = footprintObj.milestone;
+      footprint.occurAt = footprintObj.occurAt;
+      footprint.status = footprintObj.status;
       await transactionManager.save(footprint);
     } catch (error) {
       console.error('Failed to init footprint:');
