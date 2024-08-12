@@ -106,22 +106,28 @@ export const userService = {
 
     // Update or add new links
     if (links) {
-      links.forEach(({ sourceName, url }) => {
+      for (const { sourceName, url } of links) {
         const existingLink = linksMap.get(sourceName);
         if (existingLink) {
+          console.log('existingLink', existingLink);
           existingLink.url = url; // Update existing link
+          
         } else {
-          const newLink = Link.create({ sourceName, url, user: user });
-          if (user.links) user.links.push(newLink); // Add new link
+          // 發現create()要save才會真的進db
+          const newLink = Link.create({ sourceName, url, user });
+          // await newLink.save();
+          user.links.push(newLink); // Add new link
         }
-      });
+      }
     }
-
     // Collect links that need to be removed
     const linksToRemove = user.links.filter(
       (link) => !updatedSourceNames.has(link.sourceName),
     );
-
+    // await Link.remove(linksToRemove);
+    // for (const link of linksToRemove) {
+    //   await Link.delete(link.id);
+    // }
     for (const link of linksToRemove) {
       await Link.remove(link);
     }
@@ -129,7 +135,7 @@ export const userService = {
     user.links = user.links.filter((link) =>
       updatedSourceNames.has(link.sourceName),
     );
-
+    // console.log(user.links);
     await user.save();
   },
 };

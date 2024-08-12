@@ -50,5 +50,5 @@ export const linkRepo = {
       console.error('Error finding user by id:');
       throw error;
     }
-  },
+  }
 };
