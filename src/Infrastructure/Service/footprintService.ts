@@ -1,6 +1,7 @@
 import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
 import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
 import { Database } from '../../Database/data-source.js';
+import { Footprint } from '../../Database/Entities/footprint.js';
 import { FootprintHashTag } from '../../Database/Entities/footprintHashTag.js';
 import {
   FootprintNotFoundError,
@@ -25,14 +26,14 @@ export const footprintService = {
   },
   publish: async (
     userId: string,
-    reqBody: PublishFootprint.IPublishFootprintReqBody,
-  ): Promise<PublishFootprint.IPublishFootprintDto> => {
+    footprintObj: PublishFootprint.IPublishFootprintReqBody,
+  ): Promise<Footprint> => {
     const user = await userRepo.findById(userId);
     if (!user) {
       throw new UserNotFoundError();
     }
     const footprint = await footprintRepo.findByFootprintId(
-      reqBody.footprintId,
+        footprintObj.footprintId,
     );
     if (!footprint) {
       throw new FootprintNotFoundError();
@@ -40,12 +41,12 @@ export const footprintService = {
     // transaction begin
     return Database.transaction(async (transactionManager) => {
       try {
-        await footprintRepo.updateFootprint(
+        const updatedFootprint = await footprintRepo.updateFootprint(
           footprint,
-          reqBody,
+          footprintObj,
           transactionManager,
         );
-        for (const tagContent of reqBody.tags) {
+        for (const tagContent of footprintObj.tags) {
           let footprintHashTag =
             await footprintHashTagRepo.findByContent(tagContent);
           if (!footprintHashTag) {
@@ -56,14 +57,12 @@ export const footprintService = {
               );
           }
           await mFootprintFootprintHashTagRepo.insertNewRecord(
-            footprint,
+            updatedFootprint,
             footprintHashTag as FootprintHashTag,
             transactionManager,
           );
         }
-        return {
-          id: footprint.id,
-        };
+        return updatedFootprint;
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;

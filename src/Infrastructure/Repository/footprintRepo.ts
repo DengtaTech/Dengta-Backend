@@ -26,7 +26,7 @@ export const footprintRepo = {
     footprint: Footprint,
     footprintObj: PublishFootprint.IPublishFootprintReqBody,
     transactionManager: EntityManager,
-  ): Promise<void> => {
+  ): Promise<Footprint> => {
     try {
       footprint.title = footprintObj.title;
       footprint.content = footprintObj.content;
@@ -34,7 +34,8 @@ export const footprintRepo = {
       footprint.milestone = footprintObj.milestone;
       footprint.occurAt = footprintObj.occurAt;
       footprint.status = footprintObj.status;
-      await transactionManager.save(footprint);
+      const savedFootprint = await transactionManager.save(footprint);
+      return savedFootprint;
     } catch (error) {
       console.error('Failed to init footprint:');
       throw error;

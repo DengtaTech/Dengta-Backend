@@ -1,13 +1,13 @@
+import { Footprint } from '../../../../Database/Entities/footprint.js';
 import { PublishFootprint } from './Types/api.js';
 
 export const publishFootprintRes = {
   customize: async (
-    result: PublishFootprint.IPublishFootprintDto,
+    result: Footprint,
   ): Promise<PublishFootprint.IPublishFootprintResponse> => {
     const response: PublishFootprint.IPublishFootprintResponse = {
       data: {
-        id: result.id,
-        message: 'Footprint published successfully',
+        footrpint: result,
       },
     };
     return response;
