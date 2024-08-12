@@ -1,10 +1,10 @@
-import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
+import { Dengta } from '../../Types/common.js';
 import { Link } from '../../Database/Entities/link.js';
 import { EntityManager } from 'typeorm';
 import { User } from '../../Database/Entities/user.js';
 export const linkRepo = {
   initLink: async (
-    links: Signup.ILink[],
+    links: Dengta.ILink[],
     user: User,
     transactionManager: EntityManager,
   ): Promise<Link[]> => {
@@ -51,4 +51,19 @@ export const linkRepo = {
       throw error;
     }
   },
+  deleteLink: async (
+    user: User,
+    transactionManager?: EntityManager,
+  ): Promise<void> => {
+    try {
+      if (transactionManager) {
+        await transactionManager.delete(Link, { user: user });
+      } else {
+        await Link.delete({ user: user });
+      }
+    } catch (error) {
+      console.error('Error deleting link by user:');
+      throw error;
+    }
+  }
 };

@@ -121,4 +121,21 @@ export const userRepo = {
       throw error;
     }
   },
+  updateLink: async (
+    user: User,
+    links: Link[],
+    transactionManager?: EntityManager,
+  ): Promise<void> => {
+    try {
+      user.links = links;
+      if (transactionManager) {
+        await transactionManager.save(user);
+      } else {
+        await user.save();
+      }
+    } catch (error) {
+      console.error('Error updating link:');
+      throw error;
+    }
+  },
 };

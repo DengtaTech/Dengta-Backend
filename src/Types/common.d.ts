@@ -1,5 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
-
+import { Link } from '../Database/Entities/link.js';
 declare namespace Dengta {
   type TJwtTokenPayload = JwtPayload & {
     id: string;
@@ -9,4 +9,6 @@ declare namespace Dengta {
     token: string;
     expire: string;
   }
+  type ILink = Pick<Link, 'sourceName' | 'url'>;
+
 }

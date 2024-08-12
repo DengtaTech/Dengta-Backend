@@ -96,45 +96,19 @@ export const userService = {
 
     const { links, ...otherFields } = updateFields;
 
-    // 這之後會不會需要一個transaction
     Object.assign(user, otherFields);
-
-    user.links = user.links || [];
-
-    const linksMap = new Map(user.links.map((link) => [link.sourceName, link]));
-    const updatedSourceNames = new Set(links?.map((link) => link.sourceName));
-
-    // Update or add new links
-    if (links) {
-      for (const { sourceName, url } of links) {
-        const existingLink = linksMap.get(sourceName);
-        if (existingLink) {
-          console.log('existingLink', existingLink);
-          existingLink.url = url; // Update existing link
-        } else {
-          // 發現create()要save才會真的進db
-          const newLink = Link.create({ sourceName, url, user });
-          // await newLink.save();
-          user.links.push(newLink); // Add new link
-        }
+    console.log(user);
+    // transaction begin
+    return Database.transaction(async (transactionManager) => {
+      try {
+        await linkRepo.deleteLink(user,transactionManager);
+        const newLinks = await linkRepo.initLink(links, user, transactionManager);
+        await userRepo.updateLink(user, newLinks, transactionManager);
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
       }
-    }
-    // Collect links that need to be removed
-    const linksToRemove = user.links.filter(
-      (link) => !updatedSourceNames.has(link.sourceName),
-    );
-    // await Link.remove(linksToRemove);
-    // for (const link of linksToRemove) {
-    //   await Link.delete(link.id);
-    // }
-    for (const link of linksToRemove) {
-      await Link.remove(link);
-    }
+    });
 
-    user.links = user.links.filter((link) =>
-      updatedSourceNames.has(link.sourceName),
-    );
-    // console.log(user.links);
-    await user.save();
   },
 };
