@@ -65,5 +65,5 @@ export const linkRepo = {
       console.error('Error deleting link by user:');
       throw error;
     }
-  }
+  },
 };

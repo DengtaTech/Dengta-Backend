@@ -101,14 +101,17 @@ export const userService = {
     // transaction begin
     return Database.transaction(async (transactionManager) => {
       try {
-        await linkRepo.deleteLink(user,transactionManager);
-        const newLinks = await linkRepo.initLink(links, user, transactionManager);
+        await linkRepo.deleteLink(user, transactionManager);
+        const newLinks = await linkRepo.initLink(
+          links,
+          user,
+          transactionManager,
+        );
         await userRepo.updateLink(user, newLinks, transactionManager);
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
       }
     });
-
   },
 };

@@ -10,5 +10,4 @@ declare namespace Dengta {
     expire: string;
   }
   type ILink = Pick<Link, 'sourceName' | 'url'>;
-
 }
