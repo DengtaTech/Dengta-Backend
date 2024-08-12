@@ -4,7 +4,7 @@ import {
   avatarBucket,
   footprintBucket,
 } from '../../Database/FileServer/minioClient.js';
-const PERMANENT_IMG_URL = process.env.PERMANENT_IMG_URL;
+const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 export const minioService = {
   uploadAvatar: async (
     userId: string,
@@ -26,7 +26,7 @@ export const minioService = {
           'Content-Type': sourceFile.mimetype,
         },
       );
-      const permanentURL = `${PERMANENT_IMG_URL}/image/${avatarBucket}/${filename}`;
+      const permanentURL = `${BACKEND_DOMAIN}/image/${avatarBucket}/${filename}`;
       return permanentURL;
     } catch (err) {
       console.error('Error:', err);
@@ -53,7 +53,7 @@ export const minioService = {
           'Content-Type': sourceFile.mimetype,
         },
       );
-      const permanentURL = `${PERMANENT_IMG_URL}/image/${footprintBucket}/${filename}`;
+      const permanentURL = `${BACKEND_DOMAIN}/image/${footprintBucket}/${filename}`;
       return permanentURL;
     } catch (err) {
       console.error('Error:', err);
