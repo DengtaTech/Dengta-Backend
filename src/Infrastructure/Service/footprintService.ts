@@ -33,7 +33,7 @@ export const footprintService = {
       throw new UserNotFoundError();
     }
     const footprint = await footprintRepo.findByFootprintId(
-        footprintObj.footprintId,
+      footprintObj.footprintId,
     );
     if (!footprint) {
       throw new FootprintNotFoundError();
