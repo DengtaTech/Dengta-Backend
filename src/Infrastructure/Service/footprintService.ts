@@ -3,9 +3,7 @@ import { PublishFootprint } from '../../Application/Features/Footprint/PublishFo
 import { Database } from '../../Database/data-source.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { FootprintHashTag } from '../../Database/Entities/footprintHashTag.js';
-import {
-  FootprintNotFoundError,
-} from '../../Errors/errors.js';
+import { FootprintNotFoundError } from '../../Errors/errors.js';
 import { footprintHashTagRepo } from '../Repository/footprintHashTagRepo.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprintHashTagRepo.js';
@@ -15,7 +13,6 @@ export const footprintService = {
     userId: string,
     status: string,
   ): Promise<InitFootprint.IInitFootprintDto> => {
-    
     const result = await footprintRepo.initFootprint(userId, status);
     return result;
   },

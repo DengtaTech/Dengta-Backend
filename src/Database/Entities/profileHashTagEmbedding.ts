@@ -20,7 +20,7 @@ export class ProfileHashTagEmbedding extends BaseEntity {
 
   @Column('uuid')
   profileHashTagId!: string;
-  
+
   @OneToOne(
     () => ProfileHashTag,
     (profileHashTag) => profileHashTag.embedding,
