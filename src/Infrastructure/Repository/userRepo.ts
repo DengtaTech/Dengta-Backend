@@ -30,6 +30,7 @@ export const userRepo = {
       newUser.provider = userInfoObj.provider as string;
       newUser.avatar = userInfoObj.avatar as string;
       newUser.gender = userInfoObj.gender;
+      newUser.clerkId = userInfoObj.clerkId;
       const savedUser = await transactionManager.save(newUser);
       return savedUser;
     } catch (error) {

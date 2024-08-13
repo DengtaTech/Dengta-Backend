@@ -16,6 +16,9 @@ export class FootprintHashTagEmbedding extends BaseEntity {
   @Column({ type: 'json', nullable: false })
   contentEmbedding!: number[];
 
+  @Column('uuid')
+  footprintHashTagId!: string;
+  
   @OneToOne(
     () => FootprintHashTag,
     (footprintHashTag) => footprintHashTag.embedding,

@@ -6,13 +6,13 @@ import { EntityManager } from 'typeorm';
 
 export const footprintRepo = {
   initFootprint: async (
-    user: User,
+    userId: string,
     status: string,
   ): Promise<InitFootprint.IInitFootprintDto> => {
     try {
       const footprint = new Footprint();
       footprint.status = status;
-      footprint.user = user;
+      footprint.userId = userId;
       const savedFootprint = await footprint.save();
       return {
         id: savedFootprint.id,

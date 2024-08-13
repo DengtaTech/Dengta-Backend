@@ -23,7 +23,7 @@ declare namespace Signup {
   }
   //Dto專門用於Service層組資料，回傳給Handler用
   interface ISignUpDto
-    extends Pick<User, 'id' | 'fullName' | 'lifeRole' | 'email'> {
+    extends Pick<User, 'id' | 'fullName' | 'lifeRole' | 'email' | 'clerkId'> {
     links: Dengta.ILink[];
   }
   interface ISignUpResponse {

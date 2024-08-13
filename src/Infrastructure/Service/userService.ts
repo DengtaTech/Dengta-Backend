@@ -45,6 +45,7 @@ export const userService = {
           fullName: newUser.fullName,
           lifeRole: newUser.lifeRole,
           email: newUser.email,
+          clerkId: newUser.clerkId,
           links: initLinks.map((link) => {
             const { sourceName, url } = link;
             return { sourceName, url };
@@ -97,7 +98,6 @@ export const userService = {
     const { links, ...otherFields } = updateFields;
 
     Object.assign(user, otherFields);
-    console.log(user);
     // transaction begin
     return Database.transaction(async (transactionManager) => {
       try {

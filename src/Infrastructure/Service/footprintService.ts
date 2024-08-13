@@ -5,33 +5,23 @@ import { Footprint } from '../../Database/Entities/footprint.js';
 import { FootprintHashTag } from '../../Database/Entities/footprintHashTag.js';
 import {
   FootprintNotFoundError,
-  UserNotFoundError,
 } from '../../Errors/errors.js';
 import { footprintHashTagRepo } from '../Repository/footprintHashTagRepo.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprintHashTagRepo.js';
-import { userRepo } from '../Repository/userRepo.js';
 
 export const footprintService = {
   initFootprint: async (
     userId: string,
     status: string,
   ): Promise<InitFootprint.IInitFootprintDto> => {
-    const user = await userRepo.findById(userId);
-    if (!user) {
-      throw new UserNotFoundError();
-    }
-    const result = await footprintRepo.initFootprint(user, status);
+    
+    const result = await footprintRepo.initFootprint(userId, status);
     return result;
   },
   publish: async (
-    userId: string,
     footprintObj: PublishFootprint.IPublishFootprintReqBody,
   ): Promise<Footprint> => {
-    const user = await userRepo.findById(userId);
-    if (!user) {
-      throw new UserNotFoundError();
-    }
     const footprint = await footprintRepo.findByFootprintId(
       footprintObj.footprintId,
     );

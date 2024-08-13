@@ -18,6 +18,9 @@ export class UserEmbedding extends BaseEntity {
   @Column({ type: 'json', nullable: false })
   selfIntroEmbedding!: number[];
 
+  @Column('uuid')
+  userId!: string;
+  
   @OneToOne(() => User, (user) => user.selfIntroEmbedding, {
     onDelete: 'CASCADE',
   })

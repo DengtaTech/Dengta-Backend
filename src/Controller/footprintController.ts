@@ -28,14 +28,12 @@ export const footprintController = {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
     }
-    const { id: userId } = req.decodedToken;
     const validationErrors = await validatePublishFootprintReqBody(req.body);
     if (validationErrors.length > 0) {
       throw new InvalidInputError(validationErrors.join(', '));
     }
 
     const response = await publishFootprintHandler.handle(
-      userId,
       req.body as PublishFootprint.IPublishFootprintReqBody,
     );
     res.status(200).json(response);
