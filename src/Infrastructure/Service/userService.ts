@@ -36,7 +36,7 @@ export const userService = {
         if (userInfoObj.links.length !== 0) {
           initLinks = await linkRepo.initLink(
             userInfoObj.links,
-            newUser.id,
+            newUser,
             transactionManager,
           );
         }
@@ -45,7 +45,11 @@ export const userService = {
           fullName: newUser.fullName,
           lifeRole: newUser.lifeRole,
           email: newUser.email,
-          links: initLinks,
+          clerkId: newUser.clerkId,
+          links: initLinks.map((link) => {
+            const { sourceName, url } = link;
+            return { sourceName, url };
+          }),
         } as Signup.ISignUpDto;
       } catch (error) {
         console.error('Error in DB ->', error);
@@ -73,12 +77,12 @@ export const userService = {
     return userInfo;
   },
 
-  updateAvatar: async (userId: string, filename: string): Promise<void> => {
+  updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
     const user = await userRepo.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
-    user.avatar = filename;
+    user.avatar = permanentURL;
     await user.save();
   },
 
@@ -94,38 +98,20 @@ export const userService = {
     const { links, ...otherFields } = updateFields;
 
     Object.assign(user, otherFields);
-
-    user.links = user.links || [];
-
-    const linksMap = new Map(user.links.map((link) => [link.sourceName, link]));
-    const updatedSourceNames = new Set(links?.map((link) => link.sourceName));
-
-    // Update or add new links
-    if (links) {
-      links.forEach(({ sourceName, url }) => {
-        const existingLink = linksMap.get(sourceName);
-        if (existingLink) {
-          existingLink.url = url; // Update existing link
-        } else {
-          const newLink = Link.create({ sourceName, url, userId: user.id });
-          if (user.links) user.links.push(newLink); // Add new link
-        }
-      });
-    }
-
-    // Collect links that need to be removed
-    const linksToRemove = user.links.filter(
-      (link) => !updatedSourceNames.has(link.sourceName),
-    );
-
-    for (const link of linksToRemove) {
-      await Link.remove(link);
-    }
-
-    user.links = user.links.filter((link) =>
-      updatedSourceNames.has(link.sourceName),
-    );
-
-    await user.save();
+    // transaction begin
+    return Database.transaction(async (transactionManager) => {
+      try {
+        await linkRepo.deleteLink(user, transactionManager);
+        const newLinks = await linkRepo.initLink(
+          links,
+          user,
+          transactionManager,
+        );
+        await userRepo.updateLink(user, newLinks, transactionManager);
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
   },
 };
