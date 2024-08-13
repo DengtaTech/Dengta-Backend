@@ -1,5 +1,4 @@
 import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
-import { User } from '../../Database/Entities/user.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
 import { EntityManager } from 'typeorm';
