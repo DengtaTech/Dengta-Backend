@@ -33,7 +33,7 @@ export const footprintService = {
             transactionManager,
           )) === null
         ) {
-          throw new InvalidInputError('No such footprint');
+          throw new FootprintNotFoundError();
         }
 
         const reactionType = await reactionTypeRepo.findByName(
@@ -75,7 +75,7 @@ export const footprintService = {
             transactionManager,
           )) === null
         ) {
-          throw new InvalidInputError('No such footprint');
+          throw new FootprintNotFoundError();
         }
       } catch (error) {
         console.error('Error in DB ->', error);
@@ -148,7 +148,7 @@ export const footprintService = {
   ): Promise<void> => {
     const footprint = await footprintRepo.findByFootprintId(footprintId);
     if (!footprint) {
-      throw new Error('Footprint not found');
+      throw new FootprintNotFoundError();
     }
     footprint.titleImage = permanentURL;
     await footprint.save();
