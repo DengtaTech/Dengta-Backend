@@ -145,7 +145,7 @@ export const userController = {
     const { followeeId } = req.params;
 
     if (!followeeId) {
-      throw new InvalidInputError('followeeId is inlegal');
+      throw new InvalidInputError('followeeId is illegal');
     }
 
     const response = await unFollowHandler.handle({
