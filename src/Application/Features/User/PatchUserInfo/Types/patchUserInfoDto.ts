@@ -7,6 +7,7 @@ import {
   IsEnum,
   ValidateNested,
   validate,
+  IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -62,8 +63,8 @@ export class PatchUserInfoReqBodyDto {
   @IsString()
   selfIntro?: string;
 
-  @IsOptional()
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => LinkDto)
-  links?: LinkDto[];
+  links!: LinkDto[];
 }

@@ -30,6 +30,7 @@ export const userRepo = {
       newUser.provider = userInfoObj.provider as string;
       newUser.avatar = userInfoObj.avatar as string;
       newUser.gender = userInfoObj.gender;
+      newUser.clerkId = userInfoObj.clerkId;
       const savedUser = await transactionManager.save(newUser);
       return savedUser;
     } catch (error) {
@@ -118,6 +119,23 @@ export const userRepo = {
       }
     } catch (error) {
       console.error('Error finding user by name and tag:');
+      throw error;
+    }
+  },
+  updateLink: async (
+    user: User,
+    links: Link[],
+    transactionManager?: EntityManager,
+  ): Promise<void> => {
+    try {
+      user.links = links;
+      if (transactionManager) {
+        await transactionManager.save(user);
+      } else {
+        await user.save();
+      }
+    } catch (error) {
+      console.error('Error updating link:');
       throw error;
     }
   },

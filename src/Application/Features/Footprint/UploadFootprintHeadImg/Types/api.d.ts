@@ -1,7 +1,7 @@
 import { User, UserCredential } from './entities.ts';
 
-declare namespace UploadAvatar {
-  interface IUploadAvatarResponse {
+declare namespace UploadFootprintHeadImg {
+  interface IUploadFootprintHeadImgResponse {
     data: {
       url: string;
     };

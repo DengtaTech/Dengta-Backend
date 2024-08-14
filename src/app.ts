@@ -7,9 +7,10 @@ import fakeUserCh from './Test/mockData/fakeUser-ch.json' assert { type: 'json' 
 import { recommendationService } from './Infrastructure/Service/recommendationService.js';
 
 import userRouter from './Routers/userRouter.js';
+import imageRouter from './Routers/imageRouter.js';
+import footprintRouter from './Routers/footprintRouter.js';
 import recommendationRouter from './Routers/recommendationRouter.js';
 import searchHistoryRouter from './Routers/searchHistoryRouter.js';
-import footprintRouter from './Routers/footprintRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
 import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
@@ -24,6 +25,7 @@ const app = express();
 const port = process.env.EXPRESS_PORT;
 
 app.use(express.json());
+app.use('/image', imageRouter);
 app.use('/api/1.0/user', userRouter);
 app.use('/api/1.0/recommendation', recommendationRouter);
 app.use('/api/1.0/search', searchHistoryRouter);

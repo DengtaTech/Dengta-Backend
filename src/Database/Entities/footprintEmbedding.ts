@@ -21,6 +21,9 @@ export class FootprintEmbedding extends BaseEntity {
   @Column({ type: 'json', nullable: false })
   contentEmbedding!: number[];
 
+  @Column('uuid')
+  footprintId!: string;
+
   @OneToOne(() => Footprint, (footprint) => footprint.embedding, {
     onDelete: 'CASCADE',
   })
