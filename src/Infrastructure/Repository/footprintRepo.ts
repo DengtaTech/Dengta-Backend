@@ -1,9 +1,16 @@
-import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
-import { Footprint } from '../../Database/Entities/footprint.js';
-import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
 import { EntityManager } from 'typeorm';
+import { Footprint } from '../../Database/Entities/footprint.js';
+import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
+import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
 
 export const footprintRepo = {
+  findById: async (id: Footprint['id'], transactionManager?: EntityManager) => {
+    if (transactionManager) {
+      return await transactionManager.findOne(Footprint, { where: { id } });
+    } else {
+      return await Footprint.findOne({ where: { id } });
+    }
+  },
   initFootprint: async (
     userId: string,
     status: string,

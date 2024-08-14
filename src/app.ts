@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import 'reflect-metadata';
-import { Database } from './Database/data-source.js';
+import { Database, initFixedDbData } from './Database/data-source.js';
 import { initMilvus } from './Database/VectorDB/vector-db.js';
 // import fakeUsers from './Test/mockData/fakeUsers.json' assert { type: 'json' };
 import fakeUserCh from './Test/mockData/fakeUser-ch.json' assert { type: 'json' };
@@ -62,22 +62,26 @@ async function usingMilvusExample() {
   }
 }
 
-Database.initialize()
-  .then(async () => {
-    initDbCache();
-    console.log('all database initialized successfully');
-    usingRedisExample();
+try {
+  await Database.initialize();
+} catch (err) {
+  console.error('Failed to initialize the database:', err);
+}
 
+await initFixedDbData();
+initDbCache();
+console.log('all database initialized successfully');
+await Promise.all([
+  usingRedisExample(),
+  (async () => {
     await initMilvus(true);
     await usingMilvusExample();
     console.log('Milvus initialized successfully');
+  })(),
+]);
 
-    app.listen(port, () => {
-      console.log(`App listening on port: ${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Failed to initialize the database:', err);
-  });
+app.listen(port, () => {
+  console.log(`App listening on port: ${port}`);
+});
 
 export default app; // Export for testing

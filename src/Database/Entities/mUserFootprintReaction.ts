@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   Relation,
+  Column,
 } from 'typeorm';
 import { User } from './user.js';
 import { Footprint } from './footprint.js';
@@ -18,7 +19,7 @@ export class MUserFootprintReaction extends BaseEntity {
   @PrimaryColumn('uuid')
   footprintId!: string;
 
-  @PrimaryColumn('uuid')
+  @Column('uuid', { nullable: false })
   reactionTypeId!: string;
 
   @ManyToOne(() => User, (user) => user.mUserFootprintReaction, {
