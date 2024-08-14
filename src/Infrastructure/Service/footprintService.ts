@@ -80,22 +80,22 @@ export const footprintService = {
         ) {
           throw new FootprintNotFoundError();
         }
+        const reactionObj = await mUserFootprintReactionRepo.findByIds(
+          reaction,
+          transactionManager,
+        );
+        if (reactionObj === null) {
+          // ignore on inexistent reaction
+          return;
+        }
+        await mUserFootprintReactionRepo.deleteReaction(
+          reactionObj,
+          transactionManager,
+        );
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
       }
-      const reactionObj = await mUserFootprintReactionRepo.findByIds(
-        reaction,
-        transactionManager,
-      );
-      if (reactionObj === null) {
-        // ignore on inexistent reaction
-        return;
-      }
-      await mUserFootprintReactionRepo.deleteReaction(
-        reactionObj,
-        transactionManager,
-      );
     });
   },
   initFootprint: async (
