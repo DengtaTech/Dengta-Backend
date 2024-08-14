@@ -1,7 +1,11 @@
 import { Reaction } from '../../Application/Features/Footprint/Reaction/Types/api.js';
 import { Database } from '../../Database/data-source.js';
 import { MUserFootprintReaction } from '../../Database/Entities/mUserFootprintReaction.js';
-import { InvalidInputError, UserNotFoundError } from '../../Errors/errors.js';
+import {
+  InvalidInputError,
+  UserNotFoundError,
+  FootprintNotFoundError,
+} from '../../Errors/errors.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { mUserFootprintReactionRepo } from '../Repository/mUserFootprintReactionRepo.js';
 import { reactionTypeRepo } from '../Repository/reactionTypeRepo.js';
@@ -10,7 +14,6 @@ import { InitFootprint } from '../../Application/Features/Footprint/InitFootprin
 import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { FootprintHashTag } from '../../Database/Entities/footprintHashTag.js';
-import { FootprintNotFoundError } from '../../Errors/errors.js';
 import { footprintHashTagRepo } from '../Repository/footprintHashTagRepo.js';
 import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprintHashTagRepo.js';
 
