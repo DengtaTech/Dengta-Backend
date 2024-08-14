@@ -19,11 +19,18 @@ export class Footprint extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
-  title!: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  title!: string | null;
 
   @Column({ type: 'text', nullable: true })
   content!: string | null;
+
+  @Column({
+    type: 'enum',
+    enum: ['life', 'career', 'other'],
+    nullable: true,
+  })
+  category!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   titleImage!: string | null;
@@ -38,7 +45,7 @@ export class Footprint extends BaseEntity {
   })
   status!: string;
 
-  @Column({ type: 'boolean', nullable: false, default: false }) // in mysql, boolean is tinyint(1)
+  @Column({ type: 'boolean', default: false }) // in mysql, boolean is tinyint(1)
   milestone!: boolean;
 
   @Column({
@@ -47,6 +54,13 @@ export class Footprint extends BaseEntity {
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
+
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  occurAt!: Date;
 
   @Column('uuid')
   userId!: string;

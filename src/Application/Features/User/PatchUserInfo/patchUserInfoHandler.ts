@@ -10,6 +10,6 @@ export const patchUserInfoHandler = {
     message: string;
   }> => {
     await userService.updateUserInfo(userId, updateFields);
-    return patchUserInfoRes.customize();
+    return await patchUserInfoRes.customize();
   },
 };

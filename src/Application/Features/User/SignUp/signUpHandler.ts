@@ -36,6 +36,6 @@ export const signUpHandler = {
     };
     const result = await userService.signUp(userInfoObj);
     const tokenInfo = await auth.generateAccessToken(result.id);
-    return signUpRes.customize(result, tokenInfo);
+    return await signUpRes.customize(result, tokenInfo);
   },
 };

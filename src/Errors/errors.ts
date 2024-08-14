@@ -18,7 +18,12 @@ export class EmailExistsError extends BaseError {
 
 export class UserNotFoundError extends BaseError {
   constructor() {
-    super('Email not signed up', 403);
+    super('Email not signed up', 404);
+  }
+}
+export class FootprintNotFoundError extends BaseError {
+  constructor() {
+    super('Footprint not found', 404);
   }
 }
 
@@ -55,12 +60,6 @@ export class InvalidInputError extends BaseError {
 export class EmailFormatError extends BaseError {
   constructor() {
     super('Email format problem', 403);
-  }
-}
-
-export class UploadAvatarError extends BaseError {
-  constructor() {
-    super('Failed to upload avatar', 500);
   }
 }
 

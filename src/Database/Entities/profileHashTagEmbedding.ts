@@ -18,6 +18,9 @@ export class ProfileHashTagEmbedding extends BaseEntity {
   @Column({ type: 'json', nullable: false })
   contentEmbedding!: number[];
 
+  @Column('uuid')
+  profileHashTagId!: string;
+
   @OneToOne(
     () => ProfileHashTag,
     (profileHashTag) => profileHashTag.embedding,
