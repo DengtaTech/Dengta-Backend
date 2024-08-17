@@ -39,4 +39,10 @@ router.delete(
   wrapAsync(userController.unFollow),
 );
 
+router.get(
+  '/:userId/footprints',
+  jwtAuthentication,
+  wrapAsync(userController.getFootprints),
+);
+
 export default router;

@@ -16,6 +16,7 @@ import { patchUserInfoHandler } from '../Application/Features/User/PatchUserInfo
 import { validatePatchUserInfoReqBody } from '../Application/Features/User/PatchUserInfo/Types/patchUserInfoDto.js';
 import { followHandler } from '../Application/Features/User/Follow/followHandler.js';
 import { unFollowHandler } from '../Application/Features/User/UnFollow/unFollowHandler.js';
+import { getFootprintsHandler } from '../Application/Features/User/GetFootprints/getFootprints.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -153,5 +154,18 @@ export const userController = {
       followeeId,
     });
     res.status(200).json(response);
+  },
+  getFootprints: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+    const page = parseInt(req.query.page as string) || 0;
+    if (page < 0) {
+      throw new InvalidInputError('page must be a positive integer');
+    }
+    const footprints = await getFootprintsHandler.handle(userId, page);
+
+    res.status(200).json(footprints);
   },
 };

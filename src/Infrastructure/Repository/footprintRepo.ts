@@ -2,6 +2,12 @@ import { EntityManager } from 'typeorm';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
 import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
+import { GetFootprints } from '../../Application/Features/User/GetFootprints/Types/api.js';
+import { User } from '../../Database/Entities/user.js';
+import {
+  nativeReactions,
+  type NativeReaction,
+} from '../../Application/Features/Footprint/Reaction/Types/reactions.js';
 
 export const footprintRepo = {
   findById: async (id: Footprint['id'], transactionManager?: EntityManager) => {
@@ -57,5 +63,69 @@ export const footprintRepo = {
       console.error('Failed to find footprint by id:');
       throw error;
     }
+  },
+  findByUserId: async (
+    userId: User['id'],
+    offset: number = 0,
+    limit: number = 10,
+  ): Promise<GetFootprints.TFootprintContent[]> => {
+    const [footprints] = await Footprint.createQueryBuilder('footprint')
+      .where('footprint.userId = :userId', { userId })
+      .leftJoinAndSelect(
+        'footprint.mFootprintFootprintHashTag',
+        'hashTagRelation',
+      )
+      .leftJoinAndSelect('hashTagRelation.footprintHashTag', 'hashTag')
+      .leftJoinAndSelect('footprint.mUserFootprintReaction', 'reaction')
+      .leftJoinAndSelect('reaction.reactionType', 'reactionType')
+      .select([
+        'footprint',
+        'hashTagRelation',
+        'hashTag.content',
+        'reaction',
+        'reactionType.name',
+      ])
+      .orderBy('footprint.occurAt', 'DESC')
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
+
+    const mappedFootprints = footprints.map((footprint) => {
+      const hashtags =
+        footprint.mFootprintFootprintHashTag?.map(
+          (relation) => relation.footprintHashTag?.content,
+        ) ?? [];
+
+      const reactionCounts = footprint.mUserFootprintReaction?.reduce(
+        (acc, reaction) => {
+          const reactionName = reaction.reactionType?.name;
+          if (reactionName) {
+            acc[reactionName] = (acc[reactionName] || 0) + 1;
+          }
+          return acc;
+        },
+        {} as Record<NativeReaction, number>,
+      );
+
+      const reactionCountsWithZero = nativeReactions.reduce(
+        (acc, reaction) => {
+          acc[reaction] = reactionCounts?.[reaction] || 0;
+          return acc;
+        },
+        {} as Record<NativeReaction, number>,
+      );
+
+      delete footprint.mFootprintFootprintHashTag;
+      delete footprint.mUserFootprintReaction;
+      delete (footprint as GetFootprints.TFootprint).content;
+
+      return {
+        ...footprint,
+        hashtags,
+        reactionCounts: reactionCountsWithZero,
+      } as GetFootprints.TFootprintContent;
+    });
+
+    return mappedFootprints;
   },
 };

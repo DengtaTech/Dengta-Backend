@@ -156,4 +156,10 @@ export const footprintService = {
     footprint.titleImage = permanentURL;
     await footprint.save();
   },
+  getFootprintByUserId: async (userId: string, offset: number) => {
+    const footprints = await footprintRepo.findByUserId(userId, offset);
+    return {
+      footprints,
+    };
+  },
 };
