@@ -161,7 +161,7 @@ export const footprintService = {
     updateFields: PatchFootprintSetting.PatchFootprintSettingReqBody,
   ): Promise<Footprint> => {
     const footprint = await footprintRepo.findByFootprintId(
-        updateFields.footprintId,
+      updateFields.footprintId,
     );
     if (!footprint) {
       throw new FootprintNotFoundError();
@@ -172,37 +172,35 @@ export const footprintService = {
     Object.assign(footprint, otherFields);
     // transaction begin
     return Database.transaction(async (transactionManager) => {
-        try {
-            await transactionManager.delete(MFootprintFootprintHashTag, { footprintId: footprint.id });
-            for (const tagContent of tags) {
-                let footprintHashTag =
-                    await footprintHashTagRepo.findByContent(tagContent);
-                if (!footprintHashTag) {
-                    footprintHashTag =
-                        await footprintHashTagRepo.insertNewFootprintHashTag(
-                            tagContent,
-                            transactionManager,
-                        );
-                }
-                await mFootprintFootprintHashTagRepo.insertNewRecord(
-                    footprint.id,
-                    footprintHashTag.id,
-                    transactionManager,
-                );
-            }
-            await transactionManager.save(footprint);
-            return footprint;
-
-        } catch (error) {
-          console.error('Error in DB ->', error);
-          throw error;
+      try {
+        await transactionManager.delete(MFootprintFootprintHashTag, {
+          footprintId: footprint.id,
+        });
+        for (const tagContent of tags) {
+          let footprintHashTag =
+            await footprintHashTagRepo.findByContent(tagContent);
+          if (!footprintHashTag) {
+            footprintHashTag =
+              await footprintHashTagRepo.insertNewFootprintHashTag(
+                tagContent,
+                transactionManager,
+              );
+          }
+          await mFootprintFootprintHashTagRepo.insertNewRecord(
+            footprint.id,
+            footprintHashTag.id,
+            transactionManager,
+          );
         }
-      });
-    
+        await transactionManager.save(footprint);
+        return footprint;
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
   },
-  deleteFootprint: async (
-    footprintId: string,
-  ): Promise<void> => {
+  deleteFootprint: async (footprintId: string): Promise<void> => {
     const footprint = await footprintRepo.findById(footprintId);
     if (!footprint) {
       throw new FootprintNotFoundError();

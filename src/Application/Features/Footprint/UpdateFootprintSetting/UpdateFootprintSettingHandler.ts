@@ -2,7 +2,6 @@ import { footprintService } from '../../../../Infrastructure/Service/footprintSe
 import { PatchFootprintSetting } from './Types/api.js';
 import { patchFootprintSettingRes } from './UpdateFootprintSettingRes.js';
 
-
 export const patchFootprintSettingHandler = {
   handle: async (
     reqBody: PatchFootprintSetting.PatchFootprintSettingReqBody,

@@ -2,7 +2,6 @@ import { footprintService } from '../../../../Infrastructure/Service/footprintSe
 import { deleteFootprintRes } from './deleteFootprintRes.js';
 import { DeleteFootprint } from './Types/api.js';
 
-
 export const deleteFootprintHandler = {
   handle: async (
     footprintId: string,

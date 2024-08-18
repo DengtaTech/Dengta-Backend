@@ -93,7 +93,9 @@ export const footprintController = {
       throw new NoTokenError();
     }
 
-    const validationErrors = await validatePatchFootprintSettingReqBody(req.body);
+    const validationErrors = await validatePatchFootprintSettingReqBody(
+      req.body,
+    );
     if (validationErrors.length > 0) {
       throw new InvalidInputError(validationErrors.join(', '));
     }
@@ -112,7 +114,7 @@ export const footprintController = {
       throw new InputEmptyError();
     }
     // 不確定要不要檢查 userId 是否是作者
-    
+
     const response = await deleteFootprintHandler.handle(footprintId);
     res.status(200).json(response);
   },

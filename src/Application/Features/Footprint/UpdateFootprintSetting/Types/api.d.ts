@@ -4,12 +4,7 @@ declare namespace PatchFootprintSetting {
   type PatchFootprintSettingReqBody = Partial<
     Pick<
       Footprint,
-      | 'category'
-      | 'milestone'
-      | 'occurAt'
-      | 'status'
-      | 'title'
-      | 'content'
+      'category' | 'milestone' | 'occurAt' | 'status' | 'title' | 'content'
     >
   > & {
     tags: string[];

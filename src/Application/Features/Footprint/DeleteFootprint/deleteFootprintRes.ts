@@ -1,5 +1,4 @@
-import { DeleteFootprint } from "./Types/api.js";
-
+import { DeleteFootprint } from './Types/api.js';
 
 export const deleteFootprintRes = {
   customize: async (): Promise<DeleteFootprint.IDeleteFootprintResponse> => {
