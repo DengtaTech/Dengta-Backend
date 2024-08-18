@@ -10,7 +10,7 @@ describe('GET /api/1.0/user/{userId}/footprints', () => {
   let fakeFootprints: Footprint[];
   let accessToken: string;
   const sortAlphabetically = (arr: string[]): string[] =>
-    arr.sort((a, b) => a.localeCompare(b));
+    [...arr].sort((a, b) => a.localeCompare(b));
   const fakeHashtags = sortAlphabetically([
     '#personal achievement',
     '#fitness',
