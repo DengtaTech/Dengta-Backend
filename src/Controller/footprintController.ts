@@ -11,6 +11,10 @@ import { uploadFootprintHeadImgHandler } from '../Application/Features/Footprint
 import { validatePublishFootprintReqBody } from '../Application/Features/Footprint/PublishFootprint/Types/publishFootprintDto.js';
 import { PublishFootprint } from '../Application/Features/Footprint/PublishFootprint/Types/api.js';
 import { publishFootprintHandler } from '../Application/Features/Footprint/PublishFootprint/publishFootprintHandler.js';
+import { validatePatchFootprintSettingReqBody } from '../Application/Features/Footprint/UpdateFootprintSetting/Types/patchFootprintSettingDto.js';
+import { PatchFootprintSetting } from '../Application/Features/Footprint/UpdateFootprintSetting/Types/api.js';
+import { patchFootprintSettingHandler } from '../Application/Features/Footprint/UpdateFootprintSetting/UpdateFootprintSettingHandler.js';
+import { deleteFootprintHandler } from '../Application/Features/Footprint/DeleteFootprint/deleteFootprintHandler.js';
 
 export const footprintController = {
   emotion: async (req: Request, res: Response): Promise<void> => {
@@ -82,6 +86,34 @@ export const footprintController = {
       footprintId,
       file,
     );
+    res.status(200).json(response);
+  },
+  patchFootprintSetting: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const validationErrors = await validatePatchFootprintSettingReqBody(req.body);
+    if (validationErrors.length > 0) {
+      throw new InvalidInputError(validationErrors.join(', '));
+    }
+
+    const response = await patchFootprintSettingHandler.handle(
+      req.body as PatchFootprintSetting.PatchFootprintSettingReqBody,
+    );
+    res.status(200).json(response);
+  },
+  deleteFootprint: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { footprintId } = req.body;
+    if (!footprintId) {
+      throw new InputEmptyError();
+    }
+    // 不確定要不要檢查 userId 是否是作者
+    
+    const response = await deleteFootprintHandler.handle(footprintId);
     res.status(200).json(response);
   },
 };

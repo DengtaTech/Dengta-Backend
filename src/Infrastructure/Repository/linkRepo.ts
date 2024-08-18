@@ -5,7 +5,7 @@ import { User } from '../../Database/Entities/user.js';
 export const linkRepo = {
   initLink: async (
     links: Dengta.ILink[],
-    user: User,
+    userId: string,
     transactionManager: EntityManager,
   ): Promise<Link[]> => {
     try {
@@ -13,11 +13,14 @@ export const linkRepo = {
         const newLink = new Link();
         newLink.sourceName = link.sourceName;
         newLink.url = link.url;
-        newLink.user = user;
+        newLink.userId = userId;
+
         return newLink;
       });
+      // console.log('Link entities before saving:', linkEntities);
       // 批量插入
       const savedLinks = await transactionManager.save(linkEntities);
+      // console.log('Link entities after saving:', savedLinks);
       return savedLinks;
     } catch (error) {
       console.error('Failed to save user:');
@@ -52,14 +55,14 @@ export const linkRepo = {
     }
   },
   deleteLink: async (
-    user: User,
+    userId: string,
     transactionManager?: EntityManager,
   ): Promise<void> => {
     try {
       if (transactionManager) {
-        await transactionManager.delete(Link, { user: user });
+        await transactionManager.delete(Link, { userId: userId });
       } else {
-        await Link.delete({ user: user });
+        await Link.delete({ user: { id: userId } });
       }
     } catch (error) {
       console.error('Error deleting link by user:');

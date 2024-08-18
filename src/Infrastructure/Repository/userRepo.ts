@@ -38,7 +38,7 @@ export const userRepo = {
       throw error;
     }
   },
-  findById: async (
+  findByIdWithLinks: async (
     userId: string,
     transactionManager?: EntityManager,
   ): Promise<User | null> => {
@@ -66,6 +66,27 @@ export const userRepo = {
             return { sourceName, url };
           }) as Relation<Link[]>;
         }
+        return user;
+      }
+    } catch (error) {
+      console.error('Error finding user by id with links:');
+      throw error;
+    }
+  },
+  findById: async (
+    userId: string,
+    transactionManager?: EntityManager,
+  ): Promise<User | null> => {
+    try {
+      if (transactionManager) {
+        const user = await transactionManager.findOne(User, {
+          where: { id: userId },
+        });
+        return user;
+      } else {
+        const user = await User.findOne({
+          where: { id: userId },
+        });
         return user;
       }
     } catch (error) {

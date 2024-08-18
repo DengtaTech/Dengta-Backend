@@ -16,7 +16,7 @@ export const footprintHashTagRepo = {
   insertNewFootprintHashTag: async (
     content: string,
     transactionManager: EntityManager,
-  ): Promise<FootprintHashTag | null> => {
+  ): Promise<FootprintHashTag> => {
     try {
       const newFootprintHashTag = new FootprintHashTag();
       newFootprintHashTag.content = content;

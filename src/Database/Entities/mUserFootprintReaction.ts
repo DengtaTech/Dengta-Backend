@@ -19,7 +19,7 @@ export class MUserFootprintReaction extends BaseEntity {
   @PrimaryColumn('uuid')
   footprintId!: string;
 
-  @Column('uuid', { nullable: false })
+  @Column('uuid')
   reactionTypeId!: string;
 
   @ManyToOne(() => User, (user) => user.mUserFootprintReaction, {

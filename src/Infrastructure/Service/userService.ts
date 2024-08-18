@@ -36,7 +36,7 @@ export const userService = {
         if (userInfoObj.links.length !== 0) {
           initLinks = await linkRepo.initLink(
             userInfoObj.links,
-            newUser,
+            newUser.id,
             transactionManager,
           );
         }
@@ -70,7 +70,7 @@ export const userService = {
   },
 
   getUserInfo: async (id: string): Promise<User> => {
-    const userInfo = await userRepo.findById(id);
+    const userInfo = await userRepo.findByIdWithLinks(id);
     if (!userInfo) {
       throw new Error('User not found');
     }
@@ -79,8 +79,9 @@ export const userService = {
 
   updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
     const user = await userRepo.findById(userId);
+    console.log('user', user);
     if (!user) {
-      throw new Error('User not found');
+      throw new UserNotFoundError();
     }
     user.avatar = permanentURL;
     await user.save();
@@ -90,9 +91,9 @@ export const userService = {
     userId: string,
     updateFields: PatchUserInfo.PatchUserInfoReqBody,
   ): Promise<void> => {
-    const user = await userRepo.findById(userId);
+    const user = await userRepo.findByIdWithLinks(userId);
     if (!user) {
-      throw new Error('User not found');
+      throw new UserNotFoundError();
     }
 
     const { links, ...otherFields } = updateFields;
@@ -101,10 +102,11 @@ export const userService = {
     // transaction begin
     return Database.transaction(async (transactionManager) => {
       try {
-        await linkRepo.deleteLink(user, transactionManager);
+        await linkRepo.deleteLink(user.id, transactionManager);
+
         const newLinks = await linkRepo.initLink(
           links,
-          user,
+          user.id,
           transactionManager,
         );
         await userRepo.updateLink(user, newLinks, transactionManager);
