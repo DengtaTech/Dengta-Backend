@@ -92,9 +92,9 @@ export const footprintRepo = {
 
     const mappedFootprints = footprints.map((footprint) => {
       const hashtags =
-        footprint.mFootprintFootprintHashTag?.map(
-          (relation) => relation.footprintHashTag?.content,
-        ) ?? [];
+        footprint.mFootprintFootprintHashTag
+          ?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+          .map((relation) => relation.footprintHashTag?.content) ?? [];
 
       const reactionCounts = footprint.mUserFootprintReaction?.reduce(
         (acc, reaction) => {
