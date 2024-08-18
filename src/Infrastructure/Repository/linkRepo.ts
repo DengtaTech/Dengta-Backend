@@ -17,10 +17,8 @@ export const linkRepo = {
 
         return newLink;
       });
-      // console.log('Link entities before saving:', linkEntities);
       // 批量插入
       const savedLinks = await transactionManager.save(linkEntities);
-      // console.log('Link entities after saving:', savedLinks);
       return savedLinks;
     } catch (error) {
       console.error('Failed to save user:');
