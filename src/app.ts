@@ -2,8 +2,20 @@ import express, { Request, Response } from 'express';
 import 'reflect-metadata';
 import { Database, initFixedDbData } from './Database/data-source.js';
 import { initMilvus } from './Database/VectorDB/vector-db.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 // import fakeUsers from './Test/mockData/fakeUsers.json' assert { type: 'json' };
-import fakeUserCh from './Test/mockData/fakeUser-ch.json' assert { type: 'json' };
+// import fakeUserCh from './Test/mockData/fakeUser-ch.json' assert { type: "json" };
+const fakeUserCh = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, './Test/mockData/fakeUser-ch.json'),
+    'utf8',
+  ),
+);
+
 import { recommendationService } from './Infrastructure/Service/recommendationService.js';
 
 import userRouter from './Routers/userRouter.js';
@@ -13,7 +25,6 @@ import recommendationRouter from './Routers/recommendationRouter.js';
 import searchHistoryRouter from './Routers/searchHistoryRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
 import swaggerUi from 'swagger-ui-express';
-import fs from 'fs';
 import YAML from 'yaml';
 
 // using redis example

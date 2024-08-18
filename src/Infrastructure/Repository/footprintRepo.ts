@@ -121,7 +121,7 @@ export const footprintRepo = {
 
       return {
         ...footprint,
-        hashtags,
+        hashtags: hashtags.sort(),
         reactionCounts: reactionCountsWithZero,
       } as GetFootprints.TFootprintContent;
     });

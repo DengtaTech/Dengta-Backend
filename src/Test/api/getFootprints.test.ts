@@ -9,7 +9,7 @@ describe('GET /api/1.0/user/{userId}/footprints', () => {
   let fakeUsers: User[];
   let fakeFootprints: Footprint[];
   let accessToken: string;
-  const fakeHashtags = ['#personal achievement', '#fitness'];
+  const fakeHashtags = ['#personal achievement', '#fitness'].sort();
   beforeAll(async () => {
     await Database.initialize();
     await testHelper.clearDatabase(Database);
