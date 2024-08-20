@@ -56,6 +56,7 @@ describe('GET /api/1.0/user/{userId}/footprints', () => {
       category: objectToMatch.category,
       titleImage: objectToMatch.titleImage,
       totalLike: objectToMatch.totalLike + fakeUsers.length,
+      content: objectToMatch.content,
       status: objectToMatch.status,
       milestone: objectToMatch.milestone,
       userId: objectToMatch.userId,

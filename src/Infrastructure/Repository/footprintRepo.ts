@@ -117,7 +117,6 @@ export const footprintRepo = {
 
       delete footprint.mFootprintFootprintHashTag;
       delete footprint.mUserFootprintReaction;
-      delete (footprint as GetFootprints.TFootprint).content;
 
       return {
         ...footprint,
