@@ -2,6 +2,7 @@ import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { EntityManager, Relation } from 'typeorm';
 import { Link } from '../../Database/Entities/link.js';
+import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userRepo = {
   findByEmail: async (email: string): Promise<User | null> => {
@@ -41,33 +42,46 @@ export const userRepo = {
   findById: async (
     userId: string,
     transactionManager?: EntityManager,
-  ): Promise<User | null> => {
+  ): Promise<GetUserInfo.UserWithHashtags | null> => {
     try {
+      const findOneOptions = {
+        where: { id: userId },
+        relations: [
+          'links',
+          'mUserProfileHashTag',
+          'mUserProfileHashTag.profileHashTag',
+        ],
+      };
+
+      let user: User | null;
       if (transactionManager) {
-        const user = await transactionManager.findOne(User, {
-          where: { id: userId },
-          relations: ['links'],
-        });
-        if (user?.links) {
-          user.links = user.links.map((link) => {
-            const { sourceName, url } = link;
-            return { sourceName, url };
-          }) as Relation<Link[]>;
-        }
-        return user;
+        user = await transactionManager.findOne(User, findOneOptions);
       } else {
-        const user = await User.findOne({
-          where: { id: userId },
-          relations: ['links'],
-        });
-        if (user?.links) {
+        user = await User.findOne(findOneOptions);
+      }
+
+      if (user) {
+        // Transform links
+        if (user.links) {
           user.links = user.links.map((link) => {
             const { sourceName, url } = link;
             return { sourceName, url };
           }) as Relation<Link[]>;
         }
-        return user;
+
+        // Transform mUserProfileHashTag to an array of hashtag contents
+        if (user.mUserProfileHashTag) {
+          (user as GetUserInfo.UserWithHashtags).hashtags =
+            user.mUserProfileHashTag.map(
+              (hashTag) => hashTag.profileHashTag?.content,
+            ) as string[];
+          delete user.mUserProfileHashTag;
+        } else {
+          (user as GetUserInfo.UserWithHashtags).hashtags = [];
+        }
       }
+
+      return user as GetUserInfo.UserWithHashtags | null;
     } catch (error) {
       console.error('Error finding user by id:');
       throw error;
