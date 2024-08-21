@@ -1,0 +1,42 @@
+[
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "fullName": "John Doe",
+    "lifeRole": "Student",
+    "gender": "male",
+    "birthday": "1990-01-01",
+    "email": "johndoe222ddd2@example.com",
+    "password": "mypassword123",
+    "clerkId": "1934719234",
+    "avatar": "https://avatars.githubusercontent.com/u/1934719234?v=4",
+    "links": [
+      {
+        "sourceName": "Facebook",
+        "url": "https://facebook.com/johndoe"
+      }
+    ]
+  },
+  {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "fullName": "Jane Smith",
+    "lifeRole": "Professional",
+    "gender": "female",
+    "birthday": "1985-05-15",
+    "email": "janesmith123@example.com",
+    "password": "securepass456",
+    "clerkId": "2345678901",
+    "avatar": "https://avatars.githubusercontent.com/u/1934719234?v=4",
+    "links": [
+      {
+        "sourceName": "LinkedIn",
+        "url": "https://linkedin.com/in/janesmith"
+      },
+      {
+        "sourceName": "Twitter",
+        "url": "https://twitter.com/janesmith"
+      }
+    ]
+  }
+]

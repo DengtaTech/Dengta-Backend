@@ -1,0 +1,10 @@
+[
+  {
+    "title": "My First Marathon",
+    "content": "Today, I completed my first marathon! It was an incredible experience that pushed me to my limits.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2023-04-15T09:30:00Z",
+    "status": "published"
+  }
+]
