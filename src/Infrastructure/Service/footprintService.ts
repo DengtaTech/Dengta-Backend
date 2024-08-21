@@ -216,4 +216,10 @@ export const footprintService = {
       }
     });
   },
+  getFootprintByUserId: async (userId: string, offset: number) => {
+    const footprints = await footprintRepo.findByUserId(userId, offset);
+    return {
+      footprints,
+    };
+  },
 };
