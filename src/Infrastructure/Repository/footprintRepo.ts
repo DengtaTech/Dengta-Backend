@@ -86,7 +86,7 @@ export const footprintRepo = {
         'reactionType.name',
       ])
       .orderBy('footprint.occurAt', 'DESC')
-      .skip(offset)
+      .skip(offset * limit)
       .take(limit)
       .getManyAndCount();
 
@@ -120,7 +120,7 @@ export const footprintRepo = {
 
       return {
         ...footprint,
-        hashtags: hashtags.sort(),
+        hashtags: hashtags,
         reactionCounts: reactionCountsWithZero,
       } as GetFootprints.TFootprintContent;
     });
