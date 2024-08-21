@@ -8,7 +8,6 @@ import { Link } from '../../Database/Entities/link.js';
 import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
 import { PatchUserInfo } from '../../Application/Features/User/PatchUserInfo/Types/api.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
-import { ProfileHashTag } from '../../Database/Entities/profileHashTag.js';
 import { MUserProfileHashTag } from '../../Database/Entities/mUserProfileHashTag.js';
 import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
 
