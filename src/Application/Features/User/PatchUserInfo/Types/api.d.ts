@@ -16,5 +16,7 @@ declare namespace PatchUserInfo {
     >
   > & {
     links: Dengta.ILink[];
+  } & {
+    hashtags: string[];
   };
 }

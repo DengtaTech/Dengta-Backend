@@ -61,7 +61,6 @@ export const userRepo = {
       }
 
       if (user) {
-        // Transform links
         if (user.links) {
           user.links = user.links.map((link) => {
             const { sourceName, url } = link;
@@ -69,7 +68,6 @@ export const userRepo = {
           }) as Relation<Link[]>;
         }
 
-        // Transform mUserProfileHashTag to an array of hashtag contents
         if (user.mUserProfileHashTag) {
           (user as GetUserInfo.UserWithHashtags).hashtags =
             user.mUserProfileHashTag.map(
