@@ -17,7 +17,7 @@ describe('GET /api/1.0/user/{userId}/footprints', () => {
   ]);
   beforeAll(async () => {
     await Database.initialize();
-    // await testHelper.clearDatabase(Database);
+    await testHelper.clearDatabase(Database);
     fakeUsers = await testHelper.createFakeUsers(Database);
     accessToken = await testHelper.generateToken(fakeUsers[0].id);
     fakeFootprints = await testHelper.createFakeFootprints(
@@ -38,7 +38,7 @@ describe('GET /api/1.0/user/{userId}/footprints', () => {
   });
 
   afterAll(async () => {
-    // await Database.destroy();
+    await Database.destroy();
     console.log('Database destroyed');
   });
 
