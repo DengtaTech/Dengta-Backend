@@ -83,7 +83,7 @@ export async function initFixedDbData() {
 
   for (const role of roles) {
     const maybeExistRole = await Role.findOne({ where: { name: role.name } });
-    if (maybeExistRole === undefined) {
+    if (maybeExistRole === null) {
       await Role.insert(role);
     }
   }
