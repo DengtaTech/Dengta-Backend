@@ -22,6 +22,9 @@ import { ProfileHashTagEmbedding } from './Entities/profileHashTagEmbedding.js';
 import { SearchHistory } from './Entities/searchHistory.js';
 import { nativeReactions } from '../Application/Features/Footprint/Reaction/Types/reactions.js';
 import { reactionTypeRepo } from '../Infrastructure/Repository/reactionTypeRepo.js';
+import { userRepo } from '../Infrastructure/Repository/userRepo.js';
+import { signUpHandler } from '../Application/Features/User/SignUp/signUpHandler.js';
+import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
@@ -83,8 +86,45 @@ export async function initFixedDbData() {
 
   for (const role of roles) {
     const maybeExistRole = await Role.findOne({ where: { name: role.name } });
-    if (maybeExistRole === null) {
+    if (!maybeExistRole) {
       await Role.insert(role);
     }
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL as string;
+  const adminPassword = process.env.ADMIN_PASSWORD as string;
+
+  console.log('adminEmail', adminEmail);
+  console.log('adminPassword', adminPassword);
+
+  const maybeExistAdmin = await userRepo.findByEmail(adminEmail);
+
+  if (!maybeExistAdmin) {
+    const admin: Signup.ISignUpReq = {
+      firstName: 'admin',
+      lastName: 'admin',
+      lifeRole: 'admin',
+      birthday: new Date(),
+      gender: 'notdisclosed',
+      email: adminEmail,
+      links: [],
+      password: adminPassword,
+      clerkId: 'user_12CWER123....',
+      avatar: '',
+    };
+
+    const res = await signUpHandler.handle(admin);
+    const adminUser = res.data.user;
+
+    const adminRole = await Role.findOne({ where: { name: 'admin' } });
+    if (!adminRole) {
+      throw new Error('Admin role not found');
+    }
+
+    const mUserRole = new MUserRole();
+    mUserRole.userId = adminUser.id;
+    mUserRole.roleId = adminRole.id;
+
+    await mUserRole.save();
   }
 }

@@ -5,12 +5,13 @@ import {
   JoinColumn,
   Relation,
   Column,
+  BaseEntity,
 } from 'typeorm';
 import { User } from './user.js';
 import { Role } from './role.js';
 
 @Entity({ name: 'MUserRole' })
-export class MUserRole {
+export class MUserRole extends BaseEntity {
   @PrimaryColumn('uuid')
   userId!: string;
 
