@@ -7,6 +7,7 @@ import { MUserRole } from './Entities/mUserRole.js';
 import { Followship } from './Entities/followship.js';
 import { MUserProfileHashTag } from './Entities/mUserProfileHashTag.js';
 import { ProfileHashTag } from './Entities/profileHashTag.js';
+import { Notification } from './Entities/notification.js';
 
 import { FootprintHashTag } from './Entities/footprintHashTag.js';
 import { ReactionType } from './Entities/reactionType.js';
@@ -43,6 +44,7 @@ export const Database = new DataSource({
     Role,
     MUserRole,
     Followship,
+    Notification,
     MUserProfileHashTag,
     ProfileHashTag,
     FootprintHashTagEmbedding,
@@ -65,6 +67,24 @@ export async function initFixedDbData() {
       const newReaction = new ReactionType();
       newReaction.name = reaction;
       await newReaction.save();
+    }
+  }
+
+  const roles = [
+    {
+      name: 'user',
+      description: 'User role',
+    },
+    {
+      name: 'admin',
+      description: 'Admin role',
+    },
+  ];
+
+  for (const role of roles) {
+    const maybeExistRole = await Role.findOne({ where: { name: role.name } });
+    if (maybeExistRole === undefined) {
+      await Role.insert(role);
     }
   }
 }
