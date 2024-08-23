@@ -41,16 +41,15 @@ export const userRepo = {
   },
   findById: async (
     userId: string,
-    transactionManager?: EntityManager,
-  ): Promise<GetUserInfo.UserWithHashtags | null> => {
+    transactionManager?: EntityManager | undefined,
+    joinColumns?: string[],
+  ): Promise<User | GetUserInfo.UserWithHashtags | null> => {
     try {
+      if (joinColumns === undefined) joinColumns = ['links'];
+
       const findOneOptions = {
         where: { id: userId },
-        relations: [
-          'links',
-          'mUserProfileHashTag',
-          'mUserProfileHashTag.profileHashTag',
-        ],
+        relations: joinColumns,
       };
 
       let user: User | null;
@@ -61,27 +60,31 @@ export const userRepo = {
       }
 
       if (user) {
-        if (user.links) {
+        if (joinColumns.includes('links') && user.links) {
           user.links = user.links.map((link) => {
             const { sourceName, url } = link;
             return { sourceName, url };
           }) as Relation<Link[]>;
         }
 
-        if (user.mUserProfileHashTag) {
-          (user as GetUserInfo.UserWithHashtags).hashtags =
-            user.mUserProfileHashTag.map(
+        if (
+          joinColumns.includes('mUserProfileHashTag') &&
+          joinColumns.includes('mUserProfileHashTag.profileHashTag') &&
+          user.mUserProfileHashTag
+        ) {
+          const userWithHashtags = {
+            ...user,
+            hashtags: user.mUserProfileHashTag.map(
               (hashTag) => hashTag.profileHashTag?.content,
-            ) as string[];
-          delete user.mUserProfileHashTag;
-        } else {
-          (user as GetUserInfo.UserWithHashtags).hashtags = [];
+            ) as string[],
+          } as GetUserInfo.UserWithHashtags;
+          delete userWithHashtags.mUserProfileHashTag;
+          return userWithHashtags;
         }
       }
-
-      return user as GetUserInfo.UserWithHashtags | null;
+      return user;
     } catch (error) {
-      console.error('Error finding user by id:');
+      console.error('Error finding user by id:', error);
       throw error;
     }
   },

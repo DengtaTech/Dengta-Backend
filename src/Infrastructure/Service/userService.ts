@@ -72,11 +72,19 @@ export const userService = {
   },
 
   getUserInfo: async (id: string): Promise<GetUserInfo.UserWithHashtags> => {
-    const userInfo = await userRepo.findById(id);
+    const userInfo = await userRepo.findById(id, undefined, [
+      'links',
+      'mUserProfileHashTag',
+      'mUserProfileHashTag.profileHashTag',
+    ]);
     if (!userInfo) {
-      throw new Error('User not found');
+      throw new UserNotFoundError();
     }
-    return userInfo;
+    if ('hashtags' in userInfo) {
+      return userInfo;
+    } else {
+      throw new Error('userInfo without hashtags should not happen');
+    }
   },
 
   updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
