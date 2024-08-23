@@ -4,7 +4,6 @@ import { GetFootprints } from '../../Application/Features/User/GetFootprints/Typ
 
 import {
   fakeUserIds,
-  accessToken,
   userToFootprintsMapSorted,
 } from '../testUtils/testSetup.js';
 import { testHelper } from '../testUtils/testHelper.js';
@@ -12,6 +11,7 @@ import { testHelper } from '../testUtils/testHelper.js';
 describe('GET /api/1.0/user/{userId}/footprints', () => {
   it('should get all footprints of a user', async () => {
     const testUserId = fakeUserIds[0];
+    const accessToken = await testHelper.generateToken(testUserId);
     const response = await request(app)
       .get(`/api/1.0/user/${testUserId}/footprints`)
       .set('Authorization', `Bearer ${accessToken}`)
