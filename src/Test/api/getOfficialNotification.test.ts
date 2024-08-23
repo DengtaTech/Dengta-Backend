@@ -33,7 +33,7 @@ describe('GET /api/1.0/notification', () => {
       .send();
 
     const firstPageNotifications = response.body.data.notifications;
-    const reversedFakeNotifications = fakeNotifications.reverse();
+    const reversedFakeNotifications = [...fakeNotifications].reverse();
     const objectToMatch = reversedFakeNotifications
       .slice(0, 10)
       .map((notification) => {

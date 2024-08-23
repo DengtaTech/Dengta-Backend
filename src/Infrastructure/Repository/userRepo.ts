@@ -162,7 +162,7 @@ export const userRepo = {
         .where('user.id = :userId', { userId })
         .getOne();
 
-      if (!userWithRoles || !userWithRoles.mUserRole) {
+      if (!userWithRoles?.mUserRole) {
         return [];
       }
 
