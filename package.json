@@ -12,6 +12,7 @@
     "devi:setenv": "docker compose -f ./docker-compose-dev.yml --env-file ./.env.dev up -d --build",
     "devi": "infisical run --env=dev --path=/share -- concurrently -c 'blue.bold,red.bold' 'npx tsc --watch' 'nodemon -q dist/src/app.js'",
     "test": "infisical run --env=dev --path=/share --command=\"export NODE_OPTIONS=--experimental-vm-modules && export NODE_ENV=test && npx jest --runInBand --coverage --forceExit\"",
+    "test:windows": "infisical run --env=dev --path=/share --command=\"set NODE_OPTIONS=--experimental-vm-modules && set NODE_ENV=test && npx jest --runInBand --coverage --forceExit\"",
     "staging": "docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
     "lint": "npx eslint .",
     "prettier": "npx prettier --write .",

@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import fs from 'fs';
 import { User } from '../../../src/Database/Entities/user.js';
 import { Footprint } from '../../../src/Database/Entities/footprint.js';
+import { Notification } from '../../../src/Database/Entities/notification.js';
 import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../../../src/utils/jwt.js';
 import {
@@ -134,5 +135,29 @@ export const testHelper = {
         [footprintId],
       );
     }
+  },
+  createFakeOfficialNotifications: async (
+    dataSource: DataSource,
+    userId: string,
+  ) => {
+    const notifications = fs.readFileSync(
+      'src/Test/mockData/fakeOfficialNotification-api.json',
+      'utf8',
+    );
+
+    const notificationData = JSON.parse(notifications);
+
+    const baseTime = new Date();
+
+    for (const notification of notificationData) {
+      notification.userId = userId;
+
+      notification.createdAt = new Date(baseTime);
+      baseTime.setSeconds(baseTime.getSeconds() + 1);
+
+      await dataSource.getRepository(Notification).save(notification);
+    }
+
+    return notificationData;
   },
 };
