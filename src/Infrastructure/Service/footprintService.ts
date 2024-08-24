@@ -17,6 +17,7 @@ import { footprintHashTagRepo } from '../Repository/footprintHashTagRepo.js';
 import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprintHashTagRepo.js';
 import { PatchFootprintSetting } from '../../Application/Features/Footprint/UpdateFootprintSetting/Types/api.js';
 import { MFootprintFootprintHashTag } from '../../Database/Entities/mFootprintFootprintHashTag.js';
+import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFootprintDetail/Types/api.js';
 
 export const footprintService = {
   expressReaction: async (
@@ -109,9 +110,7 @@ export const footprintService = {
   publish: async (
     footprintObj: PublishFootprint.IPublishFootprintReqBody,
   ): Promise<Footprint> => {
-    const footprint = await footprintRepo.findByFootprintId(
-      footprintObj.footprintId,
-    );
+    const footprint = await footprintRepo.findById(footprintObj.footprintId);
     if (!footprint) {
       throw new FootprintNotFoundError();
     }
@@ -150,7 +149,7 @@ export const footprintService = {
     footprintId: string,
     permanentURL: string,
   ): Promise<void> => {
-    const footprint = await footprintRepo.findByFootprintId(footprintId);
+    const footprint = await footprintRepo.findById(footprintId);
     if (!footprint) {
       throw new FootprintNotFoundError();
     }
@@ -160,9 +159,7 @@ export const footprintService = {
   patchFootprintSetting: async (
     updateFields: PatchFootprintSetting.PatchFootprintSettingReqBody,
   ): Promise<Footprint> => {
-    const footprint = await footprintRepo.findByFootprintId(
-      updateFields.footprintId,
-    );
+    const footprint = await footprintRepo.findById(updateFields.footprintId);
     if (!footprint) {
       throw new FootprintNotFoundError();
     }
@@ -217,9 +214,18 @@ export const footprintService = {
     });
   },
   getFootprintByUserId: async (userId: string, offset: number) => {
-    const footprints = await footprintRepo.findByUserId(userId, offset);
+    const footprints = await footprintRepo.findByUserIdWithAllRelations(
+      userId,
+      offset,
+    );
     return {
       footprints,
     };
+  },
+  getFootprintDetail: async (
+    footprintId: string,
+  ): Promise<GetFootprintDetail.FootprintDetailDto> => {
+    const footprint = await footprintRepo.findByIdWithAllRelations(footprintId);
+    return footprint;
   },
 };

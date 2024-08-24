@@ -8,6 +8,8 @@ import {
   nativeReactions,
   type NativeReaction,
 } from '../../Application/Features/Footprint/Reaction/Types/reactions.js';
+import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFootprintDetail/Types/api.js';
+import { FootprintNotFoundError } from '../../Errors/errors.js';
 
 export const footprintRepo = {
   findById: async (id: Footprint['id'], transactionManager?: EntityManager) => {
@@ -53,18 +55,7 @@ export const footprintRepo = {
       throw error;
     }
   },
-  findByFootprintId: async (footprintId: string): Promise<Footprint | null> => {
-    try {
-      const footprint = await Footprint.findOne({
-        where: { id: footprintId },
-      });
-      return footprint;
-    } catch (error) {
-      console.error('Failed to find footprint by id:');
-      throw error;
-    }
-  },
-  findByUserId: async (
+  findByUserIdWithAllRelations: async (
     userId: User['id'],
     offset: number = 0,
     limit: number = 10,
@@ -126,5 +117,68 @@ export const footprintRepo = {
     });
 
     return mappedFootprints;
+  },
+  findByIdWithAllRelations: async (
+    footprintId: string,
+  ): Promise<GetFootprintDetail.FootprintDetailDto> => {
+    try {
+      const footprint = await Footprint.createQueryBuilder('footprint')
+        .where('footprint.id = :footprintId', { footprintId })
+        .leftJoinAndSelect(
+          'footprint.mFootprintFootprintHashTag',
+          'hashTagRelation',
+        )
+        .leftJoinAndSelect('hashTagRelation.footprintHashTag', 'hashTag')
+        .leftJoinAndSelect('footprint.mUserFootprintReaction', 'reaction')
+        .leftJoinAndSelect('reaction.reactionType', 'reactionType')
+        .select([
+          'footprint',
+          'hashTagRelation',
+          'hashTag.content',
+          'reaction',
+          'reactionType.name',
+        ])
+        .getOne();
+
+      if (!footprint) {
+        throw new FootprintNotFoundError();
+      }
+      let hashtags =
+        footprint.mFootprintFootprintHashTag?.map(
+          (hashTagRelation) => hashTagRelation.footprintHashTag?.content,
+        ) || [];
+      hashtags = (hashtags as string[]).sort((a, b) => a.localeCompare(b));
+
+      const reactionCounts = footprint.mUserFootprintReaction?.reduce(
+        (acc, reaction) => {
+          const reactionName = reaction.reactionType?.name;
+          if (reactionName) {
+            acc[reactionName] = (acc[reactionName] || 0) + 1;
+          }
+          return acc;
+        },
+        {} as Record<NativeReaction, number>,
+      );
+
+      const reactionCountsWithZero = nativeReactions.reduce(
+        (acc, reaction) => {
+          acc[reaction] = reactionCounts?.[reaction] || 0;
+          return acc;
+        },
+        {} as Record<NativeReaction, number>,
+      );
+
+      delete footprint.mFootprintFootprintHashTag;
+      delete footprint.mUserFootprintReaction;
+
+      return {
+        ...footprint,
+        hashtags: hashtags,
+        reactionCounts: reactionCountsWithZero,
+      } as GetFootprintDetail.FootprintDetailDto;
+    } catch (error) {
+      console.error('Failed to find footprint by id with all relations:');
+      throw error;
+    }
   },
 };

@@ -6,6 +6,12 @@ import { upload } from '../Middlewares/multer.js';
 
 const router = express.Router();
 
+router.get(
+  '/detail/:footprintId',
+  jwtAuthentication,
+  wrapAsync(footprintController.getFootprintDetail),
+);
+
 router.put(
   '/emotion',
   jwtAuthentication,

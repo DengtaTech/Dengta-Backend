@@ -15,8 +15,23 @@ import { validatePatchFootprintSettingReqBody } from '../Application/Features/Fo
 import { PatchFootprintSetting } from '../Application/Features/Footprint/UpdateFootprintSetting/Types/api.js';
 import { patchFootprintSettingHandler } from '../Application/Features/Footprint/UpdateFootprintSetting/UpdateFootprintSettingHandler.js';
 import { deleteFootprintHandler } from '../Application/Features/Footprint/DeleteFootprint/deleteFootprintHandler.js';
+import { getFootprintDetailHandler } from '../Application/Features/Footprint/GetFootprintDetail/GetFootprintDetailHandler.js';
 
 export const footprintController = {
+  getFootprintDetail: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+
+    const { footprintId } = req.params;
+    if (!footprintId) {
+      throw new InputEmptyError();
+    }
+
+    const response = await getFootprintDetailHandler.handle(footprintId);
+    res.status(200).json(response);
+  },
   emotion: async (req: Request, res: Response): Promise<void> => {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
