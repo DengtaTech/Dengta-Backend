@@ -22,7 +22,6 @@ export const footprintController = {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
     }
-    const { id: userId } = req.decodedToken;
 
     const { footprintId } = req.params;
     if (!footprintId) {
