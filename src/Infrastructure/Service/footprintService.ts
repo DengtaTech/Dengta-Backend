@@ -107,6 +107,7 @@ export const footprintService = {
     const result = await footprintRepo.initFootprint(userId, status);
     return result;
   },
+  // TODO: 可能public 跟 update 可以合併用一個就好
   publish: async (
     footprintObj: PublishFootprint.IPublishFootprintReqBody,
   ): Promise<Footprint> => {
@@ -124,14 +125,11 @@ export const footprintService = {
         );
         for (const tagContent of footprintObj.tags) {
           let footprintHashTag =
-            await footprintHashTagRepo.findByContent(tagContent);
-          if (!footprintHashTag) {
-            footprintHashTag =
-              await footprintHashTagRepo.insertNewFootprintHashTag(
-                tagContent,
-                transactionManager,
-              );
-          }
+            await footprintHashTagRepo.findOrCreateByContent(
+              tagContent,
+              transactionManager,
+            );
+
           await mFootprintFootprintHashTagRepo.insertNewRecord(
             updatedFootprint.id,
             footprintHashTag.id,
@@ -170,23 +168,27 @@ export const footprintService = {
     // transaction begin
     return Database.transaction(async (transactionManager) => {
       try {
-        await transactionManager.delete(MFootprintFootprintHashTag, {
-          footprintId: footprint.id,
-        });
-        for (const tagContent of tags) {
-          let footprintHashTag =
-            await footprintHashTagRepo.findByContent(tagContent);
-          if (!footprintHashTag) {
-            footprintHashTag =
-              await footprintHashTagRepo.insertNewFootprintHashTag(
-                tagContent,
+        if (tags && tags.length > 0) {
+          await transactionManager.delete(MFootprintFootprintHashTag, {
+            footprintId: footprint.id,
+          });
+
+          const newHashtags = await Promise.all(
+            tags.map((hashtag) => {
+              return footprintHashTagRepo.findOrCreateByContent(
+                hashtag,
                 transactionManager,
               );
-          }
-          await mFootprintFootprintHashTagRepo.insertNewRecord(
-            footprint.id,
-            footprintHashTag.id,
-            transactionManager,
+            }),
+          );
+          await Promise.all(
+            newHashtags.map((hashtag) =>
+              mFootprintFootprintHashTagRepo.insertNewRecord(
+                footprint.id,
+                hashtag.id,
+                transactionManager,
+              ),
+            ),
           );
         }
         await transactionManager.save(footprint);

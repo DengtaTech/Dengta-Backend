@@ -2,11 +2,19 @@ import { EntityManager } from 'typeorm';
 import { FootprintHashTag } from '../../Database/Entities/footprintHashTag.js';
 
 export const footprintHashTagRepo = {
-  findByContent: async (content: string): Promise<FootprintHashTag | null> => {
+  findOrCreateByContent: async (
+    content: string,
+    transactionManager: EntityManager,
+  ): Promise<FootprintHashTag> => {
     try {
-      const footprintHashTag = await FootprintHashTag.findOne({
+      let footprintHashTag = await FootprintHashTag.findOne({
         where: { content: content },
       });
+      if (!footprintHashTag) {
+        footprintHashTag = await transactionManager.save(
+          FootprintHashTag.create({ content }),
+        );
+      }
       return footprintHashTag;
     } catch (error) {
       console.error('Error finding footprint hash tag by content:');
