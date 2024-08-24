@@ -3,11 +3,13 @@ import { userRepo } from '../Repository/userRepo.js';
 import { userCredentialRepo } from '../Repository/userCredentialRepo.js';
 import { linkRepo } from '../Repository/linkRepo.js';
 import { EmailExistsError, UserNotFoundError } from '../../Errors/errors.js';
-import { User } from '../../Database/Entities/user.js';
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
 import { PatchUserInfo } from '../../Application/Features/User/PatchUserInfo/Types/api.js';
+import { MUserProfileHashTag } from '../../Database/Entities/mUserProfileHashTag.js';
+import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
+import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userService = {
   signUp: async (
@@ -69,12 +71,20 @@ export const userService = {
     };
   },
 
-  getUserInfo: async (id: string): Promise<User> => {
-    const userInfo = await userRepo.findByIdWithLinks(id);
+  getUserInfo: async (id: string): Promise<GetUserInfo.UserWithHashtags> => {
+    const userInfo = await userRepo.findById(id, undefined, [
+      'links',
+      'mUserProfileHashTag',
+      'mUserProfileHashTag.profileHashTag',
+    ]);
     if (!userInfo) {
-      throw new Error('User not found');
+      throw new UserNotFoundError();
     }
-    return userInfo;
+    if ('hashtags' in userInfo) {
+      return userInfo;
+    } else {
+      throw new Error('userInfo without hashtags should not happen');
+    }
   },
 
   updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
@@ -91,29 +101,63 @@ export const userService = {
     userId: string,
     updateFields: PatchUserInfo.PatchUserInfoReqBody,
   ): Promise<void> => {
-    const user = await userRepo.findByIdWithLinks(userId);
+    const user = await userRepo.findById(userId, undefined, ['links']);
     if (!user) {
       throw new UserNotFoundError();
     }
 
-    const { links, ...otherFields } = updateFields;
+    const { hashtags, links, ...otherFields } = updateFields;
 
     Object.assign(user, otherFields);
-    // transaction begin
-    return Database.transaction(async (transactionManager) => {
-      try {
-        await linkRepo.deleteLink(user.id, transactionManager);
+    try {
+      await Database.transaction(async (transactionManager) => {
+        if (links && links.length > 0) {
+          await linkRepo.deleteLink(user.id, transactionManager);
+          const newLinks = await Promise.all(
+            links.map(async (link) => {
+              const newLink = new Link();
+              newLink.sourceName = link.sourceName;
+              newLink.url = link.url;
+              newLink.userId = userId;
+              return await transactionManager.save(newLink);
+            }),
+          );
+          user.links = newLinks;
+        }
 
-        const newLinks = await linkRepo.initLink(
-          links,
-          user.id,
-          transactionManager,
-        );
-        await userRepo.updateLink(user, newLinks, transactionManager);
-      } catch (error) {
-        console.error('Error in DB ->', error);
-        throw error;
-      }
-    });
+        if (hashtags && hashtags.length > 0) {
+          await transactionManager.delete(MUserProfileHashTag, {
+            userId: user.id,
+          });
+
+          const newHashtags = await Promise.all(
+            hashtags.map(async (hashtag) => {
+              return await profileHashTagRepo.findOrCreate(
+                hashtag,
+                transactionManager,
+              );
+            }),
+          );
+
+          const newMUserProfileHashTags = newHashtags.map((hashtag) => ({
+            userId: user.id,
+            profileHashTagId: hashtag.id,
+          }));
+
+          await transactionManager
+            .createQueryBuilder()
+            .insert()
+            .into(MUserProfileHashTag)
+            .values(newMUserProfileHashTags)
+            .orIgnore()
+            .execute();
+        }
+
+        await transactionManager.save(user);
+      });
+    } catch (error) {
+      console.error('Error in DB ->', error);
+      throw error;
+    }
   },
 };

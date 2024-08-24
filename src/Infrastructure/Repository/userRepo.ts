@@ -2,6 +2,7 @@ import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { EntityManager, Relation } from 'typeorm';
 import { Link } from '../../Database/Entities/link.js';
+import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userRepo = {
   findByEmail: async (email: string): Promise<User | null> => {
@@ -38,59 +39,50 @@ export const userRepo = {
       throw error;
     }
   },
-  findByIdWithLinks: async (
-    userId: string,
-    transactionManager?: EntityManager,
-  ): Promise<User | null> => {
-    try {
-      if (transactionManager) {
-        const user = await transactionManager.findOne(User, {
-          where: { id: userId },
-          relations: ['links'],
-        });
-        if (user?.links) {
-          user.links = user.links.map((link) => {
-            const { sourceName, url } = link;
-            return { sourceName, url };
-          }) as Relation<Link[]>;
-        }
-        return user;
-      } else {
-        const user = await User.findOne({
-          where: { id: userId },
-          relations: ['links'],
-        });
-        if (user?.links) {
-          user.links = user.links.map((link) => {
-            const { sourceName, url } = link;
-            return { sourceName, url };
-          }) as Relation<Link[]>;
-        }
-        return user;
-      }
-    } catch (error) {
-      console.error('Error finding user by id with links:');
-      throw error;
-    }
-  },
   findById: async (
     userId: string,
-    transactionManager?: EntityManager,
-  ): Promise<User | null> => {
+    transactionManager?: EntityManager | undefined,
+    joinColumns?: string[],
+  ): Promise<User | GetUserInfo.UserWithHashtags | null> => {
     try {
+      const findOneOptions = {
+        where: { id: userId },
+        relations: joinColumns,
+      };
+
+      let user: User | null;
       if (transactionManager) {
-        const user = await transactionManager.findOne(User, {
-          where: { id: userId },
-        });
-        return user;
+        user = await transactionManager.findOne(User, findOneOptions);
       } else {
-        const user = await User.findOne({
-          where: { id: userId },
-        });
-        return user;
+        user = await User.findOne(findOneOptions);
       }
+
+      if (user) {
+        if (joinColumns?.includes('links') && user.links) {
+          user.links = user.links.map((link) => {
+            const { sourceName, url } = link;
+            return { sourceName, url };
+          }) as Relation<Link[]>;
+        }
+
+        if (
+          joinColumns?.includes('mUserProfileHashTag') &&
+          joinColumns?.includes('mUserProfileHashTag.profileHashTag') &&
+          user.mUserProfileHashTag
+        ) {
+          const userWithHashtags = {
+            ...user,
+            hashtags: user.mUserProfileHashTag.map(
+              (hashTag) => hashTag.profileHashTag?.content,
+            ) as string[],
+          } as GetUserInfo.UserWithHashtags;
+          delete userWithHashtags.mUserProfileHashTag;
+          return userWithHashtags;
+        }
+      }
+      return user;
     } catch (error) {
-      console.error('Error finding user by id:');
+      console.error('Error finding user by id:', error);
       throw error;
     }
   },

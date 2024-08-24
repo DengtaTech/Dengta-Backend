@@ -2,12 +2,7 @@ import { EntityManager } from 'typeorm';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
 import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
-import { GetFootprints } from '../../Application/Features/User/GetFootprints/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
-import {
-  nativeReactions,
-  type NativeReaction,
-} from '../../Application/Features/Footprint/Reaction/Types/reactions.js';
 import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFootprintDetail/Types/api.js';
 import { FootprintNotFoundError } from '../../Errors/errors.js';
 import {
