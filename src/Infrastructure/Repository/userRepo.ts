@@ -45,8 +45,6 @@ export const userRepo = {
     joinColumns?: string[],
   ): Promise<User | GetUserInfo.UserWithHashtags | null> => {
     try {
-      if (joinColumns === undefined) joinColumns = ['links'];
-
       const findOneOptions = {
         where: { id: userId },
         relations: joinColumns,
@@ -60,7 +58,7 @@ export const userRepo = {
       }
 
       if (user) {
-        if (joinColumns.includes('links') && user.links) {
+        if (joinColumns?.includes('links') && user.links) {
           user.links = user.links.map((link) => {
             const { sourceName, url } = link;
             return { sourceName, url };
@@ -68,8 +66,8 @@ export const userRepo = {
         }
 
         if (
-          joinColumns.includes('mUserProfileHashTag') &&
-          joinColumns.includes('mUserProfileHashTag.profileHashTag') &&
+          joinColumns?.includes('mUserProfileHashTag') &&
+          joinColumns?.includes('mUserProfileHashTag.profileHashTag') &&
           user.mUserProfileHashTag
         ) {
           const userWithHashtags = {

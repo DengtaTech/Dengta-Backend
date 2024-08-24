@@ -100,7 +100,7 @@ export const userService = {
     userId: string,
     updateFields: PatchUserInfo.PatchUserInfoReqBody,
   ): Promise<void> => {
-    const user = await userRepo.findById(userId);
+    const user = await userRepo.findById(userId, undefined, ['links']);
     if (!user) {
       throw new Error('User not found');
     }
