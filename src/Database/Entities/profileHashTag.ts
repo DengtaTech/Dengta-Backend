@@ -17,7 +17,7 @@ export class ProfileHashTag extends BaseEntity {
   id!: string;
 
   @Column({ type: 'varchar', nullable: false })
-  @Index({ fulltext: true, parser: 'ngram' })
+  @Index({ fulltext: true, parser: 'ngram', unique: true })
   content!: string;
 
   @Column({

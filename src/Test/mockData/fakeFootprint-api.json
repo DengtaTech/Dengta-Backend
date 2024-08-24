@@ -5,6 +5,463 @@
     "category": "life",
     "milestone": true,
     "occurAt": "2023-04-15T09:30:00Z",
-    "status": "published"
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["marathon", "running", "fitness"]
+  },
+  {
+    "title": "Graduated College",
+    "content": "I graduated from college today! It feels surreal to have completed this journey.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2023-05-20T12:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 5,
+      "love": 3,
+      "laugh": 1,
+      "fire": 1
+    },
+    "hashtags": ["graduation", "college", "achievement"]
+  },
+  {
+    "title": "Started a New Job",
+    "content": "Excited to start my new job today! A new chapter begins.",
+    "category": "career",
+    "milestone": true,
+    "occurAt": "2023-06-01T09:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["newjob", "career", "excited"]
+  },
+  {
+    "title": "Visited Japan",
+    "content": "Just returned from an amazing trip to Japan! The culture and food were incredible.",
+    "category": "other",
+    "milestone": true,
+    "occurAt": "2023-07-10T15:30:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 2,
+      "love": 4,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["travel", "Japan", "adventure"]
+  },
+  {
+    "title": "Adopted a Pet",
+    "content": "I adopted a dog today! Can't wait to bring him home.",
+    "category": "other",
+    "milestone": false,
+    "occurAt": "2023-08-05T10:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 5,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["adoption", "pets", "dog"]
+  },
+  {
+    "title": "Completed a Triathlon",
+    "content": "Finished my first triathlon! It was tough but worth it.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2023-09-12T08:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["triathlon", "fitness", "challenge"]
+  },
+  {
+    "title": "Learned to Cook",
+    "content": "I learned how to cook my favorite dish today! Feeling accomplished.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2023-10-01T18:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 2,
+      "love": 3,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["cooking", "skills", "life"]
+  },
+  {
+    "title": "Became a Volunteer",
+    "content": "I started volunteering at a local shelter. Excited to give back!",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2023-10-15T14:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 0,
+      "fire": 0
+    },
+    "hashtags": ["volunteering", "community", "help"]
+  },
+  {
+    "title": "Learned a New Language",
+    "content": "I started learning Spanish! Excited for this new challenge.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2023-11-01T11:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 2,
+      "love": 1,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["language", "learning", "Spanish"]
+  },
+  {
+    "title": "Started a Blog",
+    "content": "I launched my personal blog today! Can't wait to share my thoughts.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2023-11-15T09:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["blog", "writing", "life"]
+  },
+  {
+    "title": "Went Hiking",
+    "content": "Had an amazing day hiking in the mountains! Nature is beautiful.",
+    "category": "career",
+    "milestone": true,
+    "occurAt": "2023-12-01T08:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 2,
+      "love": 3,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["hiking", "nature", "adventure"]
+  },
+  {
+    "title": "Bought My First Car",
+    "content": "Just bought my first car today! It's a huge milestone for me.",
+    "category": "life",
+    "milestone": false,
+    "occurAt": "2024-01-10T10:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 5,
+      "love": 3,
+      "laugh": 1,
+      "fire": 2
+    },
+    "hashtags": ["car", "firstcar", "milestone"]
+  },
+  {
+    "title": "Completed a Half Marathon",
+    "content": "Ran my first half marathon today! Feeling strong and accomplished.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2024-02-20T07:30:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 2,
+      "laugh": 0,
+      "fire": 1
+    },
+    "hashtags": ["halfmarathon", "running", "fitness"]
+  },
+  {
+    "title": "Moved to a New City",
+    "content": "I just moved to a new city! Excited to explore and start fresh.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2024-03-05T12:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["newcity", "moving", "freshstart"]
+  },
+  {
+    "title": "Attended a Concert",
+    "content": "Had an amazing time at the concert last night! The energy was electric.",
+    "category": "other",
+    "milestone": false,
+    "occurAt": "2024-04-18T21:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 3,
+      "laugh": 1,
+      "fire": 1
+    },
+    "hashtags": ["concert", "music", "live"]
+  },
+  {
+    "title": "Started a Fitness Routine",
+    "content": "I started a new fitness routine today. Time to get in shape!",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2024-05-01T06:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["fitness", "health", "routine"]
+  },
+  {
+    "title": "Visited the Grand Canyon",
+    "content": "Visited the Grand Canyon today! The views were breathtaking.",
+    "category": "other",
+    "milestone": false,
+    "occurAt": "2024-06-15T14:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 4,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["grandcanyon", "travel", "adventure"]
+  },
+  {
+    "title": "Launched a Startup",
+    "content": "Today marks the official launch of my startup! Exciting times ahead.",
+    "category": "career",
+    "milestone": true,
+    "occurAt": "2024-07-01T09:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 5,
+      "love": 3,
+      "laugh": 0,
+      "fire": 2
+    },
+    "hashtags": ["startup", "entrepreneurship", "launch"]
+  },
+  {
+    "title": "Started a Podcast",
+    "content": "Launched my first podcast episode today! Excited to share my thoughts.",
+    "category": "career",
+    "milestone": true,
+    "occurAt": "2024-08-10T10:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["podcast", "launch", "thoughts"]
+  },
+  {
+    "title": "Ran My First 10K",
+    "content": "Completed my first 10K today! I'm proud of the progress I've made.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2024-09-25T07:30:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["10k", "running", "fitness"]
+  },
+  {
+    "title": "Learned to Play the Guitar",
+    "content": "Picked up the guitar today and learned my first song! Loving it.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2024-10-12T15:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 3,
+      "laugh": 1,
+      "fire": 1
+    },
+    "hashtags": ["guitar", "music", "learning"]
+  },
+  {
+    "title": "Completed a 5K Race",
+    "content": "Ran my first 5K today! It was challenging but I'm proud of myself.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2024-11-05T08:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 3,
+      "laugh": 0,
+      "fire": 1
+    },
+    "hashtags": ["5K", "running", "fitness"]
+  },
+  {
+    "title": "Took a Cooking Class",
+    "content": "I attended my first cooking class today. Learned some great new recipes!",
+    "category": "life",
+    "milestone": false,
+    "occurAt": "2024-12-02T17:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["cooking", "learning", "recipes"]
+  },
+  {
+    "title": "Traveled to Italy",
+    "content": "Just got back from an incredible trip to Italy. The history and food were amazing!",
+    "category": "other",
+    "milestone": false,
+    "occurAt": "2025-01-15T13:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 5,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["Italy", "travel", "adventure"]
+  },
+  {
+    "title": "Completed a Tough Mudder",
+    "content": "Just finished my first Tough Mudder! It was intense but so much fun.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2025-02-10T09:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 5,
+      "love": 3,
+      "laugh": 1,
+      "fire": 1
+    },
+    "hashtags": ["toughmudder", "challenge", "fitness"]
+  },
+  {
+    "title": "Learned to Swim",
+    "content": "Finally learned how to swim! It feels so freeing to be in the water.",
+    "category": "life",
+    "milestone": true,
+    "occurAt": "2025-03-12T10:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["swimming", "learning", "achievement"]
+  },
+  {
+    "title": "Visited the Eiffel Tower",
+    "content": "Finally visited the Eiffel Tower! Paris is as beautiful as they say.",
+    "category": "other",
+    "milestone": true,
+    "occurAt": "2025-04-05T16:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 3,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["EiffelTower", "Paris", "travel"]
+  },
+  {
+    "title": "Completed a Coding Bootcamp",
+    "content": "Graduated from a coding bootcamp today! Ready to take on the tech world.",
+    "category": "career",
+    "milestone": true,
+    "occurAt": "2025-05-20T18:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 5,
+      "love": 2,
+      "laugh": 1,
+      "fire": 1
+    },
+    "hashtags": ["coding", "bootcamp", "tech"]
+  },
+  {
+    "title": "Visited the Great Wall of China",
+    "content": "Walked along the Great Wall of China today! A truly awe-inspiring experience.",
+    "category": "other",
+    "milestone": true,
+    "occurAt": "2025-06-10T14:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 4,
+      "laugh": 0,
+      "fire": 1
+    },
+    "hashtags": ["GreatWall", "China", "travel"]
+  },
+  {
+    "title": "Started a Yoga Practice",
+    "content": "Began my yoga practice today. It's so calming and energizing.",
+    "category": "life",
+    "milestone": false,
+    "occurAt": "2025-07-01T07:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 3,
+      "love": 2,
+      "laugh": 0,
+      "fire": 0
+    },
+    "hashtags": ["yoga", "wellness", "fitness"]
+  },
+  {
+    "title": "Read 50 Books in a Year",
+    "content": "Finished reading 50 books this year! It was a great journey of learning.",
+    "category": "life",
+    "milestone": false,
+    "occurAt": "2025-08-15T20:00:00Z",
+    "status": "published",
+    "reactions": {
+      "like": 4,
+      "love": 3,
+      "laugh": 1,
+      "fire": 0
+    },
+    "hashtags": ["reading", "books", "learning"]
   }
 ]
