@@ -225,7 +225,8 @@ export const footprintService = {
   getFootprintDetail: async (
     footprintId: string,
   ): Promise<GetFootprintDetail.FootprintDetailDto> => {
-    const footprint = await footprintRepo.findByIdWithAllRelations(footprintId);
-    return footprint;
+    const footprint =
+      await footprintRepo.findOneByIdWithAllRelations(footprintId);
+    return footprint as GetFootprintDetail.FootprintDetailDto;
   },
 };
