@@ -17,4 +17,5 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   extensionsToTreatAsEsm: ['.ts'],
+  setupFilesAfterEnv: ['./src/Test/testUtils/testSetup.ts'],
 };

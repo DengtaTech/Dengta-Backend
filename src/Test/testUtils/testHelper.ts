@@ -1,16 +1,40 @@
 import { DataSource } from 'typeorm';
 import fs from 'fs';
 import { User } from '../../../src/Database/Entities/user.js';
+import { UserCredential } from '../../../src/Database/Entities/userCredential.js';
+import { Link } from '../../../src/Database/Entities/link.js';
+import { MUserProfileHashTag } from '../../../src/Database/Entities/mUserProfileHashTag.js';
+import { ProfileHashTag } from '../../Database/Entities/profileHashTag.js';
 import { Footprint } from '../../../src/Database/Entities/footprint.js';
 import { Notification } from '../../../src/Database/Entities/notification.js';
 import { v4 as uuidv4 } from 'uuid';
+import { FootprintHashTag } from '../../../src/Database/Entities/footprintHashTag.js';
+import { MFootprintFootprintHashTag } from '../../../src/Database/Entities/mFootprintFootprintHashTag.js';
+import { ReactionType } from '../../../src/Database/Entities/reactionType.js';
+import { MUserFootprintReaction } from '../../../src/Database/Entities/mUserFootprintReaction.js';
 import { auth } from '../../../src/utils/jwt.js';
 import {
   nativeReactions,
   type NativeReaction,
 } from '../../../src/Application/Features/Footprint/Reaction/Types/reactions.js';
 
+export type TFootprintJson = Footprint & {
+  hashtags: string[];
+  reactions: Record<NativeReaction, number>;
+};
+
 export const testHelper = {
+  reactionTypesIdMap: {} as Record<string, string>,
+  userToFootprintsMap: {} as Record<string, TFootprintJson[]>,
+  initReactionTypes: async (dataSource: DataSource) => {
+    const reactionTypeRepo = dataSource.getRepository(ReactionType);
+    const reactionTypes = await reactionTypeRepo.save(
+      nativeReactions.map((reaction: NativeReaction) => ({ name: reaction })),
+    );
+    for (const reactionType of reactionTypes) {
+      testHelper.reactionTypesIdMap[reactionType.name] = reactionType.id;
+    }
+  },
   clearDatabase: async (dataSource: DataSource) => {
     const tablesQuery = await dataSource.query(`
       SELECT table_name 
@@ -27,114 +51,188 @@ export const testHelper = {
     await dataSource.query('SET FOREIGN_KEY_CHECKS = 1;');
   },
   createFakeUsers: async (dataSource: DataSource) => {
-    const users = fs.readFileSync(
+    const usersJsonFile = fs.readFileSync(
       'src/Test/mockData/fakeUser-api.json',
       'utf8',
     );
-    const userData = JSON.parse(users);
-    const userArray: User[] = [];
-    for (const user of userData) {
-      userArray.push(user);
+    const userDataParsed = JSON.parse(usersJsonFile);
+    const userIds: string[] = [];
+
+    const userRepo = dataSource.getRepository(User);
+    const userCredRepo = dataSource.getRepository(UserCredential);
+    const linkRepo = dataSource.getRepository(Link);
+    const hashtagRepo = dataSource.getRepository(ProfileHashTag);
+    const mUserProfileHashTagRepo =
+      dataSource.getRepository(MUserProfileHashTag);
+
+    for (const userRaw of userDataParsed) {
+      const { password, links, hashtags, ...user } = userRaw;
+
+      const newUser = await userRepo.save(user);
+      const userId = newUser.id;
+      userIds.push(userId);
+
+      const userCredPromise = userCredRepo.save({
+        userId,
+        password,
+      });
+
+      const linksPromise = links.length
+        ? linkRepo.save(links.map((link: Link) => ({ ...link, userId })))
+        : Promise.resolve();
+
+      // Process hashtags
+      let hashtagIds: string[] = [];
+      if (hashtags.length) {
+        const existingHashtags = await hashtagRepo.find({
+          where: hashtags.map((hashtag: ProfileHashTag) => ({
+            content: hashtag,
+          })),
+        });
+
+        const existingHashtagContents = existingHashtags.map(
+          (hashtag) => hashtag.content,
+        );
+        const newHashtags = hashtags.filter(
+          (hashtag: string) => !existingHashtagContents.includes(hashtag),
+        );
+
+        if (newHashtags.length) {
+          const savedHashtags = await hashtagRepo.save(
+            newHashtags.map((hashtag: string) => ({ content: hashtag })),
+          );
+          hashtagIds = savedHashtags.map(
+            (hashtag: ProfileHashTag) => hashtag.id,
+          );
+        }
+
+        hashtagIds = [
+          ...hashtagIds,
+          ...existingHashtags.map((hashtag) => hashtag.id),
+        ];
+      }
+
+      const mUserProfileHashTagPromise = hashtagIds.length
+        ? mUserProfileHashTagRepo.save(
+            hashtagIds.map((id) => ({
+              userId,
+              profileHashTagId: id,
+            })),
+          )
+        : Promise.resolve();
+
+      await Promise.all([
+        userCredPromise,
+        linksPromise,
+        mUserProfileHashTagPromise,
+      ]);
     }
-    return await dataSource.getRepository(User).save(userArray);
+
+    return userIds;
   },
   generateToken: async (userId: string) => {
     const tokenobj = await auth.generateAccessToken(userId);
     return tokenobj.token;
   },
-  createFakeFootprints: async (dataSource: DataSource, userId: string) => {
-    const footprints = fs.readFileSync(
+  createFakeFootprints: async (dataSource: DataSource, userIds: string[]) => {
+    const footprintsJsonFile = fs.readFileSync(
       'src/Test/mockData/fakeFootprint-api.json',
       'utf8',
     );
-    const footprintData = JSON.parse(footprints);
-    footprintData.forEach((footprint: Footprint) => {
-      footprint.userId = userId;
-    });
-    return await dataSource.getRepository(Footprint).save(footprintData);
-  },
-  addHashtagsToFootprint: async (
-    dataSource: DataSource,
-    footprintId: string,
-    hashtags: string[],
-  ) => {
-    for (const hashtag of hashtags) {
-      const [existingHashtag] = await dataSource.query(
-        `
-        SELECT id FROM FootprintHashTags WHERE content = ?
-      `,
-        [hashtag],
-      );
+    const footprintData = JSON.parse(footprintsJsonFile);
 
-      let hashtagId;
-      if (existingHashtag) {
-        hashtagId = existingHashtag.id;
-      } else {
-        const newId = uuidv4();
-        await dataSource.query(
-          `
-          INSERT INTO FootprintHashTags (id, content)
-          VALUES (?, ?)
-        `,
-          [newId, hashtag],
+    const footprintRepo = dataSource.getRepository(Footprint);
+    const hashtagRepo = dataSource.getRepository(FootprintHashTag);
+    const mFootprintFootprintHashTagRepo = dataSource.getRepository(
+      MFootprintFootprintHashTag,
+    );
+    const mUserFootprintReactionRepo = dataSource.getRepository(
+      MUserFootprintReaction,
+    );
+
+    const footprintIds: string[] = [];
+    const footprintPromises = footprintData.map(
+      async (footprint: TFootprintJson, index: number) => {
+        const { hashtags, reactions, ...footprintDetails } = footprint;
+        const randomUserId = userIds[index % userIds.length];
+        const newFootprint = await footprintRepo.save({
+          ...footprintDetails,
+          userId: randomUserId,
+        });
+        const footprintId = newFootprint.id;
+        footprintIds.push(footprintId);
+
+        if (testHelper.userToFootprintsMap[randomUserId]) {
+          testHelper.userToFootprintsMap[randomUserId].push(footprint);
+        } else {
+          testHelper.userToFootprintsMap[randomUserId] = [footprint];
+        }
+
+        // Process hashtags
+        const hashtagPromises = hashtags.map(async (hashtag: string) => {
+          let existingHashtag = await hashtagRepo.findOne({
+            where: { content: hashtag },
+          });
+          if (!existingHashtag) {
+            existingHashtag = await hashtagRepo.save({ content: hashtag });
+          }
+          return existingHashtag.id;
+        });
+
+        const hashtagIds = await Promise.all(hashtagPromises);
+        if (hashtagIds.length > 0) {
+          await mFootprintFootprintHashTagRepo.save(
+            hashtagIds.map((id) => ({
+              footprintId,
+              footprintHashTagId: id,
+            })),
+          );
+        }
+
+        if (!testHelper.reactionTypesIdMap) {
+          throw new Error('Reaction types not initialized');
+        }
+
+        let counter = 0; // 一個 user 只能對同一個 footprint 有一個 reaction，footprint 的 totalLike 不能多於 user 的數量
+        const reactionTypes = nativeReactions; // List of reaction types
+        const reactionPromises = reactionTypes.map(
+          async (reactionName: NativeReaction) => {
+            const reactionCount = reactions[reactionName];
+            const reactionTypeId = testHelper.reactionTypesIdMap[reactionName];
+
+            if (reactionTypeId && reactionCount > 0) {
+              const reactionEntities = Array(reactionCount)
+                .fill(null)
+                .map(() => {
+                  const obj = {
+                    footprintId,
+                    reactionTypeId,
+                    userId: userIds[counter % userIds.length],
+                  };
+                  counter++;
+                  return obj;
+                });
+
+              await mUserFootprintReactionRepo.save(reactionEntities);
+            }
+          },
         );
-        hashtagId = newId;
-      }
 
-      await dataSource.query(
-        `
-        INSERT IGNORE INTO MFootprintFootprintHashTag (footprintId, footprintHashTagId)
-        VALUES (?, ?)
-      `,
-        [footprintId, hashtagId],
-      );
-    }
+        await Promise.all(reactionPromises);
+      },
+    );
+
+    await Promise.all(footprintPromises);
+    return footprintIds;
   },
-  addReactionsToFootprint: async (
-    dataSource: DataSource,
-    footprintId: string,
-    userIds: string[],
-    reactions: NativeReaction[],
-  ) => {
-    for (const reaction of nativeReactions) {
-      await dataSource.query(
-        `
-        INSERT IGNORE INTO ReactionType (id, name)
-        VALUES (?, ?)
-      `,
-        [uuidv4(), reaction],
-      );
-    }
-
-    for (let i = 0; i < userIds.length; i++) {
-      const userId = userIds[i];
-      const reaction = reactions[i % reactions.length];
-
-      const [reactionType] = await dataSource.query(
-        `
-        SELECT id FROM ReactionType WHERE name = ?
-      `,
-        [reaction],
-      );
-
-      await dataSource.query(
-        `
-        INSERT INTO MUserFootprintReaction (userId, footprintId, reactionTypeId)
-        VALUES (?, ?, ?)
-        ON DUPLICATE KEY UPDATE reactionTypeId = VALUES(reactionTypeId)
-      `,
-        [userId, footprintId, reactionType.id],
-      );
-
-      await dataSource.query(
-        `
-        UPDATE Footprints
-        SET totalLike = totalLike + 1
-        WHERE id = ?
-      `,
-        [footprintId],
-      );
-    }
+  sortAlphabetically: (arr: string[]): string[] =>
+    [...arr].sort((a, b) => a.localeCompare(b)),
+  sortByOccurAt: (arr: TFootprintJson[]): TFootprintJson[] => {
+    return arr.sort((a, b) => {
+      const dateA = new Date(a.occurAt).getTime();
+      const dateB = new Date(b.occurAt).getTime();
+      return dateB - dateA;
+    });
   },
   createFakeOfficialNotifications: async (
     dataSource: DataSource,

@@ -91,10 +91,12 @@ export const footprintRepo = {
       .getManyAndCount();
 
     const mappedFootprints = footprints.map((footprint) => {
-      const hashtags =
-        footprint.mFootprintFootprintHashTag
-          ?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-          .map((relation) => relation.footprintHashTag?.content) ?? [];
+      // sort alphabetically
+      let hashtags =
+        footprint.mFootprintFootprintHashTag?.map(
+          (hashTagRelation) => hashTagRelation.footprintHashTag?.content,
+        ) || [];
+      hashtags = (hashtags as string[]).sort((a, b) => a.localeCompare(b));
 
       const reactionCounts = footprint.mUserFootprintReaction?.reduce(
         (acc, reaction) => {
