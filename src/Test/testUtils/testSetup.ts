@@ -26,10 +26,11 @@ beforeAll(async () => {
     userToFootprintsMapSorted[userId] = testHelper.sortByOccurAt(footprints);
   });
 
-  fakeNotifications = await testHelper.createFakeOfficialNotifications(
+  const newFakeNotifications = await testHelper.createFakeOfficialNotifications(
     Database,
     fakeUserIds[0],
   );
+  fakeNotifications.push(...newFakeNotifications);
 });
 
 afterAll(async () => {
