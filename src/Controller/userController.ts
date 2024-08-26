@@ -159,6 +159,7 @@ export const userController = {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
     }
+
     const { id: userId } = req.decodedToken;
     const page = parseInt(req.query.page as string) || 0;
     if (page < 0) {

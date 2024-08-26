@@ -2,6 +2,8 @@ import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { EntityManager, Relation } from 'typeorm';
 import { Link } from '../../Database/Entities/link.js';
+import { Role } from '../../Database/Entities/role.js';
+import { MUserRole } from '../../Database/Entities/mUserRole.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userRepo = {
@@ -149,6 +151,33 @@ export const userRepo = {
       }
     } catch (error) {
       console.error('Error updating link:');
+      throw error;
+    }
+  },
+  getUserRoles: async (userId: string): Promise<Role[]> => {
+    try {
+      const userWithRoles = await User.createQueryBuilder('user')
+        .leftJoinAndSelect('user.mUserRole', 'mUserRole')
+        .leftJoinAndSelect('mUserRole.role', 'role')
+        .where('user.id = :userId', { userId })
+        .getOne();
+
+      if (!userWithRoles?.mUserRole) {
+        return [];
+      }
+
+      return userWithRoles.mUserRole.map((mUserRole) => mUserRole.role!);
+    } catch (error) {
+      console.error('Error getting user roles:');
+      throw error;
+    }
+  },
+  getAllUsers: async (): Promise<User[]> => {
+    try {
+      const users = await User.find();
+      return users;
+    } catch (error) {
+      console.error('Error getting all users:');
       throw error;
     }
   },

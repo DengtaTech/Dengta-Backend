@@ -6,6 +6,7 @@ import { Link } from '../../../src/Database/Entities/link.js';
 import { MUserProfileHashTag } from '../../../src/Database/Entities/mUserProfileHashTag.js';
 import { ProfileHashTag } from '../../Database/Entities/profileHashTag.js';
 import { Footprint } from '../../../src/Database/Entities/footprint.js';
+import { Notification } from '../../../src/Database/Entities/notification.js';
 import { FootprintHashTag } from '../../../src/Database/Entities/footprintHashTag.js';
 import { MFootprintFootprintHashTag } from '../../../src/Database/Entities/mFootprintFootprintHashTag.js';
 import { ReactionType } from '../../../src/Database/Entities/reactionType.js';
@@ -231,5 +232,29 @@ export const testHelper = {
       const dateB = new Date(b.occurAt).getTime();
       return dateB - dateA;
     });
+  },
+  createFakeOfficialNotifications: async (
+    dataSource: DataSource,
+    userId: string,
+  ) => {
+    const notifications = fs.readFileSync(
+      'src/Test/mockData/fakeOfficialNotification-api.json',
+      'utf8',
+    );
+
+    const notificationData = JSON.parse(notifications);
+
+    const baseTime = new Date();
+
+    for (const notification of notificationData) {
+      notification.userId = userId;
+
+      notification.createdAt = new Date(baseTime);
+      baseTime.setSeconds(baseTime.getSeconds() + 1);
+
+      await dataSource.getRepository(Notification).save(notification);
+    }
+
+    return notificationData;
   },
 };

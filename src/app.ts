@@ -23,6 +23,7 @@ import imageRouter from './Routers/imageRouter.js';
 import footprintRouter from './Routers/footprintRouter.js';
 import recommendationRouter from './Routers/recommendationRouter.js';
 import searchHistoryRouter from './Routers/searchHistoryRouter.js';
+import notificationRouter from './Routers/notificationRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yaml';
@@ -41,6 +42,7 @@ app.use('/api/1.0/user', userRouter);
 app.use('/api/1.0/recommendation', recommendationRouter);
 app.use('/api/1.0/search', searchHistoryRouter);
 app.use('/api/1.0/footprint', footprintRouter);
+app.use('/api/1.0/notification', notificationRouter);
 
 app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
