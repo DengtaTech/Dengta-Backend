@@ -19,6 +19,7 @@ import { Link } from './link.js';
 import { UserEmbedding } from './userEmbedding.js';
 import { SearchHistory } from './searchHistory.js';
 import { MUserProfileHashTag } from './mUserProfileHashTag.js';
+import { Notification } from './notification.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
@@ -129,4 +130,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => SearchHistory, (history) => history.user, { cascade: true })
   searchHistories?: Relation<SearchHistory[]>;
+
+  @OneToMany(() => Notification, (notification) => notification.user, {
+    cascade: true,
+  })
+  notifications?: Relation<Notification[]>;
 }
