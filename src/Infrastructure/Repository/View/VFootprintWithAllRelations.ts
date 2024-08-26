@@ -25,10 +25,10 @@ export const buildFootprintWithAllRelationsQuery = () => {
 
 export const mapFootprintData = (footprint: Footprint): View.FootprintDto => {
   let hashtags =
-    footprint.mFootprintFootprintHashTag?.map(
-      (hashTagRelation) => hashTagRelation.footprintHashTag?.content,
-    ) || [];
-  hashtags = (hashtags as string[]).sort((a, b) => a.localeCompare(b));
+    footprint.mFootprintFootprintHashTag
+      ?.map((hashTagRelation) => hashTagRelation.footprintHashTag?.content)
+      .filter((content): content is string => content !== undefined) || [];
+  hashtags = hashtags.sort((a, b) => a.localeCompare(b));
 
   const reactionCounts = footprint.mUserFootprintReaction?.reduce(
     (acc, reaction) => {
