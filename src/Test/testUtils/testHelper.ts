@@ -7,7 +7,6 @@ import { MUserProfileHashTag } from '../../../src/Database/Entities/mUserProfile
 import { ProfileHashTag } from '../../Database/Entities/profileHashTag.js';
 import { Footprint } from '../../../src/Database/Entities/footprint.js';
 import { Notification } from '../../../src/Database/Entities/notification.js';
-import { v4 as uuidv4 } from 'uuid';
 import { FootprintHashTag } from '../../../src/Database/Entities/footprintHashTag.js';
 import { MFootprintFootprintHashTag } from '../../../src/Database/Entities/mFootprintFootprintHashTag.js';
 import { ReactionType } from '../../../src/Database/Entities/reactionType.js';

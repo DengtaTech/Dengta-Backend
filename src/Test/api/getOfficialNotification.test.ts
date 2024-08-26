@@ -1,32 +1,12 @@
 import request from 'supertest';
 import app from '../../app.js';
-import { Database } from '../../Database/data-source.js';
 import { testHelper } from '../testUtils/testHelper.js';
-import { User } from '../../Database/Entities/user.js';
-import { Notification } from '../../Database/Entities/notification.js';
+import { fakeUserIds, fakeNotifications } from '../testUtils/testSetup.js';
 
 describe('GET /api/1.0/notification', () => {
-  let fakeUsers: User[];
-  let fakeNotifications: Notification[];
-  let accessToken: string;
-
-  beforeAll(async () => {
-    await Database.initialize();
-    await testHelper.clearDatabase(Database);
-    fakeUsers = await testHelper.createFakeUsers(Database);
-    accessToken = await testHelper.generateToken(fakeUsers[0].id);
-    fakeNotifications = await testHelper.createFakeOfficialNotifications(
-      Database,
-      fakeUsers[0].id,
-    );
-  });
-
-  afterAll(async () => {
-    await Database.destroy();
-    console.log('Database destroyed');
-  });
-
   it('should get all official notifications of a user', async () => {
+    const accessToken = await testHelper.generateToken(fakeUserIds[0]);
+
     const response = await request(app)
       .get('/api/1.0/notification?page=1')
       .set('Authorization', `Bearer ${accessToken}`)
