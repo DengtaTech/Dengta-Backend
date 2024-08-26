@@ -16,8 +16,8 @@ export class ProfileHashTag extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  @Index({ fulltext: true, parser: 'ngram', unique: true })
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  @Index('IDX_CONTENT_FULLTEXT', { fulltext: true, parser: 'ngram' })
   content!: string;
 
   @Column({
