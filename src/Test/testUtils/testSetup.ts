@@ -8,7 +8,7 @@ const fakeFootprintIds: string[] = [];
 const userToFootprintsMap = testHelper.userToFootprintsMap;
 const userToFootprintsMapSorted: Record<string, TFootprintJson[]> = {};
 
-let fakeNotifications: Notification[] = [];
+const fakeNotifications: Notification[] = [];
 
 beforeAll(async () => {
   await Database.initialize();
