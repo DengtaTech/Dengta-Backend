@@ -161,7 +161,7 @@ export const userController = {
     }
 
     const { id: userId } = req.decodedToken;
-    const page = parseInt(req.query.page as string) || 0;
+    const page = parseInt(req.query.page as string) || 1;
     if (page < 0) {
       throw new InvalidInputError('page must be a positive integer');
     }
