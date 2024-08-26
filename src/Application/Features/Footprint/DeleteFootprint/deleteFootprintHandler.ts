@@ -7,11 +7,9 @@ export const deleteFootprintHandler = {
     footprintId: string,
   ): Promise<DeleteFootprint.IDeleteFootprintResponse> => {
     //init
-    let response = null;
-
     await footprintService.deleteFootprint(footprintId);
 
-    response = await deleteFootprintRes.customize();
+    const response = await deleteFootprintRes.customize();
 
     return response;
   },
