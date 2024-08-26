@@ -67,4 +67,8 @@ export class PatchUserInfoReqBodyDto {
   @ValidateNested({ each: true })
   @Type(() => LinkDto)
   links!: LinkDto[];
+
+  @IsArray()
+  @IsString({ each: true })
+  hashtags!: string[];
 }
