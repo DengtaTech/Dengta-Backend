@@ -7,7 +7,14 @@ coverage/
 **/.git
 **/.gitignore
 **/docker-compose*
-.eslintrc.json
+.eslintrc.config.json
 .prettierrc.json
+/swagger.json
 /dist
 .version
+/.devcontainer
+/.husky
+/.vscode
+README.md
+LICENSE
+# 可能之後要加上 EmbbedingServer

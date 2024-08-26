@@ -6,27 +6,31 @@ import {
   OneToMany,
   Relation,
 } from 'typeorm';
-import { FootprintReaction } from './footprintReaction.js';
+import { MUserFootprintReaction } from './mUserFootprintReaction.js';
+import {
+  nativeReactions,
+  type NativeReaction,
+} from '../../Application/Features/Footprint/Reaction/Types/reactions.js';
 
 @Entity({ name: 'ReactionType' })
 export class ReactionType extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  @Column({ type: 'varchar' })
-  name!: string;
+  @Column({ type: 'enum', enum: nativeReactions, nullable: false })
+  name!: NativeReaction;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
   @OneToMany(
-    () => FootprintReaction,
-    (footprintReaction) => footprintReaction.reactionType,
+    () => MUserFootprintReaction,
+    (mUserFootprintReaction) => mUserFootprintReaction.reactionType,
     { cascade: true },
   )
-  reactions?: Relation<FootprintReaction[]>;
+  mUserFootprintReaction?: Relation<MUserFootprintReaction[]>;
 }

@@ -6,22 +6,44 @@ import {
   OneToMany,
   Relation,
   OneToOne,
+  Index,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { Footprint } from './footprint.js';
 import { UserCredential } from './userCredential.js';
-import { UserRole } from './userRole.js';
+import { MUserRole } from './mUserRole.js';
 import { Followship } from './followship.js';
-import { ProfileHashTag } from './profileHashTag.js';
-import { FootprintReaction } from './footprintReaction.js';
+import { MUserFootprintReaction } from './mUserFootprintReaction.js';
 import { Link } from './link.js';
+import { UserEmbedding } from './userEmbedding.js';
+import { SearchHistory } from './searchHistory.js';
+import { MUserProfileHashTag } from './mUserProfileHashTag.js';
+import { Notification } from './notification.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
+
+  @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
+  email!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
-  name!: string;
+  @Index({ fulltext: true, parser: 'ngram' })
+  fullName!: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  firstName!: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  lastName!: string;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  setFullName() {
+    this.fullName = `${this.firstName} ${this.lastName}`;
+  }
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   lifeRole!: string;
@@ -32,35 +54,30 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', default: 'native' })
   provider!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: false })
   avatar!: string;
 
-  @Column({ type: 'int', nullable: true })
-  gender!: number;
+  @Column({
+    type: 'enum',
+    enum: ['male', 'female', 'nonbinary', 'notdisclosed'],
+    nullable: false,
+  })
+  gender!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  phone!: string;
+  phone!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  selfIntro!: string;
+  selfIntro!: string | null;
+
+  @Column({ type: 'boolean', default: true })
+  isActive!: boolean;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  fbLink!: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  igLink!: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  linkedInLink!: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  twitterLink!: string;
-
-  @Column({ type: 'int', nullable: true })
-  isActive!: number;
+  clerkId!: string | null;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
@@ -72,20 +89,24 @@ export class User extends BaseEntity {
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
   links?: Relation<Link[]>;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
-  userRoles?: Relation<UserRole[]>;
-
-  @OneToMany(() => ProfileHashTag, (profileHashTag) => profileHashTag.user, {
-    cascade: true,
-  })
-  profileHashTags?: Relation<ProfileHashTag[]>;
+  @OneToMany(() => MUserRole, (mUserRole) => mUserRole.user, { cascade: true })
+  mUserRole?: Relation<MUserRole[]>;
 
   @OneToMany(
-    () => FootprintReaction,
-    (footprintReaction) => footprintReaction.user,
+    () => MUserProfileHashTag,
+    (mUserProfileHashTag) => mUserProfileHashTag.user,
+    {
+      cascade: true,
+    },
+  )
+  mUserProfileHashTag?: Relation<MUserProfileHashTag[]>;
+
+  @OneToMany(
+    () => MUserFootprintReaction,
+    (mUserFootprintReaction) => mUserFootprintReaction.user,
     { cascade: true },
   )
-  footprintReactions?: Relation<FootprintReaction[]>;
+  mUserFootprintReaction?: Relation<MUserFootprintReaction[]>;
 
   @OneToMany(() => Followship, (followship) => followship.follower, {
     cascade: true,
@@ -101,4 +122,17 @@ export class User extends BaseEntity {
     cascade: true,
   })
   userCredential?: Relation<UserCredential>;
+
+  @OneToOne(() => UserEmbedding, (userEmbedding) => userEmbedding.user, {
+    cascade: true,
+  })
+  selfIntroEmbedding?: Relation<UserEmbedding>;
+
+  @OneToMany(() => SearchHistory, (history) => history.user, { cascade: true })
+  searchHistories?: Relation<SearchHistory[]>;
+
+  @OneToMany(() => Notification, (notification) => notification.user, {
+    cascade: true,
+  })
+  notifications?: Relation<Notification[]>;
 }

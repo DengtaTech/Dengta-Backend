@@ -1,0 +1,405 @@
+[
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "fullName": "John Doe",
+    "lifeRole": "Student",
+    "gender": "male",
+    "birthday": "1990-01-01",
+    "email": "johndoe123@example.com",
+    "password": "mypassword123",
+    "clerkId": "1934719234",
+    "avatar": "https://avatars.githubusercontent.com/u/1934719234?v=4",
+    "links": [
+      {
+        "sourceName": "Facebook",
+        "url": "https://facebook.com/johndoe"
+      }
+    ],
+    "hashtags": ["hashtag1", "hashtag2"]
+  },
+  {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "fullName": "Jane Smith",
+    "lifeRole": "Professional",
+    "gender": "female",
+    "birthday": "1985-05-15",
+    "email": "janesmith123@example.com",
+    "password": "securepass456",
+    "clerkId": "2345678901",
+    "avatar": "https://avatars.githubusercontent.com/u/1934719234?v=4",
+    "links": [
+      {
+        "sourceName": "LinkedIn",
+        "url": "https://linkedin.com/in/janesmith"
+      },
+      {
+        "sourceName": "Twitter",
+        "url": "https://twitter.com/janesmith"
+      }
+    ],
+    "hashtags": ["hashtag2", "hashtag3", "hashtag4"]
+  },
+  {
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "fullName": "Alice Johnson",
+    "lifeRole": "Artist",
+    "gender": "female",
+    "birthday": "1992-03-22",
+    "email": "alicejohnson@example.com",
+    "password": "artisticpass789",
+    "clerkId": "3456789012",
+    "avatar": "https://avatars.githubusercontent.com/u/3456789012?v=4",
+    "links": [
+      {
+        "sourceName": "Instagram",
+        "url": "https://instagram.com/alicejohnson"
+      }
+    ],
+    "hashtags": ["art", "creativity"]
+  },
+  {
+    "firstName": "Bob",
+    "lastName": "Brown",
+    "fullName": "Bob Brown",
+    "lifeRole": "Developer",
+    "gender": "male",
+    "birthday": "1988-07-30",
+    "email": "bobbrown@example.com",
+    "password": "devpass123",
+    "clerkId": "4567890123",
+    "avatar": "https://avatars.githubusercontent.com/u/4567890123?v=4",
+    "links": [
+      {
+        "sourceName": "GitHub",
+        "url": "https://github.com/bobbrown"
+      }
+    ],
+    "hashtags": ["coding", "tech"]
+  },
+  {
+    "firstName": "Charlie",
+    "lastName": "Davis",
+    "fullName": "Charlie Davis",
+    "lifeRole": "Designer",
+    "gender": "nonbinary",
+    "birthday": "1995-11-11",
+    "email": "charliedavis@example.com",
+    "password": "designpass456",
+    "clerkId": "5678901234",
+    "avatar": "https://avatars.githubusercontent.com/u/5678901234?v=4",
+    "links": [
+      {
+        "sourceName": "Behance",
+        "url": "https://behance.net/charliedavis"
+      }
+    ],
+    "hashtags": ["design", "ux"]
+  },
+  {
+    "firstName": "Diana",
+    "lastName": "Evans",
+    "fullName": "Diana Evans",
+    "lifeRole": "Writer",
+    "gender": "female",
+    "birthday": "1990-09-09",
+    "email": "dianaevans@example.com",
+    "password": "writepass789",
+    "clerkId": "6789012345",
+    "avatar": "https://avatars.githubusercontent.com/u/6789012345?v=4",
+    "links": [
+      {
+        "sourceName": "Medium",
+        "url": "https://medium.com/@dianaevans"
+      }
+    ],
+    "hashtags": ["writing", "literature"]
+  },
+  {
+    "firstName": "Ethan",
+    "lastName": "Foster",
+    "fullName": "Ethan Foster",
+    "lifeRole": "Photographer",
+    "gender": "male",
+    "birthday": "1987-12-12",
+    "email": "ethanfoster@example.com",
+    "password": "photo123456",
+    "clerkId": "7890123456",
+    "avatar": "https://avatars.githubusercontent.com/u/7890123456?v=4",
+    "links": [
+      {
+        "sourceName": "Flickr",
+        "url": "https://flickr.com/photos/ethanfoster"
+      }
+    ],
+    "hashtags": ["photography", "nature"]
+  },
+  {
+    "firstName": "Fiona",
+    "lastName": "Garcia",
+    "fullName": "Fiona Garcia",
+    "lifeRole": "Musician",
+    "gender": "female",
+    "birthday": "1993-04-04",
+    "email": "fionagarcia@example.com",
+    "password": "musicpass123",
+    "clerkId": "8901234567",
+    "avatar": "https://avatars.githubusercontent.com/u/8901234567?v=4",
+    "links": [
+      {
+        "sourceName": "Spotify",
+        "url": "https://spotify.com/fionagarcia"
+      }
+    ],
+    "hashtags": ["music", "performance"]
+  },
+  {
+    "firstName": "George",
+    "lastName": "Harris",
+    "fullName": "George Harris",
+    "lifeRole": "Chef",
+    "gender": "male",
+    "birthday": "1982-08-08",
+    "email": "georgeharris@example.com",
+    "password": "chefpass456",
+    "clerkId": "9012345678",
+    "avatar": "https://avatars.githubusercontent.com/u/9012345678?v=4",
+    "links": [
+      {
+        "sourceName": "YouTube",
+        "url": "https://youtube.com/c/georgeharris"
+      }
+    ],
+    "hashtags": ["cooking", "food"]
+  },
+  {
+    "firstName": "Hannah",
+    "lastName": "Ivy",
+    "fullName": "Hannah Ivy",
+    "lifeRole": "Teacher",
+    "gender": "female",
+    "birthday": "1989-06-06",
+    "email": "hannahivy@example.com",
+    "password": "teachpass789",
+    "clerkId": "0123456789",
+    "avatar": "https://avatars.githubusercontent.com/u/0123456789?v=4",
+    "links": [
+      {
+        "sourceName": "LinkedIn",
+        "url": "https://linkedin.com/in/hannahivy"
+      }
+    ],
+    "hashtags": ["education", "learning"]
+  },
+  {
+    "firstName": "Ian",
+    "lastName": "Jones",
+    "fullName": "Ian Jones",
+    "lifeRole": "Entrepreneur",
+    "gender": "male",
+    "birthday": "1984-02-02",
+    "email": "ianjones@example.com",
+    "password": "entrepass123",
+    "clerkId": "1234567890",
+    "avatar": "https://avatars.githubusercontent.com/u/1234567890?v=4",
+    "links": [
+      {
+        "sourceName": "Twitter",
+        "url": "https://twitter.com/ianjones"
+      }
+    ],
+    "hashtags": ["business", "startup"]
+  },
+  {
+    "firstName": "Liam",
+    "lastName": "Smith",
+    "fullName": "Liam Smith",
+    "lifeRole": "Developer",
+    "gender": "male",
+    "birthday": "1991-01-15",
+    "email": "liamsmith@example.com",
+    "password": "devpass789",
+    "clerkId": "2345678902",
+    "avatar": "https://avatars.githubusercontent.com/u/2345678902?v=4",
+    "links": [
+      {
+        "sourceName": "GitHub",
+        "url": "https://github.com/liamsmith"
+      }
+    ],
+    "hashtags": ["coding", "tech"]
+  },
+  {
+    "firstName": "Mia",
+    "lastName": "Johnson",
+    "fullName": "Mia Johnson",
+    "lifeRole": "Artist",
+    "gender": "female",
+    "birthday": "1994-02-20",
+    "email": "miajohnson@example.com",
+    "password": "artpass123",
+    "clerkId": "3456789013",
+    "avatar": "https://avatars.githubusercontent.com/u/3456789013?v=4",
+    "links": [
+      {
+        "sourceName": "Instagram",
+        "url": "https://instagram.com/miajohnson"
+      }
+    ],
+    "hashtags": ["art", "creativity"]
+  },
+  {
+    "firstName": "Noah",
+    "lastName": "Williams",
+    "fullName": "Noah Williams",
+    "lifeRole": "Photographer",
+    "gender": "male",
+    "birthday": "1986-03-30",
+    "email": "noahwilliams@example.com",
+    "password": "photo789456",
+    "clerkId": "4567890124",
+    "avatar": "https://avatars.githubusercontent.com/u/4567890124?v=4",
+    "links": [
+      {
+        "sourceName": "Flickr",
+        "url": "https://flickr.com/photos/noahwilliams"
+      }
+    ],
+    "hashtags": ["photography", "nature"]
+  },
+  {
+    "firstName": "Olivia",
+    "lastName": "Brown",
+    "fullName": "Olivia Brown",
+    "lifeRole": "Musician",
+    "gender": "female",
+    "birthday": "1990-04-10",
+    "email": "oliviabrown@example.com",
+    "password": "musicpass456",
+    "clerkId": "5678901235",
+    "avatar": "https://avatars.githubusercontent.com/u/5678901235?v=4",
+    "links": [
+      {
+        "sourceName": "Spotify",
+        "url": "https://spotify.com/oliviabrown"
+      }
+    ],
+    "hashtags": ["music", "performance"]
+  },
+  {
+    "firstName": "Sophia",
+    "lastName": "Davis",
+    "fullName": "Sophia Davis",
+    "lifeRole": "Writer",
+    "gender": "female",
+    "birthday": "1985-05-25",
+    "email": "sophiadavis@example.com",
+    "password": "writepass456",
+    "clerkId": "6789012346",
+    "avatar": "https://avatars.githubusercontent.com/u/6789012346?v=4",
+    "links": [
+      {
+        "sourceName": "Medium",
+        "url": "https://medium.com/@sophiadavis"
+      }
+    ],
+    "hashtags": ["writing", "literature"]
+  },
+  {
+    "firstName": "James",
+    "lastName": "Garcia",
+    "fullName": "James Garcia",
+    "lifeRole": "Chef",
+    "gender": "male",
+    "birthday": "1983-06-15",
+    "email": "jamesgarcia@example.com",
+    "password": "chefpass789",
+    "clerkId": "7890123457",
+    "avatar": "https://avatars.githubusercontent.com/u/7890123457?v=4",
+    "links": [
+      {
+        "sourceName": "YouTube",
+        "url": "https://youtube.com/c/jamesgarcia"
+      }
+    ],
+    "hashtags": ["cooking", "food"]
+  },
+  {
+    "firstName": "Ava",
+    "lastName": "Martinez",
+    "fullName": "Ava Martinez",
+    "lifeRole": "Teacher",
+    "gender": "female",
+    "birthday": "1992-07-20",
+    "email": "avamartinez@example.com",
+    "password": "teachpass456",
+    "clerkId": "8901234568",
+    "avatar": "https://avatars.githubusercontent.com/u/8901234568?v=4",
+    "links": [
+      {
+        "sourceName": "LinkedIn",
+        "url": "https://linkedin.com/in/avamartinez"
+      }
+    ],
+    "hashtags": ["education", "learning"]
+  },
+  {
+    "firstName": "Elijah",
+    "lastName": "Hernandez",
+    "fullName": "Elijah Hernandez",
+    "lifeRole": "Entrepreneur",
+    "gender": "male",
+    "birthday": "1989-08-30",
+    "email": "elijahhernandez@example.com",
+    "password": "entrepass456",
+    "clerkId": "9012345679",
+    "avatar": "https://avatars.githubusercontent.com/u/9012345679?v=4",
+    "links": [
+      {
+        "sourceName": "Twitter",
+        "url": "https://twitter.com/elijahhernandez"
+      }
+    ],
+    "hashtags": ["business", "startup"]
+  },
+  {
+    "firstName": "Isabella",
+    "lastName": "Lopez",
+    "fullName": "Isabella Lopez",
+    "lifeRole": "Designer",
+    "gender": "female",
+    "birthday": "1993-09-10",
+    "email": "isabellalopez@example.com",
+    "password": "designpass789",
+    "clerkId": "0123456790",
+    "avatar": "https://avatars.githubusercontent.com/u/0123456790?v=4",
+    "links": [
+      {
+        "sourceName": "Behance",
+        "url": "https://behance.net/isabellalopez"
+      }
+    ],
+    "hashtags": ["design", "ux"]
+  },
+  {
+    "firstName": "Mason",
+    "lastName": "Wilson",
+    "fullName": "Mason Wilson",
+    "lifeRole": "Developer",
+    "gender": "male",
+    "birthday": "1994-10-05",
+    "email": "masonwilson@example.com",
+    "password": "devpass456",
+    "clerkId": "1234567891",
+    "avatar": "https://avatars.githubusercontent.com/u/1234567891?v=4",
+    "links": [
+      {
+        "sourceName": "GitHub",
+        "url": "https://github.com/masonwilson"
+      }
+    ],
+    "hashtags": ["coding", "tech"]
+  }
+]

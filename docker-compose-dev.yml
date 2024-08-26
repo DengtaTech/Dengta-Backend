@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql:
     extends:
@@ -13,9 +11,40 @@ services:
     ports:
       - ${REDIS_PORT}:6379
 
+  etcd:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: etcd
+
+  minio:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: minio
+
+  milvus:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: standalone
+
+  embeddings_server:
+    build:
+      context: ./src/EmbeddingsServer/
+      dockerfile: Dockerfile
+    ports:
+      - ${EMBEDDING_SERVER_PORT}:5001
+    container_name: embeddings_server
+    networks:
+      - backend_network
+
 volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}
+  dengta_milvus_etcd_volume:
+    name: ${MILVUS_VOLUME_PATH}_etcd
+  dengta_milvus_minio_volume:
+    name: ${MILVUS_VOLUME_PATH}_minio
+  dengta_milvus_volume:
+    name: ${MILVUS_VOLUME_PATH}
 
 networks:
   backend_network:

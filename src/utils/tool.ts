@@ -19,7 +19,7 @@ export const tool = {
     try {
       return await bcrypt.compare(input, real);
     } catch (error) {
-      console.error("Error comparing passwords:", error);
+      console.error('Error comparing passwords:', error);
       return false;
     }
   },

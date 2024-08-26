@@ -8,6 +8,35 @@ servers:
   - url: 'http://localhost:3001/api/1.0'
 
 paths:
+  /user/signin:
+    post:
+      tags:
+        - User
+      summary: Sign in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                email: johndoe@example.com
+                password: mypassword123
+      responses:
+        '200':
+          description: Sign in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
   /user/signup:
     post:
       tags:
@@ -20,36 +49,218 @@ paths:
             schema:
               type: object
               required:
-              - realName
-              - accountName
-              - email
-              - password
+                - firtName
+                - lastName
+                - fullName
+                - lifeRole
+                - gender
+                - birthday
+                - email
+                - password
+                - links
+                - clerkId
               properties:
-              realName:
-                type: string
-              accountName:
-                type: string
-              email:
-                type: string
-              password:
-                type: string
+                name:
+                  type: string
+                lifeRole:
+                  type: string
+                gender:
+                  type: string
+                  enum:
+                    - male
+                    - female
+                    - nonbinary
+                    - notdisclosed
+                birthday:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                links:
+                  type: array
               example:
-                realName: John Doe
-                accountName: johndoe
+                firstName: John
+                lastName: Doe
+                fullName: John Doe
+                lifeRole: Student
+                gender: male
+                birthday: '1990-01-01'
                 email: johndoe@example.com
-                password: password123
+                password: mypassword123
+                clerkId: '1934719234'
+                links: []
       responses:
         '200':
-          description: The spacecraft corresponding to the provided `spacecraftId`
+          description: Sign up successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/LoginUserResponse'
         403:
           $ref: '#/components/errors/EmailExistsError'
+  /user/info:
+    get:
+      tags:
+        - User
+      summary: Get user personal information
+      responses:
+        '200':
+          description: get self info successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - User
+      summary: Update user personal information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lifeRole:
+                  type: string
+                fullName:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                birthday:
+                  type: string
+                gender:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+                selfIntro:
+                  type: string
+                links:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      sourceName:
+                        type: string
+                      url:
+                        type: string
+                hashtags:
+                  type: array
+                  items:
+                    type: string
+              example:
+                lifeRole: Student222
+                fullName: John222 Doe222
+                firstName: John222
+                lastName: Doe222
+                birthday: '2000-01-10'
+                links:
+                  [
+                    {
+                      sourceName: 'Facebook',
+                      url: 'https://www.facebook.com/johndoefff',
+                    },
+                    {
+                      sourceName: 'LinkedIn',
+                      url: 'https://www.linkedin.com/in/johndoefff',
+                    },
+                  ]
+                hashtags: ['hashtag1', 'hashtag2', 'hashtag3']
+      responses:
+        '200':
+          description: Update user personal information successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+      security:
+        - bearerAuth: []
+  /user/{userId}/info:
+    get:
+      tags:
+        - User
+      summary: Get others personal information
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          example: '537fe5d1-c76e-46d3-982f-43ed8d52f841'
+      responses:
+        '200':
+          description: Get others info successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+      security:
+        - bearerAuth: []
+  /user/avatar:
+    post:
+      tags:
+        - User
+      summary: Upload user avatar
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - avatar
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Upload avatar successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Upload avatar successfully'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
+        '400':
+          description: Invalid file type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'File must be an image'
+      security:
+        - bearerAuth: []
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
-    UserResponse:
+    LoginUserResponse:
       type: object
       properties:
         data:
@@ -57,31 +268,55 @@ components:
           properties:
             accessToken:
               type: string
-              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1IiwiaWF0IjoxNzIxNDY2ODk3LCJleHAiOjE3MjE1NTMyOTd9.RtvpdPUgSh00UyvtHhQbB8wib-tjguHWsVk-RAExOJY"
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1IiwiaWF0IjoxNzIxNDY2ODk3LCJleHAiOjE3MjE1NTMyOTd9.RtvpdPUgSh00UyvtHhQbB8wib-tjguHWsVk-RAExOJY'
             accessExpired:
               type: string
-              example: "86400"
+              example: '86400'
             user:
               type: object
               properties:
                 id:
                   type: string
-                  example: "15"
+                  example: '15'
                 provider:
                   type: string
-                  example: "native"
+                  example: 'native'
                 realName:
                   type: string
-                  example: "John Doe"
+                  example: 'John Doe'
                 accountName:
                   type: string
-                  example: "johndoe"
+                  example: 'johndoe'
                 email:
                   type: string
-                  example: "johndoe@example.com"
+                  example: 'johndoe@example.com'
                 avatar:
                   type: string
                   nullable: true
+    UserInfoResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: '15'
+            provider:
+              type: string
+              example: 'native'
+            realName:
+              type: string
+              example: 'John Doe'
+            accountName:
+              type: string
+              example: 'johndoe'
+            email:
+              type: string
+              example: 'johndoe@example.com'
+            avatar:
+              type: string
+              nullable: true
   errors:
     EmailExistsError:
       description: Email already exists
@@ -92,4 +327,4 @@ components:
             properties:
               error:
                 type: string
-                example: "Email already exists."
+                example: 'Email already exists.'

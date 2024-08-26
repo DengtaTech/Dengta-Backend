@@ -5,13 +5,25 @@ export class BaseError extends Error {
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
-    Object.setPrototypeOf(this, BaseError.prototype);
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 export class EmailExistsError extends BaseError {
   constructor() {
     super('Email already exists', 403);
+  }
+}
+
+export class UserNotFoundError extends BaseError {
+  constructor() {
+    super('Email not signed up', 404);
+  }
+}
+export class FootprintNotFoundError extends BaseError {
+  constructor() {
+    super('Footprint not found', 404);
   }
 }
 
@@ -27,9 +39,21 @@ export class WrongTokenError extends BaseError {
   }
 }
 
+export class WrongPasswordError extends BaseError {
+  constructor() {
+    super('Client error - wrong password', 403);
+  }
+}
+
 export class InputEmptyError extends BaseError {
   constructor() {
-    super('Client error - Input field (images?) should not be empty', 400);
+    super('Client error - Input field should not be empty', 400);
+  }
+}
+
+export class InvalidInputError extends BaseError {
+  constructor(message: string) {
+    super(`Client error - Invalid input: ${message}`, 400);
   }
 }
 

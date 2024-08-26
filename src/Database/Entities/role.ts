@@ -6,19 +6,19 @@ import {
   OneToMany,
   Relation,
 } from 'typeorm';
-import { UserRole } from './userRole.js';
+import { MUserRole } from './mUserRole.js';
 
 @Entity({ name: 'Roles' })
 export class Role extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
-  type!: string;
+  name!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  description!: string;
+  description!: string | null;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
-  userRoles?: Relation<UserRole[]>;
+  @OneToMany(() => MUserRole, (mUserRole) => mUserRole.role, { cascade: true })
+  mUserRole?: Relation<MUserRole[]>;
 }

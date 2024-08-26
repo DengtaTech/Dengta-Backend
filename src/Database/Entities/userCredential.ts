@@ -11,24 +11,21 @@ import { User } from './user.js';
 
 @Entity({ name: 'UserCredentials' })
 export class UserCredential extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: number;
-
-  @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
-  email!: string;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   password!: string;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
-  @Column({ type: 'bigint', nullable: false, unsigned: true })
-  userId!: number;
+  @Column('uuid')
+  userId!: string;
 
   @OneToOne(() => User, (user) => user.userCredential, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
