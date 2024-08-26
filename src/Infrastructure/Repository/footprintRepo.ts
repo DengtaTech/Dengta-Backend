@@ -57,13 +57,13 @@ export const footprintRepo = {
   },
   findByUserIdWithAllRelations: async (
     userId: User['id'],
-    offset: number = 0,
+    offset: number = 1,
     limit: number = 10,
   ): Promise<View.FootprintDto[]> => {
     const [footprints] = await buildFootprintWithAllRelationsQuery()
       .where('footprint.userId = :userId', { userId })
       .orderBy('footprint.occurAt', 'DESC')
-      .skip(offset * limit)
+      .skip((offset - 1) * limit)
       .take(limit)
       .getManyAndCount();
 
