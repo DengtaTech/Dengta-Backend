@@ -1,0 +1,80 @@
+[
+  {
+    "type": "system",
+    "title": "System Notification 1",
+    "content": "This is a system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 2",
+    "content": "This is another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 3",
+    "content": "This is yet another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 4",
+    "content": "This is the last system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 5",
+    "content": "This is another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 6",
+    "content": "This is yet another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 7",
+    "content": "This is the last system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 8",
+    "content": "This is another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 9",
+    "content": "This is yet another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 10",
+    "content": "This is the last system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 11",
+    "content": "This is another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 12",
+    "content": "This is yet another system notification.",
+    "isRead": false
+  },
+  {
+    "type": "system",
+    "title": "System Notification 13",
+    "content": "This is the last system notification.",
+    "isRead": false
+  }
+]
