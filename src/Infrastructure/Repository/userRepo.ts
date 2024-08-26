@@ -3,7 +3,6 @@ import { User } from '../../Database/Entities/user.js';
 import { EntityManager, Relation } from 'typeorm';
 import { Link } from '../../Database/Entities/link.js';
 import { Role } from '../../Database/Entities/role.js';
-import { MUserRole } from '../../Database/Entities/mUserRole.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userRepo = {

@@ -1,7 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { FootprintHashTag } from '../../Database/Entities/footprintHashTag.js';
 import { MFootprintFootprintHashTag } from '../../Database/Entities/mFootprintFootprintHashTag.js';
-import { Footprint } from '../../Database/Entities/footprint.js';
 
 export const mFootprintFootprintHashTagRepo = {
   insertNewRecord: async (
