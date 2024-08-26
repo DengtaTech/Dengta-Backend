@@ -1,8 +1,9 @@
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
-import { EntityManager, Relation } from 'typeorm';
+import { EntityManager, Relation, Brackets } from 'typeorm';
 import { Link } from '../../Database/Entities/link.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
+import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 
 export const userRepo = {
   findByEmail: async (email: string): Promise<User | null> => {
@@ -86,54 +87,92 @@ export const userRepo = {
       throw error;
     }
   },
-  findByNameAndTag: async (
+  findByNameAndTag: (async (
     keywords: string,
+    followerId?: User['id'],
     transactionManager?: EntityManager,
-  ): Promise<User[]> => {
+  ) => {
     try {
       if (transactionManager) {
-        const users = await transactionManager
+        const query = transactionManager
           .getRepository(User)
           .createQueryBuilder('user')
           .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
           .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
           .where(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .orWhere(
-            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            new Brackets((qb) =>
+              qb
+                .where(
+                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                )
+                .orWhere(
+                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                ),
+            ),
           )
           .addSelect(
             'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
             'relevance_score',
           )
           .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords)
-          .getMany();
-        return users;
+          .setParameter('keywords', keywords);
+
+        if (followerId) {
+          query
+            .leftJoinAndSelect('user.followedBy', 'followedBy')
+            .andWhere('followedBy.followerId = :followerId', {
+              followerId: followerId,
+            });
+        }
+
+        return await query.getMany();
       } else {
-        const users = await User.createQueryBuilder('user')
+        const query = User.createQueryBuilder('user')
           .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
           .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
           .where(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .orWhere(
-            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            new Brackets((qb) =>
+              qb
+                .where(
+                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                )
+                .orWhere(
+                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                ),
+            ),
           )
           .addSelect(
             'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
             'relevance_score',
           )
           .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords)
-          .getMany();
-        return users;
+          .setParameter('keywords', keywords);
+
+        if (followerId) {
+          query
+            .leftJoinAndSelect('user.followedBy', 'followedBy')
+            .andWhere('followedBy.followerId = :followerId', {
+              followerId: followerId,
+            });
+        }
+
+        return await query.getMany();
       }
     } catch (error) {
       console.error('Error finding user by name and tag:');
       throw error;
     }
+  }) as {
+    (
+      keywords: string,
+      followerId: User['id'],
+      transactionManager?: EntityManager,
+    ): Promise<SearchFollowees.ISearchFolloweesDto[]>;
+    (
+      keywords: string,
+      followerId?: undefined,
+      transactionManager?: EntityManager,
+    ): Promise<User[]>;
   },
   updateLink: async (
     user: User,

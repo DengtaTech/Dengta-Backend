@@ -50,6 +50,7 @@ export const searchHistoryService = {
         );
         const result = await userRepo.findByNameAndTag(
           searchInfoObj.searchContent,
+          undefined,
           transactionManager,
         );
         return result;
