@@ -7,11 +7,9 @@ export const getFootprintDetailHandler = {
     footprintId: string,
   ): Promise<GetFootprintDetail.FootprintDetailResponse> => {
     //init
-    let response = null;
-
     const result = await footprintService.getFootprintDetail(footprintId);
 
-    response = await getFootprintDetailRes.customize(result);
+    const response = await getFootprintDetailRes.customize(result);
 
     return response;
   },
