@@ -2,12 +2,14 @@ import { EntityManager } from 'typeorm';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { InitFootprint } from '../../Application/Features/Footprint/InitFootprint/Types/api.js';
 import { PublishFootprint } from '../../Application/Features/Footprint/PublishFootprint/Types/api.js';
-import { GetFootprints } from '../../Application/Features/User/GetFootprints/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
+import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFootprintDetail/Types/api.js';
+import { FootprintNotFoundError } from '../../Errors/errors.js';
 import {
-  nativeReactions,
-  type NativeReaction,
-} from '../../Application/Features/Footprint/Reaction/Types/reactions.js';
+  buildFootprintWithAllRelationsQuery,
+  mapFootprintData,
+} from './View/VFootprintWithAllRelations.js';
+import { View } from './View/view.js';
 
 export const footprintRepo = {
   findById: async (id: Footprint['id'], transactionManager?: EntityManager) => {
@@ -53,80 +55,39 @@ export const footprintRepo = {
       throw error;
     }
   },
-  findByFootprintId: async (footprintId: string): Promise<Footprint | null> => {
-    try {
-      const footprint = await Footprint.findOne({
-        where: { id: footprintId },
-      });
-      return footprint;
-    } catch (error) {
-      console.error('Failed to find footprint by id:');
-      throw error;
-    }
-  },
-  findByUserId: async (
+  findByUserIdWithAllRelations: async (
     userId: User['id'],
-    offset: number = 0,
+    offset: number = 1,
     limit: number = 10,
-  ): Promise<GetFootprints.TFootprintContent[]> => {
-    const [footprints] = await Footprint.createQueryBuilder('footprint')
+  ): Promise<View.FootprintDto[]> => {
+    const [footprints] = await buildFootprintWithAllRelationsQuery()
       .where('footprint.userId = :userId', { userId })
-      .leftJoinAndSelect(
-        'footprint.mFootprintFootprintHashTag',
-        'hashTagRelation',
-      )
-      .leftJoinAndSelect('hashTagRelation.footprintHashTag', 'hashTag')
-      .leftJoinAndSelect('footprint.mUserFootprintReaction', 'reaction')
-      .leftJoinAndSelect('reaction.reactionType', 'reactionType')
-      .select([
-        'footprint',
-        'hashTagRelation',
-        'hashTag.content',
-        'reaction',
-        'reactionType.name',
-      ])
       .orderBy('footprint.occurAt', 'DESC')
-      .skip(offset * limit)
+      .skip((offset - 1) * limit)
       .take(limit)
       .getManyAndCount();
 
-    const mappedFootprints = footprints.map((footprint) => {
-      // sort alphabetically
-      let hashtags =
-        footprint.mFootprintFootprintHashTag?.map(
-          (hashTagRelation) => hashTagRelation.footprintHashTag?.content,
-        ) || [];
-      hashtags = (hashtags as string[]).sort((a, b) => a.localeCompare(b));
+    return footprints.map(mapFootprintData);
+  },
+  findOneByIdWithAllRelations: async (
+    footprintId: string,
+  ): Promise<View.FootprintDto> => {
+    try {
+      const footprint = await buildFootprintWithAllRelationsQuery()
+        .where('footprint.id = :footprintId', { footprintId })
+        .getOne();
 
-      const reactionCounts = footprint.mUserFootprintReaction?.reduce(
-        (acc, reaction) => {
-          const reactionName = reaction.reactionType?.name;
-          if (reactionName) {
-            acc[reactionName] = (acc[reactionName] || 0) + 1;
-          }
-          return acc;
-        },
-        {} as Record<NativeReaction, number>,
+      if (!footprint) {
+        throw new FootprintNotFoundError();
+      }
+      return mapFootprintData(
+        footprint,
+      ) as GetFootprintDetail.FootprintDetailDto;
+    } catch (error) {
+      console.error(
+        'Failed to find footprint detail by id with all relations:',
       );
-
-      const reactionCountsWithZero = nativeReactions.reduce(
-        (acc, reaction) => {
-          acc[reaction] = reactionCounts?.[reaction] || 0;
-          return acc;
-        },
-        {} as Record<NativeReaction, number>,
-      );
-
-      delete footprint.mFootprintFootprintHashTag;
-      delete footprint.mUserFootprintReaction;
-
-      return {
-        ...footprint,
-        hashtags: hashtags,
-        reactionCounts: reactionCountsWithZero,
-      } as GetFootprints.TFootprintContent;
-    });
-
-    return mappedFootprints;
+      throw error;
+    }
   },
 };

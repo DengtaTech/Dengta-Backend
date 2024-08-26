@@ -6,6 +6,12 @@ import { upload } from '../Middlewares/multer.js';
 
 const router = express.Router();
 
+router.get(
+  '/detail/:footprintId',
+  jwtAuthentication,
+  wrapAsync(footprintController.getFootprintDetail),
+);
+
 router.put(
   '/emotion',
   jwtAuthentication,
@@ -24,10 +30,21 @@ router.post(
   wrapAsync(footprintController.publishFootprint),
 );
 
+router.patch(
+  '/setting',
+  jwtAuthentication,
+  wrapAsync(footprintController.patchFootprintSetting),
+);
+
 router.post(
   '/titleImg',
   [jwtAuthentication, upload.single('titleImg')],
   wrapAsync(footprintController.uploadFootprintHeadImg),
 );
 
+router.delete(
+  '/delete',
+  jwtAuthentication,
+  wrapAsync(footprintController.deleteFootprint),
+);
 export default router;

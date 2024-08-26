@@ -7,53 +7,6 @@ import { MUserRole } from '../../Database/Entities/mUserRole.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userRepo = {
-  findByEmail: async (email: string): Promise<User | null> => {
-    try {
-      const user = await User.findOne({
-        where: { email: email },
-        relations: ['userCredential'],
-      });
-      return user;
-    } catch (error) {
-      console.error('Error finding user by email:');
-      throw error;
-    }
-  },
-  insertNewUser: async (
-    userInfoObj: Signup.ISignUpReq,
-    transactionManager: EntityManager,
-  ): Promise<User> => {
-    try {
-      const newUser = new User();
-      newUser.email = userInfoObj.email;
-      newUser.firstName = userInfoObj.firstName;
-      newUser.lastName = userInfoObj.lastName;
-      newUser.lifeRole = userInfoObj.lifeRole;
-      newUser.birthday = userInfoObj.birthday;
-      newUser.provider = userInfoObj.provider as string;
-      newUser.avatar = userInfoObj.avatar as string;
-      newUser.gender = userInfoObj.gender;
-      newUser.clerkId = userInfoObj.clerkId;
-      const savedUser = await transactionManager.save(newUser);
-
-      const defaultRole = await transactionManager.findOne(Role, {
-        where: { name: 'user' },
-      });
-      if (!defaultRole) {
-        throw new Error('Default role not found');
-      }
-
-      const mUserRole = new MUserRole();
-      mUserRole.userId = newUser.id;
-      mUserRole.roleId = defaultRole.id;
-      await transactionManager.save(mUserRole);
-
-      return savedUser;
-    } catch (error) {
-      console.error('Failed to save user:');
-      throw error;
-    }
-  },
   findById: async (
     userId: string,
     transactionManager?: EntityManager | undefined,
@@ -98,6 +51,40 @@ export const userRepo = {
       return user;
     } catch (error) {
       console.error('Error finding user by id:', error);
+      throw error;
+    }
+  },
+  findByEmail: async (email: string): Promise<User | null> => {
+    try {
+      const user = await User.findOne({
+        where: { email: email },
+        relations: ['userCredential'],
+      });
+      return user;
+    } catch (error) {
+      console.error('Error finding user by email:');
+      throw error;
+    }
+  },
+  insertNewUser: async (
+    userInfoObj: Signup.ISignUpReq,
+    transactionManager: EntityManager,
+  ): Promise<User> => {
+    try {
+      const newUser = new User();
+      newUser.email = userInfoObj.email;
+      newUser.firstName = userInfoObj.firstName;
+      newUser.lastName = userInfoObj.lastName;
+      newUser.lifeRole = userInfoObj.lifeRole;
+      newUser.birthday = userInfoObj.birthday;
+      newUser.provider = userInfoObj.provider as string;
+      newUser.avatar = userInfoObj.avatar as string;
+      newUser.gender = userInfoObj.gender;
+      newUser.clerkId = userInfoObj.clerkId;
+      const savedUser = await transactionManager.save(newUser);
+      return savedUser;
+    } catch (error) {
+      console.error('Failed to save user:');
       throw error;
     }
   },

@@ -29,7 +29,7 @@ export class LinkDto {
   @IsString()
   url!: string;
 }
-
+// 還缺個 tags
 export class PatchUserInfoReqBodyDto {
   @IsOptional()
   @IsString()
@@ -67,4 +67,8 @@ export class PatchUserInfoReqBodyDto {
   @ValidateNested({ each: true })
   @Type(() => LinkDto)
   links!: LinkDto[];
+
+  @IsArray()
+  @IsString({ each: true })
+  hashtags!: string[];
 }

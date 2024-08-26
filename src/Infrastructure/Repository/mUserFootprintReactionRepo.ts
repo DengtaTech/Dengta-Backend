@@ -29,6 +29,7 @@ export const mUserFootprintReactionRepo = {
     >,
     transactionManager?: EntityManager,
   ) => {
+    // 當重複按表情或直接更換表情時會自動更新對應欄的 reactionTypeId
     const newReaction = new MUserFootprintReaction();
     newReaction.userId = reaction.userId;
     newReaction.footprintId = reaction.footprintId;
