@@ -1,4 +1,3 @@
-import { get } from 'http';
 import { QuestionItem } from '../../Database/Entities/questionItems.js';
 import { EntityManager } from 'typeorm';
 
