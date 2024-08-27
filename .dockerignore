@@ -8,6 +8,7 @@ coverage/
 **/.gitignore
 **/docker-compose*
 .eslintrc.config.json
+eslintrc.config.json
 .prettierrc.json
 /swagger.json
 /dist
