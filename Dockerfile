@@ -19,6 +19,8 @@ ENV NODE_ENV=production
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --force \
+    && npm uninstall tsc \
+    && npm install typescript \
     && npm run build \
     && npm ci --omit=dev --omit=optional --force \
     && npm cache clean --force
