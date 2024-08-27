@@ -42,7 +42,7 @@ jobs:
       - name: Update Docker Containers and Images
         run: |
           docker compose -f /srv/dengta-backend-production/docker-compose.yml down
-          docker compose -f /srv/dengta-backend-production/docker-compose.yml --env-file /srv/dengta-backend-production/.env.production up --build -d
+          docker compose -f /srv/dengta-backend-production/docker-compose.yml --env-file /srv/dengta-backend-production/.env.production up --build --no-cache -d
 
       - name: Send Notification to Discord
         uses: appleboy/discord-action@master
