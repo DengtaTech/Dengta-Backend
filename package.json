@@ -15,7 +15,7 @@
     "staging": "docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
     "lint": "npx eslint .",
     "prettier": "npx prettier --write .",
-    "prepare": "husky"
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
   },
   "keywords": [],
   "author": "",
