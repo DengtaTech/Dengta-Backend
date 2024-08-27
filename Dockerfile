@@ -15,6 +15,8 @@ RUN apk add --no-cache bash curl \
     && apk del bash curl \
     && rm -rf /var/cache/apk/* /tmp/*
 
+ENV NODE_ENV=production
+
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --legacy-peer-deps \
     && npx tsc \
