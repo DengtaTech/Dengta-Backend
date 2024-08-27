@@ -57,6 +57,12 @@ export class InvalidInputError extends BaseError {
   }
 }
 
+export class SameOperatingTargetingUserError extends BaseError {
+  constructor() {
+    super("Client error - You can't do this to yourself", 400);
+  }
+}
+
 export class EmailFormatError extends BaseError {
   constructor() {
     super('Email format problem', 403);
