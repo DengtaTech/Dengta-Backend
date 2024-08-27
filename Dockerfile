@@ -19,7 +19,8 @@ ENV NODE_ENV=production
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --legacy-peer-deps \
-    && npm run build \
+    && npm install typescript --legacy-peer-deps \
+    && npx tsc \
     && npm ci --omit=dev --omit=optional --legacy-peer-deps \
     && npm cache clean --force
 
