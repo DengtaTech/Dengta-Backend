@@ -7,11 +7,11 @@ import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
 import { PatchUserInfo } from '../../Application/Features/User/PatchUserInfo/Types/api.js';
-import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 import { MUserProfileHashTag } from '../../Database/Entities/mUserProfileHashTag.js';
 import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
 import { User } from '../../Database/Entities/user.js';
 import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
+import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userService = {
   signUp: async (
@@ -40,7 +40,7 @@ export const userService = {
         if (userInfoObj.links.length !== 0) {
           initLinks = await linkRepo.initLink(
             userInfoObj.links,
-            newUser,
+            newUser.id,
             transactionManager,
           );
         }
@@ -91,8 +91,9 @@ export const userService = {
 
   updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
     const user = await userRepo.findById(userId);
+    console.log('user', user);
     if (!user) {
-      throw new Error('User not found');
+      throw new UserNotFoundError();
     }
     user.avatar = permanentURL;
     await user.save();
@@ -104,7 +105,7 @@ export const userService = {
   ): Promise<void> => {
     const user = await userRepo.findById(userId, undefined, ['links']);
     if (!user) {
-      throw new Error('User not found');
+      throw new UserNotFoundError();
     }
 
     const { hashtags, links, ...otherFields } = updateFields;
@@ -113,7 +114,7 @@ export const userService = {
     try {
       await Database.transaction(async (transactionManager) => {
         if (links && links.length > 0) {
-          await linkRepo.deleteLink(user, transactionManager);
+          await linkRepo.deleteLink(user.id, transactionManager);
           const newLinks = await Promise.all(
             links.map(async (link) => {
               const newLink = new Link();
