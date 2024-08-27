@@ -18,11 +18,9 @@ RUN apk add --no-cache bash curl \
 ENV NODE_ENV=production
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
-    && npm ci --force \
-    && npm uninstall tsc \
-    && npm install typescript \
-    && npm run build \
-    && npm ci --omit=dev --omit=optional --force \
+    && npm ci --legacy-peer-deps \
+    && npx tsc \
+    && npm ci --omit=dev --omit=optional --legacy-peer-deps \
     && npm cache clean --force
 
 COPY --chown=appuser:appgroup . .
