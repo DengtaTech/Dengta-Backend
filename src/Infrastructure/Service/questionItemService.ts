@@ -26,4 +26,7 @@ export const questionItemService = {
 
     return await userQuestionItem.save();
   },
+  getAllQuestionItems: async () => {
+    return await questionItemRepo.getAllItems();
+  },
 };

@@ -1,3 +1,4 @@
+import { get } from 'http';
 import { QuestionItem } from '../../Database/Entities/questionItems.js';
 import { EntityManager } from 'typeorm';
 
@@ -31,5 +32,8 @@ export const questionItemRepo = {
     await repository.save(questionItem);
 
     return questionItem;
+  },
+  getAllItems: async (): Promise<QuestionItem[]> => {
+    return await QuestionItem.find();
   },
 };
