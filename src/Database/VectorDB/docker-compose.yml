@@ -25,8 +25,8 @@ services:
       MINIO_ACCESS_KEY: ${MILVUS_MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MILVUS_MINIO_SECRET_KEY}
     ports:
-      - '${MILVUS_MINIO_API_PORT}:9001'
-      - '${MILVUS_MINIO_CONSOLE_PORT}:9000'
+      - '${MILVUS_MINIO_CONSOLE_PORT}:9001'
+      - '${MILVUS_MINIO_API_PORT}:9000'
     volumes:
       - dengta_milvus_minio_volume:/minio_data
     command: minio server /minio_data --console-address ":9001"
