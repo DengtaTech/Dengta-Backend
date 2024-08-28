@@ -15,8 +15,11 @@ export class UserEmbedding extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column({ type: 'json', nullable: true })
+  selfIntroEmbedding?: number[];
+
   @Column({ type: 'json', nullable: false })
-  selfIntroEmbedding!: number[];
+  lifeRoleEmbedding!: number[];
 
   @Column('uuid')
   userId!: string;
