@@ -15,13 +15,14 @@ RUN apk add --no-cache bash curl \
     && apk del bash curl \
     && rm -rf /var/cache/apk/* /tmp/*
 
+ENV CUSTOM_ENV=prod
+
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --legacy-peer-deps \
     && npx tsc \
+    && cp -r src/Test/mockData dist/src/Test/ \
     && npm ci --omit=dev --omit=optional --legacy-peer-deps \
     && npm cache clean --force
-
-ENV NODE_ENV=production
 
 COPY --chown=appuser:appgroup . .
 

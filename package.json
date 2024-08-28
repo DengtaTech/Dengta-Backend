@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "type": "module",
   "scripts": {
-    "build": "rm -rf dist && npx tsc",
+    "build": "rm -rf dist && npx tsc && cp -r src/Test/mockData dist/src/Test/",
     "dev:setenv": "docker compose -f ./docker-compose-dev.yml --env-file ./.env.dev up -d --build",
     "dev:run": "nodemon --exec node --enable-source-maps --no-warnings=ExperimentalWarning --loader ts-node/esm --env-file=./.env.dev ./src/app.ts",
     "dev": "npm run dev:setenv && npm run dev:run",
@@ -15,7 +15,7 @@
     "staging": "docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
     "lint": "npx eslint .",
     "prettier": "npx prettier --write .",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
+    "prepare": "if [ \"$CUSTOM_ENV\" != \"production\" ]; then husky install; fi"
   },
   "keywords": [],
   "author": "",

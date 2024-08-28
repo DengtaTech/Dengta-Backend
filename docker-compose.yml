@@ -60,16 +60,22 @@ services:
     extends:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: etcd
+    networks:
+      - backend_network
 
   minio:
     extends:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: minio
+    networks:
+      - backend_network
 
   milvus:
     extends:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: standalone
+    networks:
+      - backend_network
 
 volumes:
   dengta_mysql_volume:
