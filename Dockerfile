@@ -29,6 +29,6 @@ COPY --chown=appuser:appgroup . .
 
 USER appuser
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD infisical run --env="$INFISICAL_ENVIRONMENT" --path=/share -- node dist/src/app.js
