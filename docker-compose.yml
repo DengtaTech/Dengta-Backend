@@ -14,6 +14,10 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      milvus:
+        condition: service_healthy
+    ports:
+      - ${BACKEND_PORT}:3001
 
   mysql:
     image: mysql:8.0.36-debian
