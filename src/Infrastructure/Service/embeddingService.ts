@@ -3,6 +3,7 @@ import { UserEmbedding } from '../../Database/Entities/userEmbedding.js';
 import { Database } from '../../Database/data-source.js';
 import { userEmbeddingRepo } from '../Repository/userEmbeddingRepo.js';
 import { footprintEmbeddingRepo } from '../Repository/footprintEmbeddingRepo.js';
+import { profileHashtagEmbeddingRepo } from '../Repository/profileHashtagEmbeddingRepo.js';
 
 export const embeddingService = {
   getEmbeddingBySentences: async (sentences: string[]): Promise<number[][]> => {
@@ -153,6 +154,30 @@ export const embeddingService = {
         await footprintEmbeddingRepo.updateFootprintEmbedding(
           footprintId,
           footprintEmbedding,
+          transactionManager,
+        );
+      } catch (error) {
+        console.error('Error in DB ->');
+        throw error;
+      }
+    });
+  },
+  insertProfileHashTagEmbedding: async (
+    profileHashTagInfo: Embedding.IProfileHashTagDto,
+  ): Promise<void> => {
+    return Database.transaction(async (transactionManager) => {
+      const embedding = await embeddingService.getEmbeddingBySentences([
+        profileHashTagInfo.content,
+      ]);
+
+      const profileHashTagEmbedding = {
+        profileHashTagId: profileHashTagInfo.id,
+        contentEmbedding: embedding[0],
+      };
+
+      try {
+        await profileHashtagEmbeddingRepo.insertUserHashTagEmbedding(
+          profileHashTagEmbedding,
           transactionManager,
         );
       } catch (error) {

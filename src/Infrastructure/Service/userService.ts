@@ -10,6 +10,7 @@ import { PatchUserInfo } from '../../Application/Features/User/PatchUserInfo/Typ
 import { MUserProfileHashTag } from '../../Database/Entities/mUserProfileHashTag.js';
 import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
+import { embeddingService } from './embeddingService.js';
 
 export const userService = {
   signUp: async (
@@ -151,6 +152,17 @@ export const userService = {
             .values(newMUserProfileHashTags)
             .orIgnore()
             .execute();
+
+          await Promise.all(
+            newHashtags.map((hashTag) => {
+              const hashTagInfo = {
+                id: hashTag.id,
+                content: hashTag.content,
+              };
+
+              embeddingService.insertProfileHashTagEmbedding(hashTagInfo);
+            }),
+          );
         }
 
         await transactionManager.save(user);
