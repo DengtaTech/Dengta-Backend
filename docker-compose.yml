@@ -5,6 +5,8 @@ services:
       # args:
       #     INFISICAL_ENVIRONMENT: ${INFISICAL_ENVIRONMENT}
       dockerfile: Dockerfile
+      args:
+        CUSTOM_ENV: ${CUSTOM_ENV}
     container_name: dengta_backend_container
     environment:
       - INFISICAL_TOKEN=${INFISICAL_TOKEN}
@@ -87,6 +89,7 @@ volumes:
   dengta_milvus_volume:
     name: ${MILVUS_VOLUME_PATH}
 
+# 本地測試staging 就把external這行註解掉即可
 networks:
   backend_network:
     external: true
