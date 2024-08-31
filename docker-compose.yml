@@ -80,7 +80,6 @@ services:
       service: standalone
     networks:
       - backend_network
-
 volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}
@@ -91,7 +90,6 @@ volumes:
   dengta_milvus_volume:
     name: ${MILVUS_VOLUME_PATH}
 
-# 本地測試staging 就把external這行註解掉即可
 networks:
   backend_network:
     external: true
