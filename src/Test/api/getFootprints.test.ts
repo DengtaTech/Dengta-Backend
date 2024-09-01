@@ -6,20 +6,32 @@ import {
   fakeUserIds,
   userToFootprintsMapSorted,
 } from '../testUtils/testSetup.js';
-import { testHelper } from '../testUtils/testHelper.js';
+import { testHelper, TFootprintJson } from '../testUtils/testHelper.js';
 
 describe('GET /api/1.0/user/{userId}/footprints', () => {
-  it('should get all footprints of a user', async () => {
-    const testUserId = fakeUserIds[0];
-    const accessToken = await testHelper.generateToken(testUserId);
+  const fetchAndAssertFootprints = async (
+    userId: string,
+    accessToken: string,
+    expectedFootprints: TFootprintJson[],
+    filterPublic: boolean = false,
+  ) => {
     const response = await request(app)
-      .get(`/api/1.0/user/${testUserId}/footprints`)
+      .get(`/api/1.0/user/${userId}/footprints`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send();
 
     const responseData: GetFootprints.TFootprintResponse = response.body.data;
     const footprints = responseData.footprints;
-    const objectToMatch = userToFootprintsMapSorted[testUserId];
+    let objectToMatch = expectedFootprints;
+
+    if (filterPublic) {
+      objectToMatch = objectToMatch.filter(
+        (item) => item.status === 'published',
+      );
+    }
+
+    expect(footprints.length).toBe(objectToMatch.length);
+
     footprints
       .map((item) => ({
         title: item.title,
@@ -39,5 +51,24 @@ describe('GET /api/1.0/user/{userId}/footprints', () => {
         expectedItem.occurAt = new Date(expectedItem.occurAt);
         return expect(footprintItem).toEqual(expectedItem);
       });
+  };
+
+  it('should get all footprints of a user', async () => {
+    const testUserId1 = fakeUserIds[0];
+    const testUserId2 = fakeUserIds[1];
+    const accessToken1 = await testHelper.generateToken(testUserId1);
+
+    await fetchAndAssertFootprints(
+      testUserId1,
+      accessToken1,
+      userToFootprintsMapSorted[testUserId1],
+    );
+
+    await fetchAndAssertFootprints(
+      testUserId2,
+      accessToken1,
+      userToFootprintsMapSorted[testUserId2],
+      true,
+    );
   });
 });
