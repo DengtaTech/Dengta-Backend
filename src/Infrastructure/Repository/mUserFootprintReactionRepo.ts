@@ -1,9 +1,11 @@
 import { EntityManager } from 'typeorm';
 import { MUserFootprintReaction } from '../../Database/Entities/mUserFootprintReaction.js';
+import { ReactionType } from '../../Database/Entities/reactionType.js';
+import { Reaction } from '../../Application/Features/Footprint/Reaction/Types/api.js';
 
 export const mUserFootprintReactionRepo = {
   findByIds: async (
-    reaction: Pick<MUserFootprintReaction, 'userId' | 'footprintId'>,
+    reaction: Partial<Pick<MUserFootprintReaction, 'userId' | 'footprintId'>>,
     transactionManager?: EntityManager,
   ) => {
     if (transactionManager) {
@@ -20,6 +22,58 @@ export const mUserFootprintReactionRepo = {
           footprintId: reaction.footprintId,
         },
       });
+    }
+  },
+  // 未來在寄信時使用
+  countEmotionOfFootprint: async (
+    footprintId: string,
+    transactionManager?: EntityManager,
+  ): Promise<Reaction.ReactionCount[]> => {
+    if (transactionManager) {
+      const query = transactionManager
+        .createQueryBuilder(MUserFootprintReaction, 'mUserFootprintReaction')
+        .select('reactionType.name', 'name')
+        .addSelect(
+          'COUNT(mUserFootprintReaction.reactionTypeId)',
+          'reaction_count',
+        )
+        .leftJoin(
+          ReactionType,
+          'reactionType',
+          'mUserFootprintReaction.reactionTypeId = reactionType.id',
+        )
+        .where('mUserFootprintReaction.footprintId = :footprintId', {
+          footprintId,
+        })
+        .groupBy('reactionType.name');
+
+      return (await query.getRawMany<Reaction.ReactionCount>()).map((v) => ({
+        name: v.name,
+        reaction_count: Number(v.reaction_count), // 原始取出來是字串
+      }));
+    } else {
+      const query = MUserFootprintReaction.createQueryBuilder(
+        'mUserFootprintReaction',
+      )
+        .select('reactionType.name', 'name')
+        .addSelect(
+          'COUNT(mUserFootprintReaction.reactionTypeId)',
+          'reaction_count',
+        )
+        .leftJoin(
+          ReactionType,
+          'reactionType',
+          'mUserFootprintReaction.reactionTypeId = reactionType.id',
+        )
+        .where('mUserFootprintReaction.footprintId = :footprintId', {
+          footprintId,
+        })
+        .groupBy('reactionType.name');
+
+      return (await query.getRawMany<Reaction.ReactionCount>()).map((v) => ({
+        name: v.name,
+        reaction_count: Number(v.reaction_count), // 原始取出來是字串
+      }));
     }
   },
   expressReaction: async (

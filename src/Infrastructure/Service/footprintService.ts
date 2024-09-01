@@ -18,6 +18,8 @@ import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprin
 import { PatchFootprintSetting } from '../../Application/Features/Footprint/UpdateFootprintSetting/Types/api.js';
 import { MFootprintFootprintHashTag } from '../../Database/Entities/mFootprintFootprintHashTag.js';
 import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFootprintDetail/Types/api.js';
+import { Notification } from '../../Database/Entities/notification.js';
+import { notificationRepo } from '../Repository/notificationRepo.js';
 
 export const footprintService = {
   expressReaction: async (
@@ -32,12 +34,11 @@ export const footprintService = {
           throw new UserNotFoundError();
         }
 
-        if (
-          (await footprintRepo.findById(
-            reaction.footprintId,
-            transactionManager,
-          )) === null
-        ) {
+        const footprint = await footprintRepo.findById(
+          reaction.footprintId,
+          transactionManager,
+        );
+        if (footprint === null) {
           throw new FootprintNotFoundError();
         }
 
@@ -48,14 +49,32 @@ export const footprintService = {
           throw new InvalidInputError('No such reaction type');
         }
 
-        return await mUserFootprintReactionRepo.expressReaction(
-          {
-            userId: reaction.userId,
-            footprintId: reaction.footprintId,
-            reactionTypeId: reactionType.id,
-          },
+        const mUserFootprintReaction =
+          await mUserFootprintReactionRepo.expressReaction(
+            {
+              userId: reaction.userId,
+              footprintId: reaction.footprintId,
+              reactionTypeId: reactionType.id,
+            },
+            transactionManager,
+          );
+
+        // build notification
+        const notification = Notification.create({
+          userId: reaction.userId,
+          type: 'footprint_reaction',
+          title: 'Your footprint has been reacted',
+          content: `${reaction.reaction} was reacted to your footprint`,
+          relatedUserId: footprint.userId,
+          relatedFootprintId: reaction.footprintId,
+        });
+
+        await notificationRepo.insertNewNotification(
+          notification,
           transactionManager,
         );
+
+        return mUserFootprintReaction;
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
