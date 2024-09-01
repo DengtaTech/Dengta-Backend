@@ -215,9 +215,14 @@ export const footprintService = {
       }
     });
   },
-  getFootprintByUserId: async (userId: string, offset: number) => {
+  getFootprintByUserId: async (
+    userId: string,
+    publicOnly: boolean,
+    offset: number,
+  ) => {
     const footprints = await footprintRepo.findByUserIdWithAllRelations(
       userId,
+      publicOnly,
       offset,
     );
     return {

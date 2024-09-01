@@ -17,6 +17,7 @@ import { validatePatchUserInfoReqBody } from '../Application/Features/User/Patch
 import { followHandler } from '../Application/Features/User/Follow/followHandler.js';
 import { unFollowHandler } from '../Application/Features/User/UnFollow/unFollowHandler.js';
 import { getFootprintsHandler } from '../Application/Features/User/GetFootprints/getFootprints.js';
+import { userService } from '../Infrastructure/Service/userService.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -159,13 +160,24 @@ export const userController = {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
     }
-
     const { id: userId } = req.decodedToken;
+    const queryUserId = req.params.userId;
+    const isUserIdExists = await userService.isUserIdExists(queryUserId);
+    if (!isUserIdExists) {
+      throw new InvalidInputError('No such user');
+    }
+
     const page = parseInt(req.query.page as string) || 1;
-    if (page < 0) {
+    if (page <= 0) {
       throw new InvalidInputError('page must be a positive integer');
     }
-    const footprints = await getFootprintsHandler.handle(userId, page);
+
+    const isPublicRequest = queryUserId !== userId;
+    const footprints = await getFootprintsHandler.handle(
+      queryUserId,
+      isPublicRequest,
+      page,
+    );
 
     res.status(200).json(footprints);
   },
