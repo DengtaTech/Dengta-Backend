@@ -15,9 +15,13 @@ RUN apk add --no-cache bash curl \
     && apk del bash curl \
     && rm -rf /var/cache/apk/* /tmp/*
 
+ARG CUSTOM_ENV
+ENV CUSTOM_ENV=${CUSTOM_ENV}
+
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --legacy-peer-deps \
     && npx tsc \
+    && cp -r src/Test/mockData dist/src/Test/ \
     && npm ci --omit=dev --omit=optional --legacy-peer-deps \
     && npm cache clean --force
 
@@ -25,6 +29,6 @@ COPY --chown=appuser:appgroup . .
 
 USER appuser
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD infisical run --env="$INFISICAL_ENVIRONMENT" --path=/share -- node dist/src/app.js
