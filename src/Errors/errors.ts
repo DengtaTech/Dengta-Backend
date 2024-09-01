@@ -63,6 +63,12 @@ export class EmailFormatError extends BaseError {
   }
 }
 
+export class UnauthorizedError extends BaseError {
+  constructor() {
+    super('Unauthorized - Admin privileges required', 403);
+  }
+}
+
 export class DatabaseError extends BaseError {
   constructor() {
     super('Database Error', 500);
