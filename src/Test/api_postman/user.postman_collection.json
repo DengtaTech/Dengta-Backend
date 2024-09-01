@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "5e1daf2e-04db-4f5c-bd25-dc4f267fb565",
+    "_postman_id": "33eaf2ab-d61f-4473-b3e9-89f5b4fdac74",
     "name": "user",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "33305762"
@@ -138,6 +138,64 @@
         }
       },
       "response": [
+        {
+          "name": "user test 1",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"test1@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"provider\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signin",
+              "protocol": "http",
+              "host": ["{{endpoint}}"],
+              "port": "{{port}}",
+              "path": ["{{basePath}}", "user", "signin"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "319"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"13f-jWz4A18XH39Wwy8PXqpoX/Xjh+w\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 01 Sep 2024 11:26:28 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzY2VkMjcxLWQ3NzEtNDE1ZC05YWViLWMyODA1NWYzNmU4ZCIsImlhdCI6MTcyNTE4OTk4OCwiZXhwIjoxNzI1Mjc2Mzg4fQ.sJzafW2gf7jckFX-4TUYd1LQk2z8EFKul8MZPCbJCAY\",\n        \"accessExpired\": \"86400\",\n        \"user\": {\n            \"id\": \"c3ced271-d771-415d-9aeb-c28055f36e8d\",\n            \"email\": \"test1@example.com\"\n        }\n    }\n}"
+        },
         {
           "name": "user test 2",
           "originalRequest": {

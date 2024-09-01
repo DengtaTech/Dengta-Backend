@@ -42,10 +42,16 @@
       "value": "",
       "type": "default",
       "enabled": true
+    },
+    {
+      "key": "init_footprint_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
     }
   ],
   "name": "Globals",
   "_postman_variable_scope": "globals",
-  "_postman_exported_at": "2024-08-26T12:57:36.341Z",
+  "_postman_exported_at": "2024-09-01T14:37:33.010Z",
   "_postman_exported_using": "Postman/11.9.2"
 }
