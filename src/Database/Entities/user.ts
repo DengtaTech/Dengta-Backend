@@ -20,7 +20,7 @@ import { UserEmbedding } from './userEmbedding.js';
 import { SearchHistory } from './searchHistory.js';
 import { MUserProfileHashTag } from './mUserProfileHashTag.js';
 import { Notification } from './notification.js';
-
+import { MUserQuestionItem } from './mUserQuestionItem.js';
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -135,4 +135,13 @@ export class User extends BaseEntity {
     cascade: true,
   })
   notifications?: Relation<Notification[]>;
+
+  @OneToMany(
+    () => MUserQuestionItem,
+    (mUserQuestionItem) => mUserQuestionItem.user,
+    {
+      cascade: true,
+    },
+  )
+  questionResponses?: Relation<MUserQuestionItem[]>;
 }
