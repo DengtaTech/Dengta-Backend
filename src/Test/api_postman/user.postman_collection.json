@@ -99,6 +99,64 @@
           ],
           "cookie": [],
           "body": "{\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmMzJjNzM3LTFlMGYtNDQxOC05NzE3LTY4MGNmMDI3ZjA4MCIsImlhdCI6MTcyNDY1Mzg3OCwiZXhwIjoxNzI0NzQwMjc4fQ.4UB8yXCkFzDIGKavefNHre2c4vEMyvYvC0KGdKYfGxM\",\n        \"accessExpired\": \"86400\",\n        \"user\": {\n            \"id\": \"8f32c737-1e0f-4418-9717-680cf027f080\",\n            \"fullName\": \"1 test\",\n            \"lifeRole\": \"my life role\",\n            \"email\": \"test1@example.com\",\n            \"clerkId\": \"123\",\n            \"links\": []\n        }\n    }\n}"
+        },
+        {
+          "name": "user test 2",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"2\",\r\n    \"lastName\": \"test\",\r\n    \"lifeRole\": \"my life role\",\r\n    \"birthday\": \"1970/01/01\",\r\n    \"gender\": \"notdisclosed\",\r\n    \"email\": \"test2@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"links\": [],\r\n    \"clerkId\": \"123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signup",
+              "protocol": "http",
+              "host": ["{{endpoint}}"],
+              "port": "{{port}}",
+              "path": ["{{basePath}}", "user", "signup"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "392"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"188-FzP75x3V86ur8m5mjxFt6cmjdkA\""
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 04 Sep 2024 16:37:36 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4M2Y5OTkxLTQ3ZWItNGRjZC05YTU3LTAwOGI2YzNmNmJlOSIsImlhdCI6MTcyNTQ2Nzg1NiwiZXhwIjoxNzI1NTU0MjU2fQ.54lsUAa8c_O_KfdOSRBJCUW75kXfLHCL92T5FyFMUYo\",\n        \"accessExpired\": \"86400\",\n        \"user\": {\n            \"id\": \"483f9991-47eb-4dcd-9a57-008b6c3f6be9\",\n            \"fullName\": \"2 test\",\n            \"lifeRole\": \"my life role\",\n            \"email\": \"test2@example.com\",\n            \"clerkId\": \"123\",\n            \"links\": []\n        }\n    }\n}"
         }
       ]
     },
