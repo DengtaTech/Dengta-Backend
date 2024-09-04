@@ -163,8 +163,8 @@ export const userService = {
     }
   },
   searchFollowees: async (
-    keywords: string,
     followerId: User['id'],
+    keywords?: string,
   ): Promise<SearchFollowees.ISearchFolloweesDto[]> => {
     return Database.transaction(async (transactionManager) => {
       try {
@@ -173,11 +173,11 @@ export const userService = {
         ) {
           throw new UserNotFoundError();
         }
-        return await userRepo.findByNameAndTag(
+        return await userRepo.findByNameAndTag({
           keywords,
           followerId,
           transactionManager,
-        );
+        });
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;

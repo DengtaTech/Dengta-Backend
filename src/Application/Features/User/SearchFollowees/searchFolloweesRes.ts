@@ -12,9 +12,9 @@ export const searchFolloweesRes = {
         firstName: user.firstName,
         lastName: user.lastName,
         gender: user.gender,
-        hashtags: user.mUserProfileHashTag.map(
-          (tag) => tag.profileHashTag.content,
-        ),
+        hashtags:
+          user.mUserProfileHashTag?.map((tag) => tag.profileHashTag.content) ||
+          [],
         lifeRole: user.lifeRole,
         selfIntro: user.selfIntro,
       })),

@@ -48,11 +48,10 @@ export const searchHistoryService = {
           searchInfoObj,
           transactionManager,
         );
-        const result = await userRepo.findByNameAndTag(
-          searchInfoObj.searchContent,
-          undefined,
+        const result = await userRepo.findByNameAndTag({
+          keywords: searchInfoObj.searchContent,
           transactionManager,
-        );
+        });
         return result;
       } catch (error) {
         console.error('Error in DB ->', error);

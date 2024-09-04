@@ -35,7 +35,7 @@ declare namespace SearchFollowees {
   > & {
     followedBy: Array<Followship>;
   } & {
-    mUserProfileHashTag: Array<
+    mUserProfileHashTag?: Array<
       Omit<MUserProfileHashTag, 'profileHashTag'> & {
         profileHashTag: ProfileHashTag;
       }

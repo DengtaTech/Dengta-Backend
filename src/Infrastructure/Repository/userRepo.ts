@@ -88,35 +88,49 @@ export const userRepo = {
       throw error;
     }
   },
-  findByNameAndTag: (async (
-    keywords: string,
-    followerId?: User['id'],
-    transactionManager?: EntityManager,
-  ) => {
+  findByNameAndTag: (async ({
+    keywords,
+    followerId,
+    transactionManager,
+  }: {
+    keywords?: string;
+    followerId?: User['id'];
+    transactionManager?: EntityManager;
+  }) => {
     try {
+      if (!keywords && !followerId) {
+        throw new Error(
+          'keywords and followerId cannot be both undefined. This operation should have been blocked by TS type guard',
+        );
+      }
+
       if (transactionManager) {
         const query = transactionManager
           .getRepository(User)
-          .createQueryBuilder('user')
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-          .where(
-            new Brackets((qb) =>
-              qb
-                .where(
-                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                )
-                .orWhere(
-                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                ),
-            ),
-          )
-          .addSelect(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-            'relevance_score',
-          )
-          .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords);
+          .createQueryBuilder('user');
+        if (keywords) {
+          query
+            .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+            .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
+            .where(
+              new Brackets((qb) =>
+                qb
+                  .where(
+                    'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                  )
+                  .orWhere(
+                    'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                  ),
+              ),
+            )
+            .addSelect(
+              `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
+               MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
+              'relevance_score',
+            )
+            .orderBy('relevance_score', 'DESC')
+            .setParameter('keywords', keywords);
+        }
 
         if (followerId) {
           query
@@ -128,26 +142,30 @@ export const userRepo = {
 
         return await query.getMany();
       } else {
-        const query = User.createQueryBuilder('user')
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-          .where(
-            new Brackets((qb) =>
-              qb
-                .where(
-                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                )
-                .orWhere(
-                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                ),
-            ),
-          )
-          .addSelect(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-            'relevance_score',
-          )
-          .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords);
+        const query = User.createQueryBuilder('user');
+        if (keywords) {
+          query
+            .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+            .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
+            .where(
+              new Brackets((qb) =>
+                qb
+                  .where(
+                    'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                  )
+                  .orWhere(
+                    'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                  ),
+              ),
+            )
+            .addSelect(
+              `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
+               MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
+              'relevance_score',
+            )
+            .orderBy('relevance_score', 'DESC')
+            .setParameter('keywords', keywords);
+        }
 
         if (followerId) {
           query
@@ -164,16 +182,16 @@ export const userRepo = {
       throw error;
     }
   }) as {
-    (
-      keywords: string,
-      followerId: User['id'],
-      transactionManager?: EntityManager,
-    ): Promise<SearchFollowees.ISearchFolloweesDto[]>;
-    (
-      keywords: string,
-      followerId?: undefined,
-      transactionManager?: EntityManager,
-    ): Promise<User[]>;
+    (_: {
+      keywords?: string;
+      followerId: User['id'];
+      transactionManager?: EntityManager;
+    }): Promise<SearchFollowees.ISearchFolloweesDto[]>;
+    (_: {
+      keywords: string;
+      followerId?: undefined;
+      transactionManager?: EntityManager;
+    }): Promise<User[]>;
   },
   updateLink: async (
     user: User,

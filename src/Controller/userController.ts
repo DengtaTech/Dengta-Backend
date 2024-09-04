@@ -176,10 +176,10 @@ export const userController = {
     }
     const { id: userId } = req.decodedToken;
     const keywords = req.query.keywords;
-    if (typeof keywords !== 'string') {
+    if (typeof keywords !== 'string' && typeof keywords !== 'undefined') {
       throw new InvalidInputError('keywords must be a string');
     }
-    const response = await searchFolloweesHandler.handle(keywords, userId);
+    const response = await searchFolloweesHandler.handle(userId, keywords);
     res.status(200).json(response);
   },
 };

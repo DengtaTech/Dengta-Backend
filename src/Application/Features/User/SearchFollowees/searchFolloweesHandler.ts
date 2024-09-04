@@ -5,10 +5,10 @@ import { SearchFollowees } from './Types/api.js';
 
 export const searchFolloweesHandler = {
   handle: async (
-    keywords: string,
     followerId: User['id'],
+    keywords?: string,
   ): Promise<SearchFollowees.ISearchFolloweesRes> => {
-    const result = await userService.searchFollowees(keywords, followerId);
+    const result = await userService.searchFollowees(followerId, keywords);
     return await searchFolloweesRes.customize(result);
   },
 };
