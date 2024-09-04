@@ -189,7 +189,7 @@ export const userRepo = {
     }): Promise<SearchFollowees.ISearchFolloweesDto[]>;
     (_: {
       keywords: string;
-      followerId?: undefined;
+      followerId?: never;
       transactionManager?: EntityManager;
     }): Promise<User[]>;
   },
