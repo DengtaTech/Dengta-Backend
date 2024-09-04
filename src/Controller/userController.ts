@@ -6,6 +6,7 @@ import {
   InputEmptyError,
   NoTokenError,
   InvalidInputError,
+  SameOperatingTargetingUserError,
 } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 import { signInHandler } from '../Application/Features/User/SignIn/signInHandler.js';
@@ -135,6 +136,9 @@ export const userController = {
     if (!followeeId) {
       throw new InvalidInputError('followeeId is inlegal');
     }
+    if (followerId === followeeId) {
+      throw new SameOperatingTargetingUserError();
+    }
 
     const response = await followHandler.handle({ followerId, followeeId });
     res.status(200).json(response);
@@ -148,6 +152,9 @@ export const userController = {
 
     if (!followeeId) {
       throw new InvalidInputError('followeeId is illegal');
+    }
+    if (followerId === followeeId) {
+      throw new SameOperatingTargetingUserError();
     }
 
     const response = await unFollowHandler.handle({
