@@ -17,6 +17,11 @@ import {
   type NativeReaction,
 } from '../../../src/Application/Features/Footprint/Reaction/Types/reactions.js';
 
+import { signUpHandler } from '../../Application/Features/User/SignUp/signUpHandler.js';
+import { initFootprintHandler } from '../../Application/Features/Footprint/InitFootprint/initFootprintHandler.js';
+import { publishFootprintHandler } from '../../Application/Features/Footprint/PublishFootprint/publishFootprintHandler.js';
+import { patchUserInfoHandler } from '../../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
+
 export type TFootprintJson = Footprint & {
   hashtags: string[];
   reactions: Record<NativeReaction, number>;
@@ -256,5 +261,55 @@ export const testHelper = {
     }
 
     return notificationData;
+  },
+  createFakeUsersForRecommendation: async (): Promise<string[]> => {
+    const usertsJsonFile = fs.readFileSync(
+      'src/Test/mockData/fakeUser-ch.json',
+      'utf8',
+    );
+    const userDataParsed = JSON.parse(usertsJsonFile);
+
+    const fakeUserIds: string[] = [];
+    for (const userData of userDataParsed) {
+      const signUpRes = await signUpHandler.handle({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        lifeRole: userData.lifeRole,
+        gender: userData.gender,
+        birthday: new Date('1990-01-01'),
+        email: userData.email,
+        password: '123456',
+        links: [],
+        clerkId: '',
+      });
+
+      await patchUserInfoHandler.handle(signUpRes.data.user.id, {
+        selfIntro: userData.selfIntro,
+        hashtags: userData.hashtags,
+        links: [],
+      });
+
+      for (const footprintData of userData.footprints) {
+        const footprintInitRes = await initFootprintHandler.handle(
+          signUpRes.data.user.id,
+          'draft',
+        );
+
+        await publishFootprintHandler.handle(signUpRes.data.user.id, {
+          footprintId: footprintInitRes.data.footprint.id,
+          title: footprintData.title,
+          content: footprintData.content,
+          tags: footprintData.tags,
+          category: 'career',
+          milestone: false,
+          occurAt: new Date('2021-01-01'),
+          status: 'published',
+        });
+      }
+
+      fakeUserIds.push(signUpRes.data.user.id);
+    }
+
+    return fakeUserIds;
   },
 };

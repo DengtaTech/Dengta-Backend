@@ -5,6 +5,7 @@ import { publishFootprintRes } from './publishFootprintRes.js';
 
 export const publishFootprintHandler = {
   handle: async (
+    userId: string,
     reqBody: PublishFootprint.IPublishFootprintReqBody,
   ): Promise<PublishFootprint.IPublishFootprintResponse> => {
     //init
@@ -19,6 +20,8 @@ export const publishFootprintHandler = {
       title: result.title,
       content: result.content,
     });
+
+    await embeddingService.addNewIntervalInMilvus(userId);
 
     return response;
   },

@@ -10,6 +10,12 @@ export class BaseError extends Error {
   }
 }
 
+export class FootprintNotEnoughError extends BaseError {
+  constructor() {
+    super('Footprint not enough', 403);
+  }
+}
+
 export class EmailExistsError extends BaseError {
   constructor() {
     super('Email already exists', 403);

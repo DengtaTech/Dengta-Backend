@@ -154,13 +154,16 @@ export const userService = {
             .execute();
 
           await Promise.all(
-            newHashtags.map((hashTag) => {
+            newHashtags.map(async (hashTag) => {
               const hashTagInfo = {
                 id: hashTag.id,
                 content: hashTag.content,
               };
 
-              embeddingService.insertProfileHashTagEmbedding(hashTagInfo);
+              await embeddingService.findOrInsertProfileHashTagEmbedding(
+                hashTagInfo,
+                transactionManager,
+              );
             }),
           );
         }

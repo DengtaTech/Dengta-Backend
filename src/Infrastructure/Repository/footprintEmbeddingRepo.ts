@@ -69,4 +69,178 @@ export const footprintEmbeddingRepo = {
       throw error;
     }
   },
+  getLastKPublishedFootprintEmbeddingWithAllRelationsByUserId: async (
+    userId: string,
+    k: number,
+    transactionManager?: EntityManager,
+  ): Promise<Embedding.IEmbeddingFootprintWithHashTagEmbedding[]> => {
+    if (transactionManager) {
+      const footprints = await Footprint.createQueryBuilder('footprint')
+        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
+        .leftJoinAndSelect(
+          'footprint.mFootprintFootprintHashTag',
+          'mFootprintFootprintHashTags',
+        )
+        .leftJoinAndSelect(
+          'mFootprintFootprintHashTags.footprintHashTag',
+          'footprintHashTag',
+        )
+        .leftJoinAndSelect(
+          'footprintHashTag.embedding',
+          'footprintHashTagEmbedding',
+        )
+        .where('footprint.userId = :userId and footprint.status = :status', {
+          userId,
+          status: 'published',
+        })
+        .orderBy('footprint.createdAt', 'DESC')
+        .take(k)
+        .getMany();
+
+      if (!footprints) {
+        return [];
+      }
+
+      const footprintsEmbedding = footprints.map((footprint) => {
+        return {
+          id: footprint.id,
+          createdAt: footprint.createdAt,
+          titleEmbedding: footprint.embedding?.titleEmbedding || [],
+          contentEmbedding: footprint.embedding?.contentEmbedding || [],
+          hashTagEmbeddings:
+            footprint.mFootprintFootprintHashTag?.map(
+              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
+            ) || [],
+        };
+      });
+
+      return footprintsEmbedding;
+    } else {
+      const footprints = await Footprint.createQueryBuilder('footprint')
+        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
+        .leftJoinAndSelect(
+          'footprint.mFootprintFootprintHashTag',
+          'mFootprintFootprintHashTags',
+        )
+        .leftJoinAndSelect(
+          'mFootprintFootprintHashTags.footprintHashTag',
+          'footprintHashTag',
+        )
+        .leftJoinAndSelect(
+          'footprintHashTag.embedding',
+          'footprintHashTagEmbedding',
+        )
+        .where('footprint.userId = :userId and footprint.status = :status', {
+          userId,
+          status: 'published',
+        })
+        .orderBy('footprint.createdAt', 'DESC')
+        .take(k)
+        .getMany();
+
+      if (!footprints) {
+        return [];
+      }
+
+      const footprintsEmbedding = footprints.map((footprint) => {
+        return {
+          id: footprint.id,
+          createdAt: footprint.createdAt,
+          titleEmbedding: footprint.embedding?.titleEmbedding || [],
+          contentEmbedding: footprint.embedding?.contentEmbedding || [],
+          hashTagEmbeddings:
+            footprint.mFootprintFootprintHashTag?.map(
+              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
+            ) || [],
+        };
+      });
+      return footprintsEmbedding;
+    }
+  },
+  getAllPublishedFootprintEmbeddingWithAllRelationsByUserId: async (
+    userId: string,
+    transactionManager?: EntityManager,
+  ): Promise<Embedding.IEmbeddingFootprintWithHashTagEmbedding[]> => {
+    if (transactionManager) {
+      const footprints = await Footprint.createQueryBuilder('footprint')
+        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
+        .leftJoinAndSelect(
+          'footprint.mFootprintFootprintHashTag',
+          'mFootprintFootprintHashTags',
+        )
+        .leftJoinAndSelect(
+          'mFootprintFootprintHashTags.footprintHashTag',
+          'footprintHashTag',
+        )
+        .leftJoinAndSelect(
+          'footprintHashTag.embedding',
+          'footprintHashTagEmbedding',
+        )
+        .where('footprint.userId = :userId and footprint.status = :status', {
+          userId,
+          status: 'published',
+        })
+        .orderBy('footprint.createdAt', 'DESC')
+        .getMany();
+
+      if (!footprints) {
+        return [];
+      }
+
+      const footprintsEmbedding = footprints.map((footprint) => {
+        return {
+          id: footprint.id,
+          createdAt: footprint.createdAt,
+          titleEmbedding: footprint.embedding?.titleEmbedding || [],
+          contentEmbedding: footprint.embedding?.contentEmbedding || [],
+          hashTagEmbeddings:
+            footprint.mFootprintFootprintHashTag?.map(
+              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
+            ) || [],
+        };
+      });
+
+      return footprintsEmbedding;
+    } else {
+      const footprints = await Footprint.createQueryBuilder('footprint')
+        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
+        .leftJoinAndSelect(
+          'footprint.mFootprintFootprintHashTag',
+          'mFootprintFootprintHashTags',
+        )
+        .leftJoinAndSelect(
+          'mFootprintFootprintHashTags.footprintHashTag',
+          'footprintHashTag',
+        )
+        .leftJoinAndSelect(
+          'footprintHashTag.embedding',
+          'footprintHashTagEmbedding',
+        )
+        .where('footprint.userId = :userId and footprint.status = :status', {
+          userId,
+          status: 'published',
+        })
+        .orderBy('footprint.createdAt', 'DESC')
+        .getMany();
+
+      if (!footprints) {
+        return [];
+      }
+
+      const footprintsEmbedding = footprints.map((footprint) => {
+        return {
+          id: footprint.id,
+          createdAt: footprint.createdAt,
+          titleEmbedding: footprint.embedding?.titleEmbedding || [],
+          contentEmbedding: footprint.embedding?.contentEmbedding || [],
+          hashTagEmbeddings:
+            footprint.mFootprintFootprintHashTag?.map(
+              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
+            ) || [],
+        };
+      });
+
+      return footprintsEmbedding;
+    }
+  },
 };

@@ -15,21 +15,34 @@ export const profileHashtagEmbeddingRepo = {
       return await ProfileHashTagEmbedding.findOne({ where: { id } });
     }
   },
+  findByProfileHashTagId: async (
+    profileHashTagId: ProfileHashTagEmbedding['profileHashTagId'],
+    transactionManager?: EntityManager,
+  ) => {
+    if (transactionManager) {
+      return await transactionManager.findOne(ProfileHashTagEmbedding, {
+        where: { profileHashTagId },
+      });
+    } else {
+      return await ProfileHashTagEmbedding.findOne({
+        where: { profileHashTagId },
+      });
+    }
+  },
   insertUserHashTagEmbedding: async (
     userHashTagEmbedding: Embedding.IProfileHashTagEmbeddingDto,
     transactionManager: EntityManager,
   ) => {
-    try {
+    if (transactionManager) {
       const newUserHashTagEmbedding = new ProfileHashTagEmbedding();
       Object.assign(newUserHashTagEmbedding, userHashTagEmbedding);
 
-      const savedUserHashTagEmbedding = await transactionManager.save(
-        newUserHashTagEmbedding,
-      );
-      return savedUserHashTagEmbedding;
-    } catch (error) {
-      console.error('Failed to insert userHashTagEmbedding:');
-      throw error;
+      return await transactionManager.save(newUserHashTagEmbedding);
+    } else {
+      const newUserHashTagEmbedding = new ProfileHashTagEmbedding();
+      Object.assign(newUserHashTagEmbedding, userHashTagEmbedding);
+
+      return await ProfileHashTagEmbedding.save(newUserHashTagEmbedding);
     }
   },
 };

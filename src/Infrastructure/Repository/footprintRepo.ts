@@ -90,4 +90,9 @@ export const footprintRepo = {
       throw error;
     }
   },
+  getPublishedFootprintCountByUserId: async (
+    userId: User['id'],
+  ): Promise<number> => {
+    return await Footprint.count({ where: { userId, status: 'published' } });
+  },
 };
