@@ -63,8 +63,8 @@ export const footprintService = {
         const notification = Notification.create({
           userId: reaction.userId,
           type: 'footprint_reaction',
-          title: 'Your footprint has been reacted',
-          content: `${reaction.reaction} was reacted to your footprint`,
+          title: '有人對您的足跡做出了表情',
+          content: `您的足跡得到了 ${reaction.reaction}`,
           relatedUserId: footprint.userId,
           relatedFootprintId: reaction.footprintId,
         });
