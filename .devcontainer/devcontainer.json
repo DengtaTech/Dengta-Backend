@@ -55,7 +55,7 @@
   // ## Tool-specific properties ##
   "customizations": {
     "vscode": {
-      "extensions": ["esbenp.prettier-vscode"]
+      "extensions": ["esbenp.prettier-vscode", "SonarSource.sonarlint-vscode"]
     }
   }
 
