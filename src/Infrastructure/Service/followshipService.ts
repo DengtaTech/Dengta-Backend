@@ -35,8 +35,8 @@ export const followshipService = {
         const notification = Notification.create({
           userId: followDto.followeeId,
           type: 'is_followed',
-          title: 'You just got new follower!',
-          content: `${follower.firstName} is following you now!`,
+          title: '你被視為榜樣啦！',
+          content: `${follower.firstName} 將您視為榜樣`,
           relatedUserId: followDto.followerId,
         });
 
