@@ -61,11 +61,11 @@ export const footprintService = {
 
         // build notification
         const notification = Notification.create({
-          userId: reaction.userId,
+          userId: footprint.userId,
           type: 'footprint_reaction',
           title: '有人對您的足跡做出了表情',
           content: `您的足跡得到了 ${reaction.reaction}`,
-          relatedUserId: footprint.userId,
+          relatedUserId: reaction.userId,
           relatedFootprintId: reaction.footprintId,
         });
 
