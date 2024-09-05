@@ -104,79 +104,43 @@ export const userRepo = {
         );
       }
 
-      if (transactionManager) {
-        const query = transactionManager
-          .getRepository(User)
-          .createQueryBuilder('user');
-        if (keywords) {
-          query
-            .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-            .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-            .where(
-              new Brackets((qb) =>
-                qb
-                  .where(
-                    'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                  )
-                  .orWhere(
-                    'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                  ),
-              ),
-            )
-            .addSelect(
-              `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
-               MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
-              'relevance_score',
-            )
-            .orderBy('relevance_score', 'DESC')
-            .setParameter('keywords', keywords);
-        }
+      const query = transactionManager
+        ? transactionManager.getRepository(User).createQueryBuilder('user')
+        : User.createQueryBuilder('user');
 
-        if (followerId) {
-          query
-            .leftJoinAndSelect('user.followedBy', 'followedBy')
-            .andWhere('followedBy.followerId = :followerId', {
-              followerId: followerId,
-            });
-        }
-
-        return await query.getMany();
-      } else {
-        const query = User.createQueryBuilder('user');
-        if (keywords) {
-          query
-            .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-            .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-            .where(
-              new Brackets((qb) =>
-                qb
-                  .where(
-                    'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                  )
-                  .orWhere(
-                    'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                  ),
-              ),
-            )
-            .addSelect(
-              `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
-               MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
-              'relevance_score',
-            )
-            .orderBy('relevance_score', 'DESC')
-            .setParameter('keywords', keywords);
-        }
-
-        if (followerId) {
-          query
-            .leftJoinAndSelect('user.followedBy', 'followedBy')
-            .andWhere('followedBy.followerId = :followerId', {
-              followerId: followerId,
-            });
-        }
-
-        return await query.getMany();
+      if (keywords) {
+        query
+          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
+          .where(
+            new Brackets((qb) =>
+              qb
+                .where(
+                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                )
+                .orWhere(
+                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                ),
+            ),
+          )
+          .addSelect(
+            `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
+             MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
+            'relevance_score',
+          )
+          .orderBy('relevance_score', 'DESC')
+          .setParameter('keywords', keywords);
       }
+
+      if (followerId) {
+        query
+          .leftJoinAndSelect('user.followedBy', 'followedBy')
+          .andWhere('followedBy.followerId = :followerId', {
+            followerId: followerId,
+          });
+      }
+
+      return await query.getMany();
     } catch (error) {
       console.error('Error finding user by name and tag:');
       throw error;
