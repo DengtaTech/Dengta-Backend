@@ -82,6 +82,7 @@ if (process.env.NODE_ENV !== 'test') {
   await Promise.all([
     usingRedisExample(),
     (async () => {
+      console.log('test');
       await initMilvus(true);
       console.log('Milvus initialized successfully');
     })(),
