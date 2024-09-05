@@ -34,13 +34,13 @@
   // "--init"
   // ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3001],
-  "portsAttributes": {
-    "3001": {
-      "label": "dengta_backend",
-      "requireLocalPort": true
-    }
-  },
+  // "forwardPorts": [3001],
+  // "portsAttributes": {
+  //   "3001": {
+  //     "label": "dengta_backend",
+  //     "requireLocalPort": true
+  //   }
+  // },
   // "privileged": true,
 
   // ## Custom commands in different stages ##
