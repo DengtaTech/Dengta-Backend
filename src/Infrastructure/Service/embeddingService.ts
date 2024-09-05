@@ -218,7 +218,7 @@ export const embeddingService = {
       }
 
       const lastKFootprintWithHashTagEmbedding =
-        await footprintEmbeddingRepo.getLastKPublishedFootprintEmbeddingWithAllRelationsByUserId(
+        await footprintEmbeddingRepo.getPublishedFootprintEmbeddingWithAllRelationsByUserId(
           userId,
           FOOTPRINT_INTERVAL_SIZE,
           transactionManager,
@@ -285,8 +285,9 @@ export const embeddingService = {
         }
 
         const footprintsWithHashTagEmbedding =
-          await footprintEmbeddingRepo.getAllPublishedFootprintEmbeddingWithAllRelationsByUserId(
+          await footprintEmbeddingRepo.getPublishedFootprintEmbeddingWithAllRelationsByUserId(
             userId,
+            undefined,
             transactionManager,
           );
 

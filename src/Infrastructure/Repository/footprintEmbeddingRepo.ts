@@ -8,25 +8,21 @@ export const footprintEmbeddingRepo = {
     id: FootprintEmbedding['id'],
     transactionManager?: EntityManager,
   ) => {
-    if (transactionManager) {
-      return await transactionManager.findOne(FootprintEmbedding, {
-        where: { id },
-      });
-    } else {
-      return await FootprintEmbedding.findOne({ where: { id } });
-    }
+    return footprintEmbeddingRepo.findOneById(id, transactionManager);
   },
   findByFootprintId: async (
     footprintId: Footprint['id'],
     transactionManager?: EntityManager,
   ) => {
+    return footprintEmbeddingRepo.findOneById(footprintId, transactionManager);
+  },
+  findOneById: async (id: string, transactionManager?: EntityManager) => {
     if (transactionManager) {
       return await transactionManager.findOne(FootprintEmbedding, {
-        where: { id: footprintId },
+        where: { id },
       });
-    } else {
-      return await FootprintEmbedding.findOne({ where: { id: footprintId } });
     }
+    return await FootprintEmbedding.findOne({ where: { id } });
   },
   insertFootprintEmbedding: async (
     footprintEmbedding: Embedding.IFootprintEmbeddingDto,
@@ -50,11 +46,9 @@ export const footprintEmbeddingRepo = {
     updateFootprintEmbedding: Embedding.IUpdateFootprintEmbeddingDto,
     transactionManager: EntityManager,
   ) => {
-    const footprintEmbedding = await transactionManager.findOne(
-      FootprintEmbedding,
-      {
-        where: { footprintId },
-      },
+    const footprintEmbedding = await footprintEmbeddingRepo.findOneById(
+      footprintId,
+      transactionManager,
     );
 
     if (!footprintEmbedding) {
@@ -69,180 +63,57 @@ export const footprintEmbeddingRepo = {
       throw error;
     }
   },
-  getLastKPublishedFootprintEmbeddingWithAllRelationsByUserId: async (
+  getPublishedFootprintEmbeddingWithAllRelationsByUserId: async (
     userId: string,
-    k: number,
+    limit?: number,
     transactionManager?: EntityManager,
   ): Promise<Embedding.IEmbeddingFootprintWithHashTagEmbedding[]> => {
-    if (transactionManager) {
-      const footprints = await transactionManager
-        .createQueryBuilder(Footprint, 'footprint')
-        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
-        .leftJoinAndSelect(
-          'footprint.mFootprintFootprintHashTag',
-          'mFootprintFootprintHashTags',
-        )
-        .leftJoinAndSelect(
-          'mFootprintFootprintHashTags.footprintHashTag',
-          'footprintHashTag',
-        )
-        .leftJoinAndSelect(
-          'footprintHashTag.embedding',
-          'footprintHashTagEmbedding',
-        )
-        .where('footprint.userId = :userId and footprint.status = :status', {
-          userId,
-          status: 'published',
-        })
-        .orderBy('footprint.createdAt', 'DESC')
-        .take(k)
-        .getMany();
+    const query = (
+      transactionManager?.createQueryBuilder(Footprint, 'footprint') ||
+      Footprint.createQueryBuilder('footprint')
+    )
+      .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
+      .leftJoinAndSelect(
+        'footprint.mFootprintFootprintHashTag',
+        'mFootprintFootprintHashTags',
+      )
+      .leftJoinAndSelect(
+        'mFootprintFootprintHashTags.footprintHashTag',
+        'footprintHashTag',
+      )
+      .leftJoinAndSelect(
+        'footprintHashTag.embedding',
+        'footprintHashTagEmbedding',
+      )
+      .where('footprint.userId = :userId and footprint.status = :status', {
+        userId,
+        status: 'published',
+      })
+      .orderBy('footprint.createdAt', 'DESC');
 
-      if (!footprints) {
-        return [];
-      }
-
-      const footprintsEmbedding = footprints.map((footprint) => {
-        return {
-          id: footprint.id,
-          createdAt: footprint.createdAt,
-          titleEmbedding: footprint.embedding?.titleEmbedding || [],
-          contentEmbedding: footprint.embedding?.contentEmbedding || [],
-          hashTagEmbeddings:
-            footprint.mFootprintFootprintHashTag?.map(
-              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
-            ) || [],
-        };
-      });
-
-      return footprintsEmbedding;
-    } else {
-      const footprints = await Footprint.createQueryBuilder('footprint')
-        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
-        .leftJoinAndSelect(
-          'footprint.mFootprintFootprintHashTag',
-          'mFootprintFootprintHashTags',
-        )
-        .leftJoinAndSelect(
-          'mFootprintFootprintHashTags.footprintHashTag',
-          'footprintHashTag',
-        )
-        .leftJoinAndSelect(
-          'footprintHashTag.embedding',
-          'footprintHashTagEmbedding',
-        )
-        .where('footprint.userId = :userId and footprint.status = :status', {
-          userId,
-          status: 'published',
-        })
-        .orderBy('footprint.createdAt', 'DESC')
-        .take(k)
-        .getMany();
-
-      if (!footprints) {
-        return [];
-      }
-
-      const footprintsEmbedding = footprints.map((footprint) => {
-        return {
-          id: footprint.id,
-          createdAt: footprint.createdAt,
-          titleEmbedding: footprint.embedding?.titleEmbedding || [],
-          contentEmbedding: footprint.embedding?.contentEmbedding || [],
-          hashTagEmbeddings:
-            footprint.mFootprintFootprintHashTag?.map(
-              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
-            ) || [],
-        };
-      });
-      return footprintsEmbedding;
+    if (limit) {
+      query.take(limit);
     }
-  },
-  getAllPublishedFootprintEmbeddingWithAllRelationsByUserId: async (
-    userId: string,
-    transactionManager?: EntityManager,
-  ): Promise<Embedding.IEmbeddingFootprintWithHashTagEmbedding[]> => {
-    if (transactionManager) {
-      const footprints = await transactionManager
-        .createQueryBuilder(Footprint, 'footprint')
-        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
-        .leftJoinAndSelect(
-          'footprint.mFootprintFootprintHashTag',
-          'mFootprintFootprintHashTags',
-        )
-        .leftJoinAndSelect(
-          'mFootprintFootprintHashTags.footprintHashTag',
-          'footprintHashTag',
-        )
-        .leftJoinAndSelect(
-          'footprintHashTag.embedding',
-          'footprintHashTagEmbedding',
-        )
-        .where('footprint.userId = :userId and footprint.status = :status', {
-          userId,
-          status: 'published',
-        })
-        .orderBy('footprint.createdAt', 'DESC')
-        .getMany();
 
-      if (!footprints) {
-        return [];
-      }
+    const footprints = await query.getMany();
 
-      const footprintsEmbedding = footprints.map((footprint) => {
-        return {
-          id: footprint.id,
-          createdAt: footprint.createdAt,
-          titleEmbedding: footprint.embedding?.titleEmbedding || [],
-          contentEmbedding: footprint.embedding?.contentEmbedding || [],
-          hashTagEmbeddings:
-            footprint.mFootprintFootprintHashTag?.map(
-              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
-            ) || [],
-        };
-      });
-
-      return footprintsEmbedding;
-    } else {
-      const footprints = await Footprint.createQueryBuilder('footprint')
-        .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
-        .leftJoinAndSelect(
-          'footprint.mFootprintFootprintHashTag',
-          'mFootprintFootprintHashTags',
-        )
-        .leftJoinAndSelect(
-          'mFootprintFootprintHashTags.footprintHashTag',
-          'footprintHashTag',
-        )
-        .leftJoinAndSelect(
-          'footprintHashTag.embedding',
-          'footprintHashTagEmbedding',
-        )
-        .where('footprint.userId = :userId and footprint.status = :status', {
-          userId,
-          status: 'published',
-        })
-        .orderBy('footprint.createdAt', 'DESC')
-        .getMany();
-
-      if (!footprints) {
-        return [];
-      }
-
-      const footprintsEmbedding = footprints.map((footprint) => {
-        return {
-          id: footprint.id,
-          createdAt: footprint.createdAt,
-          titleEmbedding: footprint.embedding?.titleEmbedding || [],
-          contentEmbedding: footprint.embedding?.contentEmbedding || [],
-          hashTagEmbeddings:
-            footprint.mFootprintFootprintHashTag?.map(
-              (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
-            ) || [],
-        };
-      });
-
-      return footprintsEmbedding;
+    if (!footprints) {
+      return [];
     }
+
+    const footprintsEmbedding = footprints.map((footprint) => {
+      return {
+        id: footprint.id,
+        createdAt: footprint.createdAt,
+        titleEmbedding: footprint.embedding?.titleEmbedding || [],
+        contentEmbedding: footprint.embedding?.contentEmbedding || [],
+        hashTagEmbeddings:
+          footprint.mFootprintFootprintHashTag?.map(
+            (tag) => tag.footprintHashTag?.embedding?.contentEmbedding || [],
+          ) || [],
+      };
+    });
+
+    return footprintsEmbedding;
   },
 };
