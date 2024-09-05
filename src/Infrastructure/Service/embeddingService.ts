@@ -386,15 +386,14 @@ export const embeddingService = {
         addIntervalEmbedding(tagEmbedding, EMBEDDING_WEIGHTS.profileTags);
       });
 
-      intervalFootprints.forEach(async (footprint) => {
-        addIntervalEmbedding(
+      for (const footprint of intervalFootprints) {
+        const weightedEmbedding =
           await embeddingService.calculateFootprintWeightedEmbedding(
             footprint,
             EMBEDDING_WEIGHTS.footprints,
-          ),
-          1,
-        );
-      });
+          );
+        addIntervalEmbedding(weightedEmbedding, 1);
+      }
 
       userEmbedding.questionnaire.forEach((question) => {
         addIntervalEmbedding(question.answer, EMBEDDING_WEIGHTS.questionnaire);
