@@ -75,7 +75,8 @@ export const footprintEmbeddingRepo = {
     transactionManager?: EntityManager,
   ): Promise<Embedding.IEmbeddingFootprintWithHashTagEmbedding[]> => {
     if (transactionManager) {
-      const footprints = await Footprint.createQueryBuilder('footprint')
+      const footprints = await transactionManager
+        .createQueryBuilder(Footprint, 'footprint')
         .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
         .leftJoinAndSelect(
           'footprint.mFootprintFootprintHashTag',
@@ -162,7 +163,8 @@ export const footprintEmbeddingRepo = {
     transactionManager?: EntityManager,
   ): Promise<Embedding.IEmbeddingFootprintWithHashTagEmbedding[]> => {
     if (transactionManager) {
-      const footprints = await Footprint.createQueryBuilder('footprint')
+      const footprints = await transactionManager
+        .createQueryBuilder(Footprint, 'footprint')
         .leftJoinAndSelect('footprint.embedding', 'footprintEmbedding')
         .leftJoinAndSelect(
           'footprint.mFootprintFootprintHashTag',

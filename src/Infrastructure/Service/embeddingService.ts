@@ -79,8 +79,8 @@ export const embeddingService = {
 
       const footprintEmbedding = {
         footprintId: footprintInfo.id,
-        titleEmbedding: titleEmbedding || [],
-        contentEmbedding: contentEmbedding || [],
+        titleEmbedding: titleEmbedding ?? [],
+        contentEmbedding: contentEmbedding ?? [],
       };
 
       try {
@@ -116,8 +116,8 @@ export const embeddingService = {
       }
 
       const userEmbedding = {
-        lifeRoleEmbedding: lifeRoleEmbedding || undefined,
-        selfIntroEmbedding: selfIntroEmbedding || undefined,
+        lifeRoleEmbedding: lifeRoleEmbedding ?? undefined,
+        selfIntroEmbedding: selfIntroEmbedding ?? undefined,
       };
 
       try {
