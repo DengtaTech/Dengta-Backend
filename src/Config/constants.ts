@@ -2,16 +2,16 @@ import { Embedding } from '../Application/Features/Recommendation/Embedding/Type
 
 export const FOOTPRINT_INTERVAL_SIZE = 4;
 export const EMBEDDING_WEIGHTS: Embedding.IEmbeddingWeights = {
-  lifeRole: 0.1,
-  selfIntro: 0.1,
-  profileTags: 0.2,
-  goal: 0.3,
+  lifeRole: 0.2837710806425091,
+  selfIntro: 0.2837710806425091,
+  profileTags: 0.6278933453881503,
+  goal: 0.7170155135986972,
   footprints: {
-    title: 0.2,
-    tags: 0.1,
-    content: 0.05,
+    title: 0.49944944398455426,
+    tags: 0.09638881389573006,
+    content: 0.45620581710468733,
   },
-  questionnaire: 0.05,
+  questionnaire: 0,
 };
 export const RECOMMENDATION_LIMIT = 10;
 
