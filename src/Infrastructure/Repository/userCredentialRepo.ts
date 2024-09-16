@@ -4,7 +4,7 @@ import { EntityManager } from 'typeorm';
 export const userCredentialRepo = {
   insertNewUser: async (
     user: User,
-    password: string,
+    password: string | null,
     transactionManager: EntityManager,
   ): Promise<void> => {
     try {

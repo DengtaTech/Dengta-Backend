@@ -18,49 +18,16 @@ import { validatePatchUserInfoReqBody } from '../Application/Features/User/Patch
 import { followHandler } from '../Application/Features/User/Follow/followHandler.js';
 import { unFollowHandler } from '../Application/Features/User/UnFollow/unFollowHandler.js';
 import { getFootprintsHandler } from '../Application/Features/User/GetFootprints/getFootprints.js';
+import { validateSignUpReqBodyReqBody } from '../Application/Features/User/SignUp/Types/signupDto.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
-    const {
-      firstName,
-      lastName,
-      lifeRole,
-      gender,
-      birthday,
-      email,
-      password,
-      links,
-      clerkId,
-    } = req.body;
-    if (
-      !firstName ||
-      !lastName ||
-      !lifeRole ||
-      !gender ||
-      !birthday ||
-      !email ||
-      !password ||
-      !clerkId
-    ) {
-      throw new InputEmptyError();
+    const validationErrors = await validateSignUpReqBodyReqBody(req.body);
+    if (validationErrors.length > 0) {
+      throw new InvalidInputError(validationErrors.join(', '));
     }
-    if (!(await tool.checkEmail(email))) {
-      throw new EmailFormatError();
-    }
-    const birthdayDate = new Date(birthday);
-    const userDto: Signup.ISignUpReq = {
-      firstName,
-      lastName,
-      lifeRole,
-      gender,
-      birthday: birthdayDate,
-      email,
-      password,
-      links,
-      clerkId,
-    };
-    const response = await signUpHandler.handle(userDto);
 
+    const response = await signUpHandler.handle(req.body as Signup.ISignUpReq);
     res.status(200).json(response);
   },
   signIn: async (req: Request, res: Response): Promise<void> => {

@@ -109,8 +109,9 @@ export async function initFixedDbData() {
       email: adminEmail,
       links: [],
       password: adminPassword,
-      clerkId: 'user_12CWER123....',
+      clerkId: 'user_12CWER123test',
       avatar: '',
+      provider: 'native',
     };
 
     const res = await signUpHandler.handle(admin);

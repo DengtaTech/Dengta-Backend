@@ -15,7 +15,6 @@ export const signUpRes = {
           fullName: result.fullName,
           lifeRole: result.lifeRole,
           email: result.email,
-          clerkId: result.clerkId,
           links: result.links,
         },
       },
