@@ -24,7 +24,7 @@ import { Notification } from './notification.js';
 
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   id!: string;
 
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })

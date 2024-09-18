@@ -11,10 +11,10 @@ import { User } from './user.js';
 
 @Entity({ name: 'Followship' })
 export class Followship extends BaseEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   followerId!: string;
 
-  @PrimaryColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   followeeId!: string;
 
   @Column({

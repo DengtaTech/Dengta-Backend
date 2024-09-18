@@ -24,7 +24,7 @@ export class UserCredential extends BaseEntity {
   })
   createdAt!: Date;
 
-  @Column('uuid')
+  @Column({ type: 'varchar', length: 50 })
   userId!: string;
 
   @OneToOne(() => User, (user) => user.userCredential, { onDelete: 'CASCADE' })

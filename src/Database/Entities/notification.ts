@@ -19,7 +19,7 @@ export class Notification extends BaseEntity {
   @JoinColumn({ name: 'userId' })
   user?: Relation<User>;
 
-  @Column({ nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   userId!: string;
 
   @Column({

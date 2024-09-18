@@ -3,6 +3,8 @@ import { tool } from '../../../../utils/tool.js';
 import { auth } from '../../../../utils/jwt.js';
 import { signUpRes } from './signUpRes.js';
 import { Signup } from './Types/api.js';
+import { In } from 'typeorm';
+import { InputEmptyError } from '../../../../Errors/errors.js';
 
 export const signUpHandler = {
   handle: async (body: Signup.ISignUpReq): Promise<Signup.ISignUpResponse> => {
@@ -11,6 +13,7 @@ export const signUpHandler = {
       const tokenInfo = await auth.generateAccessToken(result.id);
       return await signUpRes.customize(result, tokenInfo);
     }
+    if (!body.password) throw new InputEmptyError();
     const hashedPassword = await tool.generateHashPassword(
       body.password as string,
     );

@@ -11,7 +11,7 @@ import { User } from './user.js';
 
 @Entity({ name: 'SearchHistory' })
 export class SearchHistory extends BaseEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   userId!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
