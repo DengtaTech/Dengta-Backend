@@ -14,6 +14,10 @@ import { SearchFollowees } from '../../Application/Features/User/SearchFollowees
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userService = {
+  isUserIdExists: async (userId: string): Promise<boolean> => {
+    const user = await userRepo.findById(userId);
+    return !!user;
+  },
   signUp: async (
     userInfoObj: Signup.ISignUpReq,
   ): Promise<Signup.ISignUpDto> => {
