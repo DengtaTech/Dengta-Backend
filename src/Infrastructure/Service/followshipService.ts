@@ -2,8 +2,10 @@ import { UserFollow } from '../../Application/Features/User/Follow/Types/api.js'
 import { UserUnFollow } from '../../Application/Features/User/UnFollow/Types/api.js';
 import { Database } from '../../Database/data-source.js';
 import { Followship } from '../../Database/Entities/followship.js';
+import { Notification } from '../../Database/Entities/notification.js';
 import { UserNotFoundError } from '../../Errors/errors.js';
 import { followshipRepo } from '../Repository/followshipRepo.js';
+import { notificationRepo } from '../Repository/notificationRepo.js';
 import { userRepo } from '../Repository/userRepo.js';
 
 export const followshipService = {
@@ -24,7 +26,26 @@ export const followshipService = {
         throw new UserNotFoundError();
       }
       try {
-        return await followshipRepo.follow(followDto, transactionManager);
+        const followship = await followshipRepo.follow(
+          followDto,
+          transactionManager,
+        );
+
+        // build notification
+        const notification = Notification.create({
+          userId: followDto.followeeId,
+          type: 'is_followed',
+          title: '你被視為榜樣啦！',
+          content: `${follower.firstName} 將您視為榜樣`,
+          relatedUserId: followDto.followerId,
+        });
+
+        await notificationRepo.insertNewNotification(
+          notification,
+          transactionManager,
+        );
+
+        return followship;
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
