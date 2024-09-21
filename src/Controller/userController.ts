@@ -6,6 +6,7 @@ import {
   InputEmptyError,
   NoTokenError,
   InvalidInputError,
+  SameOperatingTargetingUserError,
 } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 import { signInHandler } from '../Application/Features/User/SignIn/signInHandler.js';
@@ -18,6 +19,7 @@ import { followHandler } from '../Application/Features/User/Follow/followHandler
 import { unFollowHandler } from '../Application/Features/User/UnFollow/unFollowHandler.js';
 import { getFootprintsHandler } from '../Application/Features/User/GetFootprints/getFootprints.js';
 import { userService } from '../Infrastructure/Service/userService.js';
+import { searchFolloweesHandler } from '../Application/Features/User/SearchFollowees/searchFolloweesHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -135,6 +137,9 @@ export const userController = {
     if (!followeeId) {
       throw new InvalidInputError('followeeId is inlegal');
     }
+    if (followerId === followeeId) {
+      throw new SameOperatingTargetingUserError();
+    }
 
     const response = await followHandler.handle({ followerId, followeeId });
     res.status(200).json(response);
@@ -148,6 +153,9 @@ export const userController = {
 
     if (!followeeId) {
       throw new InvalidInputError('followeeId is illegal');
+    }
+    if (followerId === followeeId) {
+      throw new SameOperatingTargetingUserError();
     }
 
     const response = await unFollowHandler.handle({
@@ -180,5 +188,17 @@ export const userController = {
     );
 
     res.status(200).json(footprints);
+  },
+  searchFollowees: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+    const keywords = req.query.keywords;
+    if (typeof keywords !== 'string' && typeof keywords !== 'undefined') {
+      throw new InvalidInputError('keywords must be a string');
+    }
+    const response = await searchFolloweesHandler.handle(userId, keywords);
+    res.status(200).json(response);
   },
 };

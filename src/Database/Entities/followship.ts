@@ -24,11 +24,11 @@ export class Followship extends BaseEntity {
   })
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.followers, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.follows, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'followerId' })
   follower?: Relation<User>;
 
-  @ManyToOne(() => User, (user) => user.followees, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.followedBy, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'followeeId' })
   followee?: Relation<User>;
 }

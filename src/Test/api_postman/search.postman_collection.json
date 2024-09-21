@@ -1,0 +1,44 @@
+{
+  "info": {
+    "_postman_id": "cd9750ec-b309-4572-ac43-47193c3b75c6",
+    "name": "search",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33305762"
+  },
+  "item": [
+    {
+      "name": "以hashtag, 人名搜尋",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"content\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/search",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "search"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
