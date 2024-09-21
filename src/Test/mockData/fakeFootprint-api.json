@@ -5,7 +5,7 @@
     "category": "life",
     "milestone": true,
     "occurAt": "2023-04-15T09:30:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 3,
       "love": 2,
@@ -20,7 +20,7 @@
     "category": "life",
     "milestone": true,
     "occurAt": "2023-05-20T12:00:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 5,
       "love": 3,
@@ -35,7 +35,7 @@
     "category": "career",
     "milestone": true,
     "occurAt": "2023-06-01T09:00:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 4,
       "love": 2,
@@ -50,7 +50,7 @@
     "category": "other",
     "milestone": true,
     "occurAt": "2023-07-10T15:30:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 2,
       "love": 4,
@@ -110,7 +110,7 @@
     "category": "life",
     "milestone": true,
     "occurAt": "2023-10-15T14:00:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 3,
       "love": 2,
@@ -185,7 +185,7 @@
     "category": "life",
     "milestone": true,
     "occurAt": "2024-02-20T07:30:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 4,
       "love": 2,
@@ -290,7 +290,7 @@
     "category": "life",
     "milestone": true,
     "occurAt": "2024-09-25T07:30:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 3,
       "love": 2,
@@ -440,7 +440,7 @@
     "category": "life",
     "milestone": false,
     "occurAt": "2025-07-01T07:00:00Z",
-    "status": "published",
+    "status": "draft",
     "reactions": {
       "like": 3,
       "love": 2,

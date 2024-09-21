@@ -5,7 +5,6 @@ import { jwtAuthentication } from '../Middlewares/auth.js';
 import { upload } from '../Middlewares/multer.js';
 
 const router = express.Router();
-
 router.get(
   '/detail/:footprintId',
   jwtAuthentication,
