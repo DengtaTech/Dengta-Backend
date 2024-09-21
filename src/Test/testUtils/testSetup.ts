@@ -13,7 +13,7 @@ const fakeNotifications: Notification[] = [];
 beforeAll(async () => {
   await Database.initialize();
   await testHelper.clearDatabase(Database);
-  testHelper.initReactionTypes(Database);
+  await testHelper.initReactionTypes(Database);
   const newfakeUserIds = await testHelper.createFakeUsers(Database);
   fakeUserIds.push(...newfakeUserIds);
   const newFootprintIds = await testHelper.createFakeFootprints(
