@@ -111,12 +111,12 @@ export class User extends BaseEntity {
   @OneToMany(() => Followship, (followship) => followship.follower, {
     cascade: true,
   })
-  followers?: Relation<Followship[]>;
+  follows?: Relation<Followship[]>;
 
   @OneToMany(() => Followship, (followship) => followship.followee, {
     cascade: true,
   })
-  followees?: Relation<Followship[]>;
+  followedBy?: Relation<Followship[]>;
 
   @OneToOne(() => UserCredential, (userCredential) => userCredential.user, {
     cascade: true,
