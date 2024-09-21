@@ -57,6 +57,9 @@ export class Notification extends BaseEntity {
   @JoinColumn({ name: 'relatedFootprintId' })
   relatedFootprint?: Relation<Footprint>;
 
+  @Column({ nullable: true })
+  relatedFootprintId?: string;
+
   @Column({
     type: 'timestamp',
     nullable: false,
