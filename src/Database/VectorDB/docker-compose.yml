@@ -11,7 +11,7 @@ services:
       - ETCD_SNAPSHOT_COUNT=50000
     volumes:
       - dengta_milvus_etcd_volume:/etcd
-    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    command: etcd -advertise-client-urls=http://milvus_etcd_staging:2379 -listen-client-urls=http://0.0.0.0:2379 --data-dir /etcd
     healthcheck:
       test: ['CMD', 'etcdctl', 'endpoint', 'health']
       interval: 10s
@@ -41,8 +41,8 @@ services:
     image: milvusdb/milvus:v2.4.6
     command: ['milvus', 'run', 'standalone']
     environment:
-      ETCD_ENDPOINTS: milvus_etcd_staging:2379
-      MINIO_ADDRESS: milvus_minio_staging:9000
+      ETCD_ENDPOINTS: http://milvus_etcd_staging:2379
+      MINIO_ADDRESS: http://milvus_minio_staging:9000
       MINIO_ACCESS_KEY_ID: ${MILVUS_MINIO_ACCESS_KEY}
       MINIO_SECRET_ACCESS_KEY: ${MILVUS_MINIO_SECRET_KEY}
       MILVUS_ROOT_USERNAME: ${MILVUS_ROOT_USERNAME}
