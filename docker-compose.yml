@@ -84,9 +84,9 @@ volumes:
   dengta_mysql_volume:
     name: ${MYSQL_VOLUME_PATH}
   dengta_milvus_etcd_volume:
-    name: ${MILVUS_VOLUME_PATH}_etcd
+    name: ${MILVUS_VOLUME_PATH}-etcd
   dengta_milvus_minio_volume:
-    name: ${MILVUS_VOLUME_PATH}_minio
+    name: ${MILVUS_VOLUME_PATH}-minio
   dengta_milvus_volume:
     name: ${MILVUS_VOLUME_PATH}
 
