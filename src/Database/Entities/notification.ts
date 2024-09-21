@@ -10,6 +10,14 @@ import {
 import { User } from './user.js';
 import { Footprint } from './footprint.js';
 
+const notificationTypes = [
+  'system',
+  'is_followed',
+  'follower_footprint',
+  'footprint_reaction',
+] as const;
+type NotificationType = (typeof notificationTypes)[number];
+
 @Entity({ name: 'Notification' })
 export class Notification extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -24,10 +32,10 @@ export class Notification extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: ['system', 'is_followed', 'follower_footprint', 'footprint_reaction'],
+    enum: notificationTypes,
     nullable: false,
   })
-  type!: string;
+  type!: NotificationType;
 
   @Column({ type: 'text', nullable: false })
   title!: string;
@@ -42,9 +50,15 @@ export class Notification extends BaseEntity {
   @JoinColumn({ name: 'relatedUserId' })
   relatedUser?: Relation<User>;
 
+  @Column({ nullable: true })
+  relatedUserId?: string;
+
   @ManyToOne(() => Footprint)
   @JoinColumn({ name: 'relatedFootprintId' })
   relatedFootprint?: Relation<Footprint>;
+
+  @Column({ nullable: true })
+  relatedFootprintId?: string;
 
   @Column({
     type: 'timestamp',

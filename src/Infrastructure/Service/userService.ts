@@ -9,6 +9,8 @@ import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
 import { PatchUserInfo } from '../../Application/Features/User/PatchUserInfo/Types/api.js';
 import { MUserProfileHashTag } from '../../Database/Entities/mUserProfileHashTag.js';
 import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
+import { User } from '../../Database/Entities/user.js';
+import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 
 export const userService = {
@@ -162,5 +164,27 @@ export const userService = {
       console.error('Error in DB ->', error);
       throw error;
     }
+  },
+  searchFollowees: async (
+    followerId: User['id'],
+    keywords?: string,
+  ): Promise<SearchFollowees.ISearchFolloweesDto[]> => {
+    return Database.transaction(async (transactionManager) => {
+      try {
+        if (
+          (await userRepo.findById(followerId, transactionManager)) === null
+        ) {
+          throw new UserNotFoundError();
+        }
+        return await userRepo.findByNameAndTag({
+          keywords,
+          followerId,
+          transactionManager,
+        });
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
   },
 };

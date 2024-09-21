@@ -1,9 +1,10 @@
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
-import { EntityManager, Relation } from 'typeorm';
+import { EntityManager, Relation, Brackets } from 'typeorm';
 import { Link } from '../../Database/Entities/link.js';
 import { Role } from '../../Database/Entities/role.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
+import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 
 export const userRepo = {
   findById: async (
@@ -87,54 +88,74 @@ export const userRepo = {
       throw error;
     }
   },
-  findByNameAndTag: async (
-    keywords: string,
-    transactionManager?: EntityManager,
-  ): Promise<User[]> => {
+  findByNameAndTag: (async ({
+    keywords,
+    followerId,
+    transactionManager,
+  }: {
+    keywords?: string;
+    followerId?: User['id'];
+    transactionManager?: EntityManager;
+  }) => {
     try {
-      if (transactionManager) {
-        const users = await transactionManager
-          .getRepository(User)
-          .createQueryBuilder('user')
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-          .where(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .orWhere(
-            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .addSelect(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-            'relevance_score',
-          )
-          .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords)
-          .getMany();
-        return users;
-      } else {
-        const users = await User.createQueryBuilder('user')
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-          .where(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .orWhere(
-            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .addSelect(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-            'relevance_score',
-          )
-          .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords)
-          .getMany();
-        return users;
+      if (!keywords && !followerId) {
+        throw new Error(
+          'keywords and followerId cannot be both undefined. This operation should have been blocked by TS type guard',
+        );
       }
+
+      const query = transactionManager
+        ? transactionManager.getRepository(User).createQueryBuilder('user')
+        : User.createQueryBuilder('user');
+
+      if (keywords) {
+        query
+          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
+          .where(
+            new Brackets((qb) =>
+              qb
+                .where(
+                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                )
+                .orWhere(
+                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                ),
+            ),
+          )
+          .addSelect(
+            `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
+             MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
+            'relevance_score',
+          )
+          .orderBy('relevance_score', 'DESC')
+          .setParameter('keywords', keywords);
+      }
+
+      if (followerId) {
+        query
+          .leftJoinAndSelect('user.followedBy', 'followedBy')
+          .andWhere('followedBy.followerId = :followerId', {
+            followerId: followerId,
+          });
+      }
+
+      return await query.getMany();
     } catch (error) {
       console.error('Error finding user by name and tag:');
       throw error;
     }
+  }) as {
+    (_: {
+      keywords?: string;
+      followerId: User['id'];
+      transactionManager?: EntityManager;
+    }): Promise<SearchFollowees.ISearchFolloweesDto[]>;
+    (_: {
+      keywords: string;
+      followerId?: never;
+      transactionManager?: EntityManager;
+    }): Promise<User[]>;
   },
   updateLink: async (
     user: User,

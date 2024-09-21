@@ -19,6 +19,7 @@ import { followHandler } from '../Application/Features/User/Follow/followHandler
 import { unFollowHandler } from '../Application/Features/User/UnFollow/unFollowHandler.js';
 import { getFootprintsHandler } from '../Application/Features/User/GetFootprints/getFootprints.js';
 import { validateSignUpReqBodyReqBody } from '../Application/Features/User/SignUp/Types/signupDto.js';
+import { searchFolloweesHandler } from '../Application/Features/User/SearchFollowees/searchFolloweesHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -142,5 +143,17 @@ export const userController = {
     const footprints = await getFootprintsHandler.handle(userId, page);
 
     res.status(200).json(footprints);
+  },
+  searchFollowees: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+    const keywords = req.query.keywords;
+    if (typeof keywords !== 'string' && typeof keywords !== 'undefined') {
+      throw new InvalidInputError('keywords must be a string');
+    }
+    const response = await searchFolloweesHandler.handle(userId, keywords);
+    res.status(200).json(response);
   },
 };
