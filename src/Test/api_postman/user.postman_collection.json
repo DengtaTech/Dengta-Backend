@@ -1,0 +1,434 @@
+{
+  "info": {
+    "_postman_id": "33eaf2ab-d61f-4473-b3e9-89f5b4fdac74",
+    "name": "user",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33305762"
+  },
+  "item": [
+    {
+      "name": "註冊",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.globals.set(\"tmp_accessToken\", pm.response.json()[\"data\"][\"accessToken\"]);\r",
+              "pm.globals.set(\"tmp_userId\", pm.response.json()[\"data\"][\"user\"][\"id\"])"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\": \"1\",\r\n    \"lastName\": \"test\",\r\n    \"lifeRole\": \"my life role\",\r\n    \"birthday\": \"1970/01/01\",\r\n    \"gender\": \"notdisclosed\",\r\n    \"email\": \"test1@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"links\": [],\r\n    \"clerkId\": \"123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signup",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "user", "signup"]
+        }
+      },
+      "response": [
+        {
+          "name": "user test 1",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"1\",\r\n    \"lastName\": \"test\",\r\n    \"lifeRole\": \"my life role\",\r\n    \"birthday\": \"1970/01/01\",\r\n    \"gender\": \"notdisclosed\",\r\n    \"email\": \"test1@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"links\": [],\r\n    \"clerkId\": \"123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signup",
+              "protocol": "http",
+              "host": ["{{endpoint}}"],
+              "port": "{{port}}",
+              "path": ["{{basePath}}", "user", "signup"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "392"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"188-b4HpW2KNOclqXKYq8/KS4vwZV4w\""
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 26 Aug 2024 06:31:18 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmMzJjNzM3LTFlMGYtNDQxOC05NzE3LTY4MGNmMDI3ZjA4MCIsImlhdCI6MTcyNDY1Mzg3OCwiZXhwIjoxNzI0NzQwMjc4fQ.4UB8yXCkFzDIGKavefNHre2c4vEMyvYvC0KGdKYfGxM\",\n        \"accessExpired\": \"86400\",\n        \"user\": {\n            \"id\": \"8f32c737-1e0f-4418-9717-680cf027f080\",\n            \"fullName\": \"1 test\",\n            \"lifeRole\": \"my life role\",\n            \"email\": \"test1@example.com\",\n            \"clerkId\": \"123\",\n            \"links\": []\n        }\n    }\n}"
+        },
+        {
+          "name": "user test 2",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"2\",\r\n    \"lastName\": \"test\",\r\n    \"lifeRole\": \"my life role\",\r\n    \"birthday\": \"1970/01/01\",\r\n    \"gender\": \"notdisclosed\",\r\n    \"email\": \"test2@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"links\": [],\r\n    \"clerkId\": \"123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signup",
+              "protocol": "http",
+              "host": ["{{endpoint}}"],
+              "port": "{{port}}",
+              "path": ["{{basePath}}", "user", "signup"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "392"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"188-FzP75x3V86ur8m5mjxFt6cmjdkA\""
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 04 Sep 2024 16:37:36 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4M2Y5OTkxLTQ3ZWItNGRjZC05YTU3LTAwOGI2YzNmNmJlOSIsImlhdCI6MTcyNTQ2Nzg1NiwiZXhwIjoxNzI1NTU0MjU2fQ.54lsUAa8c_O_KfdOSRBJCUW75kXfLHCL92T5FyFMUYo\",\n        \"accessExpired\": \"86400\",\n        \"user\": {\n            \"id\": \"483f9991-47eb-4dcd-9a57-008b6c3f6be9\",\n            \"fullName\": \"2 test\",\n            \"lifeRole\": \"my life role\",\n            \"email\": \"test2@example.com\",\n            \"clerkId\": \"123\",\n            \"links\": []\n        }\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "登入",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.globals.set(\"tmp_accessToken2\", pm.response.json()[\"data\"][\"accessToken\"]);\r",
+              "pm.globals.set(\"tmp_userId2\", pm.response.json()[\"data\"][\"user\"][\"id\"])"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"test2@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"provider\": null\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signin",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "user", "signin"]
+        }
+      },
+      "response": [
+        {
+          "name": "user test 1",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"test1@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"provider\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signin",
+              "protocol": "http",
+              "host": ["{{endpoint}}"],
+              "port": "{{port}}",
+              "path": ["{{basePath}}", "user", "signin"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "319"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"13f-jWz4A18XH39Wwy8PXqpoX/Xjh+w\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 01 Sep 2024 11:26:28 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzY2VkMjcxLWQ3NzEtNDE1ZC05YWViLWMyODA1NWYzNmU4ZCIsImlhdCI6MTcyNTE4OTk4OCwiZXhwIjoxNzI1Mjc2Mzg4fQ.sJzafW2gf7jckFX-4TUYd1LQk2z8EFKul8MZPCbJCAY\",\n        \"accessExpired\": \"86400\",\n        \"user\": {\n            \"id\": \"c3ced271-d771-415d-9aeb-c28055f36e8d\",\n            \"email\": \"test1@example.com\"\n        }\n    }\n}"
+        },
+        {
+          "name": "user test 2",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"test2@example.com\",\r\n    \"password\": \"pswd\",\r\n    \"provider\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/signin",
+              "protocol": "http",
+              "host": ["{{endpoint}}"],
+              "port": "{{port}}",
+              "path": ["{{basePath}}", "user", "signin"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "319"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"13f-XiDWz5l/3UQ8G/rdawomSRbRsgU\""
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 26 Aug 2024 06:39:01 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ2NTc4ZDY5LTMwMjgtNGUxNi1iNjI5LTNjM2UwMGU2YjI2NSIsImlhdCI6MTcyNDY1NDM0MSwiZXhwIjoxNzI0NzQwNzQxfQ.kNMzlzA1byIPuZplJu7BHtGEE9rOM-18tXZChag0g0E\",\n        \"accessExpired\": \"86400\",\n        \"user\": {\n            \"id\": \"46578d69-3028-4e16-b629-3c3e00e6b265\",\n            \"email\": \"test2@example.com\"\n        }\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "更新個人資訊",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken2}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\": \"2\",\r\n    \"links\": [],\r\n    \"hashtags\": [\r\n        \"test\",\r\n        \"postman\"\r\n    ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/info",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "user", "info"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "將某用戶視為榜樣",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/{{tmp_userId2}}/follow",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "user", "{{tmp_userId2}}", "follow"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "從榜樣清單中移除榜樣",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/{{tmp_userId2}}/follow",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "user", "{{tmp_userId2}}", "follow"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "取得特定人的所有榜樣清單",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/user/followees?keywords=test",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "user", "followees"],
+          "query": [
+            {
+              "key": "keywords",
+              "value": "test",
+              "description": "要搜尋什麼？用空格隔開關鍵字"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

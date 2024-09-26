@@ -5,10 +5,12 @@ import { GetFootprints } from './Types/api.js';
 export const getFootprintsHandler = {
   handle: async (
     userId: string,
+    isPublicRequest: boolean,
     page: number,
   ): Promise<{ data: GetFootprints.TFootprintResponse }> => {
     const footprints = await footprintService.getFootprintByUserId(
       userId,
+      isPublicRequest,
       page,
     );
     const response = await getFootprintsRes.customize(footprints);
