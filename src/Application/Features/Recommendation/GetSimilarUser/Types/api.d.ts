@@ -7,6 +7,8 @@ declare namespace GetSimilarUser {
     similarity: number;
     startFootprintId: string;
     endFootprintId: string;
+    startFootprintAge: number;
+    endFootprintAge: number;
   }
   interface IGetSimilarUserResponse {
     data: {

@@ -11,7 +11,9 @@ import {
   FOOTPRINT_INTERVAL_SIZE,
   EMBEDDING_WEIGHTS,
   TOTAL_WEIGHT,
+  TOTAL_WEIGHT_WITHOUT_FOOTPRINTS,
 } from '../../Config/constants.js';
+import { EmbeddingServerError } from '../../Errors/errors.js';
 
 export const embeddingService = {
   getEmbeddingBySentences: async (sentences: string[]): Promise<number[][]> => {
@@ -23,6 +25,10 @@ export const embeddingService = {
         headers: { 'Content-Type': 'application/json' },
       },
     );
+
+    if (!res.ok) {
+      throw new EmbeddingServerError();
+    }
 
     const data = (await res.json()) as Embedding.IEmbeddingResponse;
     return data.embeddings;
@@ -37,8 +43,13 @@ export const embeddingService = {
         sentences.push(userInfo.selfIntro);
       }
 
-      const embedding =
-        await embeddingService.getEmbeddingBySentences(sentences);
+      let embedding: number[][] = [];
+      try {
+        embedding = await embeddingService.getEmbeddingBySentences(sentences);
+      } catch (error) {
+        console.error('Error in embedding service ->');
+        throw error;
+      }
 
       const userEmbedding = {
         userId: userInfo.id,
@@ -61,21 +72,41 @@ export const embeddingService = {
     footprintInfo: Embedding.IFootprintDto,
   ): Promise<void> => {
     return Database.transaction(async (transactionManager) => {
-      let titleEmbedding: number[] | undefined;
+      const sentences = [];
+      const mapping: { [key: string]: string } = {};
+
       if (footprintInfo.title) {
-        const res = await embeddingService.getEmbeddingBySentences([
-          footprintInfo.title,
-        ]);
-        titleEmbedding = res[0];
+        sentences.push(footprintInfo.title);
+        mapping[footprintInfo.title] = 'title';
       }
 
-      let contentEmbedding: number[] | undefined;
       if (footprintInfo.content) {
-        const res = await embeddingService.getEmbeddingBySentences([
-          footprintInfo.content,
-        ]);
-        contentEmbedding = res[0];
+        sentences.push(footprintInfo.content);
+        mapping[footprintInfo.content] = 'content';
       }
+
+      let embeddings: number[][] = [];
+
+      if (sentences.length > 0) {
+        try {
+          embeddings =
+            await embeddingService.getEmbeddingBySentences(sentences);
+        } catch (error) {
+          console.error('Error in embedding service ->');
+          throw error;
+        }
+      }
+
+      let titleEmbedding: number[] | undefined;
+      let contentEmbedding: number[] | undefined;
+
+      sentences.forEach((sentence, index) => {
+        if (mapping[sentence] === 'title') {
+          titleEmbedding = embeddings[index];
+        } else {
+          contentEmbedding = embeddings[index];
+        }
+      });
 
       const footprintEmbedding = {
         footprintId: footprintInfo.id,
@@ -99,23 +130,44 @@ export const embeddingService = {
     userInfo: Embedding.IUpdateUserIntroDto,
   ): Promise<void> => {
     return Database.transaction(async (transactionManager) => {
-      let selfIntroEmbedding: number[] | undefined;
+      const sentences = [];
+      const mapping: { [key: string]: string } = {};
+
+      if (userInfo.lifeRole) {
+        sentences.push(userInfo.lifeRole);
+        mapping[userInfo.lifeRole] = 'lifeRole';
+      }
+
       if (userInfo.selfIntro) {
-        const res = await embeddingService.getEmbeddingBySentences([
-          userInfo.selfIntro,
-        ]);
-        selfIntroEmbedding = res[0];
+        sentences.push(userInfo.selfIntro);
+        mapping[userInfo.selfIntro] = 'selfIntro';
+      }
+
+      let embeddings: number[][] = [];
+
+      if (sentences.length > 0) {
+        try {
+          embeddings =
+            await embeddingService.getEmbeddingBySentences(sentences);
+        } catch (error) {
+          console.error('Error in embedding service ->');
+          throw error;
+        }
       }
 
       let lifeRoleEmbedding: number[] | undefined;
-      if (userInfo.lifeRole) {
-        const res = await embeddingService.getEmbeddingBySentences([
-          userInfo.lifeRole,
-        ]);
-        lifeRoleEmbedding = res[0];
-      }
+      let selfIntroEmbedding: number[] | undefined;
+
+      sentences.forEach((sentence, index) => {
+        if (mapping[sentence] === 'lifeRole') {
+          lifeRoleEmbedding = embeddings[index];
+        } else {
+          selfIntroEmbedding = embeddings[index];
+        }
+      });
 
       const userEmbedding = {
+        userId,
         lifeRoleEmbedding: lifeRoleEmbedding ?? undefined,
         selfIntroEmbedding: selfIntroEmbedding ?? undefined,
       };
@@ -136,26 +188,26 @@ export const embeddingService = {
     profileHashTagInfo: Embedding.IProfileHashTagDto,
     transactionManager: EntityManager,
   ): Promise<void> => {
-    const embedding = await embeddingService.getEmbeddingBySentences([
-      profileHashTagInfo.content,
-    ]);
-
-    const profileHashTagEmbedding =
-      await profileHashtagEmbeddingRepo.findByProfileHashTagId(
-        profileHashTagInfo.id,
-        transactionManager,
-      );
-
-    if (profileHashTagEmbedding) {
-      return;
-    }
-
-    const newProfileHashTagEmbedding = {
-      profileHashTagId: profileHashTagInfo.id,
-      contentEmbedding: embedding[0],
-    };
-
     try {
+      const profileHashTagEmbedding =
+        await profileHashtagEmbeddingRepo.findByProfileHashTagId(
+          profileHashTagInfo.id,
+          transactionManager,
+        );
+
+      if (profileHashTagEmbedding) {
+        return;
+      }
+
+      const embedding = await embeddingService.getEmbeddingBySentences([
+        profileHashTagInfo.content,
+      ]);
+
+      const newProfileHashTagEmbedding = {
+        profileHashTagId: profileHashTagInfo.id,
+        contentEmbedding: embedding[0],
+      };
+
       await profileHashtagEmbeddingRepo.insertUserHashTagEmbedding(
         newProfileHashTagEmbedding,
         transactionManager,
@@ -193,6 +245,36 @@ export const embeddingService = {
         newFootprintHashTagEmbedding,
         transactionManager,
       );
+    } catch (error) {
+      console.error('Error in DB ->');
+      throw error;
+    }
+  },
+  getUserWithoutFootprintWeightedEmbedding: async (
+    userId: string,
+  ): Promise<number[]> => {
+    try {
+      const userEmbedding =
+        await userEmbeddingRepo.getUserWithProfileHashTagEmbedding(userId);
+
+      if (!userEmbedding) {
+        throw new EmbeddingServerError();
+      }
+
+      const userEmbeddingWithoutFootprints = {
+        userId: userEmbedding.userId,
+        selfIntro: userEmbedding.selfIntroEmbedding,
+        lifeRole: userEmbedding.lifeRoleEmbedding,
+        profileTags: userEmbedding.profileHashTagsEmbedding,
+        questionnaire: [],
+      };
+
+      const weightedEmbedding =
+        await embeddingService.calculateUserWithoutFootprintWeightedEmbedding(
+          userEmbeddingWithoutFootprints,
+        );
+
+      return weightedEmbedding;
     } catch (error) {
       console.error('Error in DB ->');
       throw error;
@@ -241,7 +323,6 @@ export const embeddingService = {
             title: footprint.titleEmbedding || [],
             content: footprint.contentEmbedding || [],
             tags: footprint.hashTagEmbeddings || [],
-            description: footprint.contentEmbedding || [],
           };
         }),
         questionnaire: [],
@@ -306,7 +387,6 @@ export const embeddingService = {
               title: footprint.titleEmbedding || [],
               content: footprint.contentEmbedding || [],
               tags: footprint.hashTagEmbeddings || [],
-              description: footprint.contentEmbedding || [],
             };
           }),
           questionnaire: [],
@@ -353,6 +433,50 @@ export const embeddingService = {
     addEmbedding(footprint.content, footprintWeights.content);
 
     return footprintEmbedding;
+  },
+
+  calculateUserWithoutFootprintWeightedEmbedding: async (
+    userWithoutFootprintEmbedding: Embedding.IEmbeddingUserWithoutFootprints,
+  ): Promise<number[]> => {
+    const weightedEmbedding = Array(
+      userWithoutFootprintEmbedding.lifeRole.length,
+    ).fill(0);
+
+    const addIntervalEmbedding = (embedding: number[], weight: number) => {
+      for (let i = 0; i < embedding.length; i++) {
+        weightedEmbedding[i] += embedding[i] * weight;
+      }
+    };
+
+    addIntervalEmbedding(
+      userWithoutFootprintEmbedding.lifeRole,
+      EMBEDDING_WEIGHTS.lifeRole,
+    );
+
+    if (userWithoutFootprintEmbedding.selfIntro) {
+      addIntervalEmbedding(
+        userWithoutFootprintEmbedding.selfIntro,
+        EMBEDDING_WEIGHTS.selfIntro,
+      );
+    }
+
+    userWithoutFootprintEmbedding.profileTags.forEach((tagEmbedding) => {
+      addIntervalEmbedding(tagEmbedding, EMBEDDING_WEIGHTS.profileTags);
+    });
+
+    userWithoutFootprintEmbedding.profileTags.forEach((tagEmbedding) => {
+      addIntervalEmbedding(tagEmbedding, EMBEDDING_WEIGHTS.profileTags);
+    });
+
+    userWithoutFootprintEmbedding.questionnaire.forEach((question) => {
+      addIntervalEmbedding(question.answer, EMBEDDING_WEIGHTS.questionnaire);
+    });
+
+    weightedEmbedding.forEach((value, index) => {
+      weightedEmbedding[index] = value / TOTAL_WEIGHT_WITHOUT_FOOTPRINTS;
+    });
+
+    return weightedEmbedding;
   },
 
   calculateUserWeightedEmbedding: async (

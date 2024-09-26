@@ -93,6 +93,8 @@ declare namespace Embedding {
     }[];
   }
 
+  type IEmbeddingUserWithoutFootprints = Omit<IEmbeddingUser, 'footprints'>;
+
   interface IEmbeddingFootprint {
     footPrintId: string;
     title: number[];

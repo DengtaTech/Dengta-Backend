@@ -86,3 +86,9 @@ export class DatabaseError extends BaseError {
     super('Database Error', 500);
   }
 }
+
+export class EmbeddingServerError extends BaseError {
+  constructor() {
+    super('Embedding Server Error', 500);
+  }
+}

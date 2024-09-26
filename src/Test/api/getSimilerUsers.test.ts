@@ -43,6 +43,12 @@ describe('GET /api/1.0/recommendation/similar_users', () => {
 
       expect(similarUser).toHaveProperty('endFootprintId');
       expect(typeof similarUser.endFootprintId).toBe('string');
+
+      expect(similarUser).toHaveProperty('startFootprintAge');
+      expect(typeof similarUser.startFootprintAge).toBe('number');
+
+      expect(similarUser).toHaveProperty('endFootprintAge');
+      expect(typeof similarUser.endFootprintAge).toBe('number');
     }
   });
 });

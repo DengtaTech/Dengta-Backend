@@ -24,3 +24,12 @@ const calculateTotalWeight = (weights: Embedding.IEmbeddingWeights) => {
   }, 0);
 };
 export const TOTAL_WEIGHT = calculateTotalWeight(EMBEDDING_WEIGHTS);
+
+export const TOTAL_WEIGHT_WITHOUT_FOOTPRINTS = calculateTotalWeight({
+  ...EMBEDDING_WEIGHTS,
+  footprints: {
+    title: 0,
+    tags: 0,
+    content: 0,
+  },
+});
