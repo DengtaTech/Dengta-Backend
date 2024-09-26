@@ -464,10 +464,6 @@ export const embeddingService = {
       addIntervalEmbedding(tagEmbedding, EMBEDDING_WEIGHTS.profileTags);
     });
 
-    userWithoutFootprintEmbedding.profileTags.forEach((tagEmbedding) => {
-      addIntervalEmbedding(tagEmbedding, EMBEDDING_WEIGHTS.profileTags);
-    });
-
     userWithoutFootprintEmbedding.questionnaire.forEach((question) => {
       addIntervalEmbedding(question.answer, EMBEDDING_WEIGHTS.questionnaire);
     });
