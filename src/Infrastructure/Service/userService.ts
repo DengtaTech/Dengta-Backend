@@ -12,6 +12,7 @@ import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
 import { User } from '../../Database/Entities/user.js';
 import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
+import { embeddingService } from './embeddingService.js';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -157,6 +158,20 @@ export const userService = {
             .values(newMUserProfileHashTags)
             .orIgnore()
             .execute();
+
+          await Promise.all(
+            newHashtags.map(async (hashTag) => {
+              const hashTagInfo = {
+                id: hashTag.id,
+                content: hashTag.content,
+              };
+
+              await embeddingService.findOrInsertProfileHashTagEmbedding(
+                hashTagInfo,
+                transactionManager,
+              );
+            }),
+          );
         }
 
         await transactionManager.save(user);

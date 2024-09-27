@@ -69,12 +69,6 @@ async function usingRedisExample() {
   }
 }
 
-async function usingMilvusExample() {
-  for (const user of fakeUserCh) {
-    await recommendationService.addUserDataToMilvus(user, 3);
-  }
-}
-
 if (process.env.NODE_ENV !== 'test') {
   try {
     await Database.initialize();
@@ -90,7 +84,6 @@ if (process.env.NODE_ENV !== 'test') {
     (async () => {
       console.log('test');
       await initMilvus(true);
-      // await usingMilvusExample();
       console.log('Milvus initialized successfully');
     })(),
   ]);

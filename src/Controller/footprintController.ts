@@ -77,6 +77,7 @@ export const footprintController = {
     }
 
     const response = await publishFootprintHandler.handle(
+      req.decodedToken.id,
       req.body as PublishFootprint.IPublishFootprintReqBody,
     );
     res.status(200).json(response);

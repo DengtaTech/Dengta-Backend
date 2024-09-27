@@ -18,6 +18,7 @@ import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprin
 import { PatchFootprintSetting } from '../../Application/Features/Footprint/UpdateFootprintSetting/Types/api.js';
 import { MFootprintFootprintHashTag } from '../../Database/Entities/mFootprintFootprintHashTag.js';
 import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFootprintDetail/Types/api.js';
+import { embeddingService } from './embeddingService.js';
 import { Notification } from '../../Database/Entities/notification.js';
 import { notificationRepo } from '../Repository/notificationRepo.js';
 
@@ -142,6 +143,7 @@ export const footprintService = {
           footprintObj,
           transactionManager,
         );
+
         for (const tagContent of footprintObj.tags) {
           let footprintHashTag =
             await footprintHashTagRepo.findOrCreateByContent(
@@ -152,6 +154,14 @@ export const footprintService = {
           await mFootprintFootprintHashTagRepo.insertNewRecord(
             updatedFootprint.id,
             footprintHashTag.id,
+            transactionManager,
+          );
+
+          await embeddingService.findOrinsertFootprintHashTagEmbedding(
+            {
+              id: footprintHashTag.id,
+              content: tagContent,
+            },
             transactionManager,
           );
         }
