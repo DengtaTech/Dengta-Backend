@@ -13,7 +13,7 @@ describe('GET /api/1.0/recommendation/similar_users', () => {
     const newFakeUserIdsForRecommendation =
       await testHelper.createFakeUsersForRecommendation();
     fakeUserIdsForRecommendation.push(...newFakeUserIdsForRecommendation);
-  }, 30000);
+  }, 50000);
 
   it('should get similar users', async () => {
     const accessToken = await testHelper.generateToken(

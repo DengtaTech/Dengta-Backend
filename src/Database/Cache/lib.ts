@@ -5,7 +5,7 @@ import assert from 'assert';
 
 export function newRedis() {
   const client = new Redis({
-    port: 6379,
+    port: Number(process.env.REDIS_PORT),
     host: process.env.REDIS_HOST,
     password: process.env.REDIS_PASSWORD,
   });
