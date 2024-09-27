@@ -10,6 +10,12 @@ export class BaseError extends Error {
   }
 }
 
+export class FootprintNotEnoughError extends BaseError {
+  constructor() {
+    super('Footprint not enough', 403);
+  }
+}
+
 export class EmailExistsError extends BaseError {
   constructor() {
     super('Email already exists', 403);
@@ -78,5 +84,11 @@ export class UnauthorizedError extends BaseError {
 export class DatabaseError extends BaseError {
   constructor() {
     super('Database Error', 500);
+  }
+}
+
+export class EmbeddingServerError extends BaseError {
+  constructor() {
+    super('Embedding Server Error', 500);
   }
 }

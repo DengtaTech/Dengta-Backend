@@ -15,13 +15,16 @@ export class UserEmbedding extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column({ type: 'json', nullable: true })
+  selfIntroEmbedding?: number[];
+
   @Column({ type: 'json', nullable: false })
-  selfIntroEmbedding!: number[];
+  lifeRoleEmbedding!: number[];
 
   @Column({ type: 'varchar', length: 50 })
   userId!: string;
 
-  @OneToOne(() => User, (user) => user.selfIntroEmbedding, {
+  @OneToOne(() => User, (user) => user.embedding, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })

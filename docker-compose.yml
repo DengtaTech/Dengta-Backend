@@ -59,6 +59,8 @@ services:
         target: /data
     networks:
       - backend_network
+    ports:
+      - ${REDIS_PORT}:6379
 
   etcd:
     extends:

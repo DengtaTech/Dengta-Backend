@@ -127,7 +127,7 @@ export class User extends BaseEntity {
   @OneToOne(() => UserEmbedding, (userEmbedding) => userEmbedding.user, {
     cascade: true,
   })
-  selfIntroEmbedding?: Relation<UserEmbedding>;
+  embedding?: Relation<UserEmbedding>;
 
   @OneToMany(() => SearchHistory, (history) => history.user, { cascade: true })
   searchHistories?: Relation<SearchHistory[]>;

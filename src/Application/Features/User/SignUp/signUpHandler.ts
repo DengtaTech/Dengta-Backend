@@ -1,4 +1,5 @@
 import { userService } from '../../../../Infrastructure/Service/userService.js';
+import { embeddingService } from '../../../../Infrastructure/Service/embeddingService.js';
 import { tool } from '../../../../utils/tool.js';
 import { auth } from '../../../../utils/jwt.js';
 import { signUpRes } from './signUpRes.js';
@@ -22,6 +23,13 @@ export const signUpHandler = {
     const result = await userService.signUp(body);
 
     const tokenInfo = await auth.generateAccessToken(result.id);
+
+    await embeddingService.initUserEmbedding({
+      id: result.id,
+      lifeRole: lifeRole,
+      selfIntro: null,
+    });
+
     return await signUpRes.customize(result, tokenInfo);
   },
 };
