@@ -13,7 +13,7 @@ export const EMBEDDING_WEIGHTS: Embedding.IEmbeddingWeights = {
   },
   questionnaire: 0,
 };
-export const RECOMMENDATION_LIMIT = 10;
+export const RECOMMENDATION_LIMIT = 8;
 
 const calculateTotalWeight = (weights: Embedding.IEmbeddingWeights) => {
   return Object.values(weights).reduce((total, weight) => {

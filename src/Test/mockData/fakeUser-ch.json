@@ -90,30 +90,6 @@
         "category": "藝術"
       },
       {
-        "title": "開始學習JavaScript",
-        "tags": ["JavaScript", "程式設計"],
-        "content": "JavaScript是前端開發中最重要的程式設計語言，我正在學習它。",
-        "category": "程式設計"
-      },
-      {
-        "title": "學習前端框架React",
-        "tags": ["React", "JavaScript"],
-        "content": "React是一個流行的前端框架，我希望通過學習它來提升我的前端技能。",
-        "category": "程式設計"
-      },
-      {
-        "title": "設計數位插畫",
-        "tags": ["插畫", "數位設計"],
-        "content": "我設計了多幅數位插畫，這些作品展現了我對數位藝術的興趣。",
-        "category": "藝術"
-      },
-      {
-        "title": "參加線上前端開發課程",
-        "tags": ["線上課程", "前端開發"],
-        "content": "我參加了一個線上課程，專注於前端開發的最佳實踐和工具。",
-        "category": "教育"
-      },
-      {
         "title": "構建個人網站",
         "tags": ["項目", "前端開發"],
         "content": "我正在利用React構建一個個人網站，展示我的藝術作品和程式設計項目。",
@@ -149,44 +125,7 @@
     "selfIntro": "我是資工系畢業生，目前在研究資料科學，但我也對軟體開發很感興趣。",
     "goal": "我希望成為一名資料科學家。",
     "hashtags": ["Python", "資料分析", "機器學習"],
-    "footprints": [
-      {
-        "title": "參與資工系專題項目",
-        "tags": ["資工", "專題"],
-        "content": "在大學期間，我參與了多個資工系的專題項目，積累了不少編程經驗。",
-        "category": "專題"
-      },
-      {
-        "title": "學習Python基礎",
-        "tags": ["Python", "程式設計"],
-        "content": "Python是資料科學中最常用的程式設計語言，我正在學習其基礎知識。",
-        "category": "程式設計"
-      },
-      {
-        "title": "學習資料分析",
-        "tags": ["資料分析", "Python"],
-        "content": "資料分析是資料科學的核心技能之一，我正在學習如何使用Python進行資料分析。",
-        "category": "資料分析"
-      },
-      {
-        "title": "協助教授進行資料處理研究",
-        "tags": ["研究", "資料處理"],
-        "content": "我協助教授進行資料處理的研究工作，這讓我深入理解了資料分析的實際應用。",
-        "category": "研究"
-      },
-      {
-        "title": "學習機器學習",
-        "tags": ["機器學習", "Python"],
-        "content": "機器學習是資料科學中非常重要的一部分，我正在學習相關的算法和技術。",
-        "category": "機器學習"
-      },
-      {
-        "title": "構建資料科學項目",
-        "tags": ["項目", "資料科學"],
-        "content": "我開始構建一個資料科學項目，利用Python進行資料處理和模型訓練。",
-        "category": "項目"
-      }
-    ],
+    "footprints": [],
     "questionnaire": [
       {
         "question": "workDomain",

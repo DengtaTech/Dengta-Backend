@@ -19,10 +19,22 @@ export const recommendationService = {
         userId,
       );
 
-    // 如果用戶沒有interval，則取個人資料做推薦
     if (lastIntervelEmbedding.length === 0) {
-      lastIntervelEmbedding =
-        await embeddingService.getUserWithoutFootprintWeightedEmbedding(userId);
+      const footprintCount =
+        await footprintRepo.getPublishedFootprintCountByUserId(userId);
+
+      // 如果用戶沒有足跡，則直接從用戶資料做推薦
+      if (footprintCount === 0) {
+        lastIntervelEmbedding =
+          await embeddingService.getUserWithoutFootprintWeightedEmbedding(
+            userId,
+          );
+      } else {
+        lastIntervelEmbedding =
+          await embeddingService.getUserPartialIntervalWeightedEmbedding(
+            userId,
+          );
+      }
     }
 
     const goalEmbeddingArr = await embeddingService.getEmbeddingBySentences([

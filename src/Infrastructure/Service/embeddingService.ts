@@ -15,6 +15,16 @@ import {
 } from '../../Config/constants.js';
 import { EmbeddingServerError } from '../../Errors/errors.js';
 
+const addWeightedEmbedding = (
+  embedding: number[],
+  weight: number,
+  targetEmbedding: number[],
+) => {
+  for (let i = 0; i < embedding.length; i++) {
+    targetEmbedding[i] += embedding[i] * weight;
+  }
+};
+
 export const embeddingService = {
   getEmbeddingBySentences: async (sentences: string[]): Promise<number[][]> => {
     const res = await fetch(
@@ -105,6 +115,10 @@ export const embeddingService = {
           titleEmbedding = embeddings[index];
         } else {
           contentEmbedding = embeddings[index];
+
+          if (footprintInfo.title === footprintInfo.content) {
+            titleEmbedding = [...contentEmbedding];
+          }
         }
       });
 
@@ -163,6 +177,10 @@ export const embeddingService = {
           lifeRoleEmbedding = embeddings[index];
         } else {
           selfIntroEmbedding = embeddings[index];
+
+          if (userInfo.selfIntro === userInfo.lifeRole) {
+            lifeRoleEmbedding = [...selfIntroEmbedding];
+          }
         }
       });
 
@@ -280,6 +298,52 @@ export const embeddingService = {
       throw error;
     }
   },
+  getUserPartialIntervalWeightedEmbedding: async (
+    userId: string,
+  ): Promise<number[]> => {
+    try {
+      const userWithProfileHashTagEmbedding =
+        await userEmbeddingRepo.getUserWithProfileHashTagEmbedding(userId);
+
+      if (!userWithProfileHashTagEmbedding) {
+        throw new EmbeddingServerError();
+      }
+
+      const footprintsWithHashTagEmbedding =
+        await footprintEmbeddingRepo.getPublishedFootprintEmbeddingWithAllRelationsByUserId(
+          userId,
+          undefined,
+          undefined,
+        );
+
+      const userEmbedding: Embedding.IEmbeddingUser = {
+        userId: userWithProfileHashTagEmbedding.userId,
+        selfIntro: userWithProfileHashTagEmbedding.selfIntroEmbedding,
+        lifeRole: userWithProfileHashTagEmbedding.lifeRoleEmbedding,
+        profileTags: userWithProfileHashTagEmbedding.profileHashTagsEmbedding,
+        footprints: footprintsWithHashTagEmbedding.map((footprint) => {
+          return {
+            footPrintId: footprint.id,
+            title: footprint.titleEmbedding || [],
+            content: footprint.contentEmbedding || [],
+            tags: footprint.hashTagEmbeddings || [],
+          };
+        }),
+        questionnaire: [],
+      };
+
+      const weightedEmbedding =
+        await embeddingService.calculateUserPartialIntervalWeightedEmbedding(
+          userEmbedding,
+        );
+
+      return weightedEmbedding;
+    } catch (error) {
+      console.error('Error in DB ->');
+      throw error;
+    }
+  },
+
   addNewIntervalInMilvus: async (userId: string): Promise<void> => {
     return Database.transaction(async (transactionManager) => {
       // 檢查是否有interval size數量的footprint
@@ -418,19 +482,25 @@ export const embeddingService = {
   ): Promise<number[]> => {
     const footprintEmbedding = Array(footprint.title.length).fill(0);
 
-    const addEmbedding = (embedding: number[], weight: number) => {
-      for (let i = 0; i < embedding.length; i++) {
-        footprintEmbedding[i] += embedding[i] * weight;
-      }
-    };
-
-    addEmbedding(footprint.title, footprintWeights.title);
+    addWeightedEmbedding(
+      footprint.title,
+      footprintWeights.title,
+      footprintEmbedding,
+    );
 
     footprint.tags.forEach((tagEmbedding) => {
-      addEmbedding(tagEmbedding, footprintWeights.tags);
+      addWeightedEmbedding(
+        tagEmbedding,
+        footprintWeights.tags,
+        footprintEmbedding,
+      );
     });
 
-    addEmbedding(footprint.content, footprintWeights.content);
+    addWeightedEmbedding(
+      footprint.content,
+      footprintWeights.content,
+      footprintEmbedding,
+    );
 
     return footprintEmbedding;
   },
@@ -442,34 +512,88 @@ export const embeddingService = {
       userWithoutFootprintEmbedding.lifeRole.length,
     ).fill(0);
 
-    const addIntervalEmbedding = (embedding: number[], weight: number) => {
-      for (let i = 0; i < embedding.length; i++) {
-        weightedEmbedding[i] += embedding[i] * weight;
-      }
-    };
-
-    addIntervalEmbedding(
+    addWeightedEmbedding(
       userWithoutFootprintEmbedding.lifeRole,
       EMBEDDING_WEIGHTS.lifeRole,
+      weightedEmbedding,
     );
 
     if (userWithoutFootprintEmbedding.selfIntro) {
-      addIntervalEmbedding(
+      addWeightedEmbedding(
         userWithoutFootprintEmbedding.selfIntro,
         EMBEDDING_WEIGHTS.selfIntro,
+        weightedEmbedding,
       );
     }
 
     userWithoutFootprintEmbedding.profileTags.forEach((tagEmbedding) => {
-      addIntervalEmbedding(tagEmbedding, EMBEDDING_WEIGHTS.profileTags);
+      addWeightedEmbedding(
+        tagEmbedding,
+        EMBEDDING_WEIGHTS.profileTags,
+        weightedEmbedding,
+      );
     });
 
     userWithoutFootprintEmbedding.questionnaire.forEach((question) => {
-      addIntervalEmbedding(question.answer, EMBEDDING_WEIGHTS.questionnaire);
+      addWeightedEmbedding(
+        question.answer,
+        EMBEDDING_WEIGHTS.questionnaire,
+        weightedEmbedding,
+      );
     });
 
     weightedEmbedding.forEach((value, index) => {
       weightedEmbedding[index] = value / TOTAL_WEIGHT_WITHOUT_FOOTPRINTS;
+    });
+
+    return weightedEmbedding;
+  },
+  calculateUserPartialIntervalWeightedEmbedding: async (
+    userEmbedding: Embedding.IEmbeddingUser,
+  ): Promise<number[]> => {
+    const weightedEmbedding = Array(userEmbedding.lifeRole.length).fill(0);
+
+    addWeightedEmbedding(
+      userEmbedding.lifeRole,
+      EMBEDDING_WEIGHTS.lifeRole,
+      weightedEmbedding,
+    );
+
+    if (userEmbedding.selfIntro) {
+      addWeightedEmbedding(
+        userEmbedding.selfIntro,
+        EMBEDDING_WEIGHTS.selfIntro,
+        weightedEmbedding,
+      );
+    }
+
+    userEmbedding.profileTags.forEach((tagEmbedding) => {
+      addWeightedEmbedding(
+        tagEmbedding,
+        EMBEDDING_WEIGHTS.profileTags,
+        weightedEmbedding,
+      );
+    });
+
+    for (const footprint of userEmbedding.footprints) {
+      const weightedEmbedding =
+        await embeddingService.calculateFootprintWeightedEmbedding(
+          footprint,
+          EMBEDDING_WEIGHTS.footprints,
+        );
+      addWeightedEmbedding(weightedEmbedding, 1, weightedEmbedding);
+    }
+
+    userEmbedding.questionnaire.forEach((question) => {
+      addWeightedEmbedding(
+        question.answer,
+        EMBEDDING_WEIGHTS.questionnaire,
+        weightedEmbedding,
+      );
+    });
+
+    weightedEmbedding.forEach((value, index) => {
+      weightedEmbedding[index] = value / TOTAL_WEIGHT;
     });
 
     return weightedEmbedding;
@@ -488,23 +612,26 @@ export const embeddingService = {
 
       const intervalEmbedding = Array(userEmbedding.lifeRole.length).fill(0);
 
-      const addIntervalEmbedding = (embedding: number[], weight: number) => {
-        for (let i = 0; i < embedding.length; i++) {
-          intervalEmbedding[i] += embedding[i] * weight;
-        }
-      };
-
-      addIntervalEmbedding(userEmbedding.lifeRole, EMBEDDING_WEIGHTS.lifeRole);
+      addWeightedEmbedding(
+        userEmbedding.lifeRole,
+        EMBEDDING_WEIGHTS.lifeRole,
+        intervalEmbedding,
+      );
 
       if (userEmbedding.selfIntro) {
-        addIntervalEmbedding(
+        addWeightedEmbedding(
           userEmbedding.selfIntro,
           EMBEDDING_WEIGHTS.selfIntro,
+          intervalEmbedding,
         );
       }
 
       userEmbedding.profileTags.forEach((tagEmbedding) => {
-        addIntervalEmbedding(tagEmbedding, EMBEDDING_WEIGHTS.profileTags);
+        addWeightedEmbedding(
+          tagEmbedding,
+          EMBEDDING_WEIGHTS.profileTags,
+          intervalEmbedding,
+        );
       });
 
       for (const footprint of intervalFootprints) {
@@ -513,11 +640,15 @@ export const embeddingService = {
             footprint,
             EMBEDDING_WEIGHTS.footprints,
           );
-        addIntervalEmbedding(weightedEmbedding, 1);
+        addWeightedEmbedding(weightedEmbedding, 1, intervalEmbedding);
       }
 
       userEmbedding.questionnaire.forEach((question) => {
-        addIntervalEmbedding(question.answer, EMBEDDING_WEIGHTS.questionnaire);
+        addWeightedEmbedding(
+          question.answer,
+          EMBEDDING_WEIGHTS.questionnaire,
+          intervalEmbedding,
+        );
       });
 
       intervalEmbedding.forEach((value, index) => {
