@@ -34,14 +34,14 @@ jobs:
         run: |
           docker compose -f /srv/dengta-ci/docker-compose-ci.yml down -v
           docker compose -f /srv/dengta-ci/docker-compose-ci.yml --env-file /srv/dengta-ci/.env.staging up --build -d
+      - name: Wait for Milvus to be Ready
+        run: |
+          ./wait-for-it.sh milvus-standalone-staging:19533 --timeout=300 --strict
       - name: Wait for MySQL to be Ready
         run: |
           wget -O wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
-          ./wait-for-it.sh mysql_staging:3309 --timeout=300 --strict
-      - name: Wait for Milvus to be Ready
-        run: |
-          ./wait-for-it.sh milvus-standalone-staging:19533 --timeout=300 --strict
+          ./wait-for-it.sh mysql-staging:3309 --timeout=300 --strict
       - name: Install
         run: |
           cd /srv/dengta-ci
