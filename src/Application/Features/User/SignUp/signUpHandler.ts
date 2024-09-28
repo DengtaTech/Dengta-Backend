@@ -4,7 +4,6 @@ import { tool } from '../../../../utils/tool.js';
 import { auth } from '../../../../utils/jwt.js';
 import { signUpRes } from './signUpRes.js';
 import { Signup } from './Types/api.js';
-import { In } from 'typeorm';
 import { InputEmptyError } from '../../../../Errors/errors.js';
 
 export const signUpHandler = {
@@ -26,7 +25,7 @@ export const signUpHandler = {
 
     await embeddingService.initUserEmbedding({
       id: result.id,
-      lifeRole: lifeRole,
+      lifeRole: result.lifeRole,
       selfIntro: null,
     });
 

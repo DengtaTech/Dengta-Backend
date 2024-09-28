@@ -31,7 +31,7 @@ beforeAll(async () => {
     fakeUserIds[0],
   );
   fakeNotifications.push(...newFakeNotifications);
-});
+}, 50000);
 
 afterAll(async () => {
   await Database.destroy();

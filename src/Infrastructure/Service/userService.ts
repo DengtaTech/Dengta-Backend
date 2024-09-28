@@ -41,7 +41,7 @@ export const userService = {
           transactionManager,
         );
         await userCredentialRepo.insertNewUser(
-          newUser,
+          newUser.id,
           userInfoObj.password,
           transactionManager,
         );

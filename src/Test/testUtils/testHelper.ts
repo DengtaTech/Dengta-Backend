@@ -21,6 +21,7 @@ import { signUpHandler } from '../../Application/Features/User/SignUp/signUpHand
 import { initFootprintHandler } from '../../Application/Features/Footprint/InitFootprint/initFootprintHandler.js';
 import { publishFootprintHandler } from '../../Application/Features/Footprint/PublishFootprint/publishFootprintHandler.js';
 import { patchUserInfoHandler } from '../../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export type TFootprintJson = Footprint & {
   hashtags: string[];
@@ -62,28 +63,34 @@ export const testHelper = {
     const userDataParsed = JSON.parse(usersJsonFile);
     const userIds: string[] = [];
 
-    const userRepo = dataSource.getRepository(User);
-    const userCredRepo = dataSource.getRepository(UserCredential);
-    const linkRepo = dataSource.getRepository(Link);
+    // const userRepo = dataSource.getRepository(User);
+    // const userCredRepo = dataSource.getRepository(UserCredential);
+    // const linkRepo = dataSource.getRepository(Link);
     const hashtagRepo = dataSource.getRepository(ProfileHashTag);
     const mUserProfileHashTagRepo =
       dataSource.getRepository(MUserProfileHashTag);
 
     for (const userRaw of userDataParsed) {
-      const { password, links, hashtags, ...user } = userRaw;
+      const { password, links, hashtags } = userRaw;
 
-      const newUser = await userRepo.save(user);
-      const userId = newUser.id;
+      const signUpRes = await signUpHandler.handle({
+        firstName: userRaw.firstName,
+        lastName: userRaw.lastName,
+        lifeRole: userRaw.lifeRole,
+        gender: userRaw.gender,
+        birthday: new Date('1990-01-01'),
+        email: userRaw.email,
+        password: password,
+        links: [...links],
+        clerkId: userRaw.clerkId,
+        provider: 'native',
+      });
+      const userId = signUpRes.data.user.id;
       userIds.push(userId);
 
-      const userCredPromise = userCredRepo.save({
-        userId,
-        password,
-      });
-
-      const linksPromise = links.length
-        ? linkRepo.save(links.map((link: Link) => ({ ...link, userId })))
-        : Promise.resolve();
+      // const linksPromise = links.length
+      //   ? linkRepo.save(links.map((link: Link) => ({ ...link, userId })))
+      //   : Promise.resolve();
 
       // Process hashtags
       let hashtagIds: string[] = [];
@@ -125,11 +132,7 @@ export const testHelper = {
           )
         : Promise.resolve();
 
-      await Promise.all([
-        userCredPromise,
-        linksPromise,
-        mUserProfileHashTagPromise,
-      ]);
+      await Promise.all([mUserProfileHashTagPromise]);
     }
 
     return userIds;
@@ -280,7 +283,8 @@ export const testHelper = {
         email: userData.email,
         password: '123456',
         links: [],
-        clerkId: '',
+        clerkId: uuidv4(),
+        provider: 'native',
       });
 
       await patchUserInfoHandler.handle(signUpRes.data.user.id, {
