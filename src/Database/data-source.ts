@@ -25,6 +25,19 @@ import { reactionTypeRepo } from '../Infrastructure/Repository/reactionTypeRepo.
 import { userRepo } from '../Infrastructure/Repository/userRepo.js';
 import { signUpHandler } from '../Application/Features/User/SignUp/signUpHandler.js';
 import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
+import { MUserQuestionItem } from './Entities/mUserQuestionItem.js';
+import { QuestionItem } from './Entities/questionItems.js';
+import { questionItemRepo } from '../Infrastructure/Repository/questionItemRepo.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
+
+const questionnaireItems: QuestionItem['content'] = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'questionnaireItems.json'), 'utf8'),
+);
+
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
@@ -60,6 +73,8 @@ export const Database = new DataSource({
     UserEmbedding,
     ProfileHashTagEmbedding,
     SearchHistory,
+    QuestionItem,
+    MUserQuestionItem,
   ],
 });
 
@@ -70,6 +85,13 @@ export async function initFixedDbData() {
       const newReaction = new ReactionType();
       newReaction.name = reaction;
       await newReaction.save();
+    }
+  }
+
+  for (const item of questionnaireItems) {
+    const maybeExistItem = await questionItemRepo.findByContent(item);
+    if (!maybeExistItem) {
+      await questionItemRepo.insertOne(item);
     }
   }
 
@@ -109,8 +131,9 @@ export async function initFixedDbData() {
       email: adminEmail,
       links: [],
       password: adminPassword,
-      clerkId: 'user_12CWER123....',
+      clerkId: 'user_12CWER123test',
       avatar: '',
+      provider: 'native',
     };
 
     const res = await signUpHandler.handle(admin);

@@ -14,8 +14,8 @@ export class UserCredential extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
-  password!: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  password!: string | null;
 
   @Column({
     type: 'timestamp',
@@ -24,7 +24,7 @@ export class UserCredential extends BaseEntity {
   })
   createdAt!: Date;
 
-  @Column('uuid')
+  @Column({ type: 'varchar', length: 50 })
   userId!: string;
 
   @OneToOne(() => User, (user) => user.userCredential, { onDelete: 'CASCADE' })

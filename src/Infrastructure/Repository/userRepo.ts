@@ -72,15 +72,15 @@ export const userRepo = {
   ): Promise<User> => {
     try {
       const newUser = new User();
+      newUser.id = userInfoObj.clerkId;
       newUser.email = userInfoObj.email;
       newUser.firstName = userInfoObj.firstName;
       newUser.lastName = userInfoObj.lastName;
       newUser.lifeRole = userInfoObj.lifeRole;
       newUser.birthday = userInfoObj.birthday;
       newUser.provider = userInfoObj.provider as string;
-      newUser.avatar = userInfoObj.avatar as string;
+      newUser.avatar = '';
       newUser.gender = userInfoObj.gender;
-      newUser.clerkId = userInfoObj.clerkId;
       const savedUser = await transactionManager.save(newUser);
       return savedUser;
     } catch (error) {

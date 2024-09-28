@@ -23,7 +23,11 @@ export const userService = {
     userInfoObj: Signup.ISignUpReq,
   ): Promise<Signup.ISignUpDto> => {
     // try {
-    const checkUserExist = await userRepo.findByEmail(userInfoObj.email);
+    const checkUserExist = await userRepo.findById(
+      userInfoObj.clerkId,
+      undefined,
+      undefined,
+    );
 
     if (checkUserExist) {
       throw new EmailExistsError();
@@ -37,7 +41,7 @@ export const userService = {
           transactionManager,
         );
         await userCredentialRepo.insertNewUser(
-          newUser,
+          newUser.id,
           userInfoObj.password,
           transactionManager,
         );
@@ -54,7 +58,6 @@ export const userService = {
           fullName: newUser.fullName,
           lifeRole: newUser.lifeRole,
           email: newUser.email,
-          clerkId: newUser.clerkId,
           links: initLinks.map((link) => {
             const { sourceName, url } = link;
             return { sourceName, url };
@@ -74,7 +77,7 @@ export const userService = {
     return {
       id: checkUserExist.id,
       email: checkUserExist.email,
-      password: checkUserExist.userCredential.password,
+      password: checkUserExist.userCredential.password as string,
     };
   },
 

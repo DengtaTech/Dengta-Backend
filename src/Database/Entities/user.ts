@@ -9,6 +9,7 @@ import {
   Index,
   BeforeInsert,
   BeforeUpdate,
+  PrimaryColumn,
 } from 'typeorm';
 import { Footprint } from './footprint.js';
 import { UserCredential } from './userCredential.js';
@@ -20,10 +21,10 @@ import { UserEmbedding } from './userEmbedding.js';
 import { SearchHistory } from './searchHistory.js';
 import { MUserProfileHashTag } from './mUserProfileHashTag.js';
 import { Notification } from './notification.js';
-
+import { MUserQuestionItem } from './mUserQuestionItem.js';
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   id!: string;
 
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
@@ -73,8 +74,8 @@ export class User extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  clerkId!: string | null;
+  // @Column({ type: 'varchar', length: 255, nullable: true })
+  // clerkId!: string | null;
 
   @Column({
     type: 'timestamp',
@@ -135,4 +136,13 @@ export class User extends BaseEntity {
     cascade: true,
   })
   notifications?: Relation<Notification[]>;
+
+  @OneToMany(
+    () => MUserQuestionItem,
+    (mUserQuestionItem) => mUserQuestionItem.user,
+    {
+      cascade: true,
+    },
+  )
+  questionResponses?: Relation<MUserQuestionItem[]>;
 }

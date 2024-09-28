@@ -4,43 +4,28 @@ import { tool } from '../../../../utils/tool.js';
 import { auth } from '../../../../utils/jwt.js';
 import { signUpRes } from './signUpRes.js';
 import { Signup } from './Types/api.js';
+import { InputEmptyError } from '../../../../Errors/errors.js';
 
 export const signUpHandler = {
   handle: async (body: Signup.ISignUpReq): Promise<Signup.ISignUpResponse> => {
-    //init variables
-    const provider: string = 'native';
-    const {
-      firstName,
-      lastName,
-      lifeRole,
-      gender,
-      birthday,
-      email,
-      password,
-      links,
-      clerkId,
-    } = body;
+    if (body.provider !== 'native') {
+      const result = await userService.signUp(body);
+      const tokenInfo = await auth.generateAccessToken(result.id);
+      return await signUpRes.customize(result, tokenInfo);
+    }
+    if (!body.password) throw new InputEmptyError();
+    const hashedPassword = await tool.generateHashPassword(
+      body.password as string,
+    );
+    body.password = hashedPassword;
 
-    const hashedPassword = await tool.generateHashPassword(password);
-    const userInfoObj: Signup.ISignUpReq = {
-      firstName: firstName,
-      lastName: lastName,
-      lifeRole: lifeRole,
-      gender: gender,
-      birthday: birthday,
-      email: email,
-      password: hashedPassword,
-      provider: provider,
-      avatar: '',
-      links: links,
-      clerkId,
-    };
-    const result = await userService.signUp(userInfoObj);
+    const result = await userService.signUp(body);
+
     const tokenInfo = await auth.generateAccessToken(result.id);
 
     await embeddingService.initUserEmbedding({
       id: result.id,
-      lifeRole: lifeRole,
+      lifeRole: result.lifeRole,
       selfIntro: null,
     });
 
