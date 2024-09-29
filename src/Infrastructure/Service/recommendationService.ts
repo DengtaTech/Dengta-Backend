@@ -1,29 +1,48 @@
 import { getMilvusClient } from '../../Database/VectorDB/vector-db.js';
+import { embeddingService } from './embeddingService.js';
+import { milvusUserIntervalsEmbeddingRepo } from '../Repository/milvusUserIntervalsEmbeddingRepo.js';
+import { footprintRepo } from '../Repository/footprintRepo.js';
+import { userRepo } from '../Repository/userRepo.js';
+import {
+  EMBEDDING_WEIGHTS,
+  RECOMMENDATION_LIMIT,
+} from '../../Config/constants.js';
+import { DatabaseError } from '../../Errors/errors.js';
 
 export const recommendationService = {
-  collectSentences(userData: GetSimilarUser.IEmbeddingUserData): string[] {
-    const sentences = [userData.selfIntro, userData.goal];
-    userData.profileTags.forEach((tag) => sentences.push(tag));
-    userData.footPrints.forEach((footPrint) => {
-      sentences.push(footPrint.title);
-      footPrint.tags.forEach((tag) => sentences.push(tag));
-      sentences.push(footPrint.description);
-    });
-    return sentences;
-  },
   getSimilarUsers: async (
     userId: string,
     goal: string,
-    limit: number,
   ): Promise<GetSimilarUser.ISimilarUser[]> => {
-    const lastIntervelEmbedding =
-      await recommendationService.getLastIntervelEmbeddingByUserId(userId);
+    let lastIntervelEmbedding =
+      await milvusUserIntervalsEmbeddingRepo.getLastIntervelEmbeddingByUserId(
+        userId,
+      );
 
-    const goalEmbeddingArr =
-      await recommendationService.getEmbeddingBySentences([goal]);
+    if (lastIntervelEmbedding.length === 0) {
+      const footprintCount =
+        await footprintRepo.getPublishedFootprintCountByUserId(userId);
+
+      // 如果用戶沒有足跡，則直接從用戶資料做推薦
+      if (footprintCount === 0) {
+        lastIntervelEmbedding =
+          await embeddingService.getUserWithoutFootprintWeightedEmbedding(
+            userId,
+          );
+      } else {
+        lastIntervelEmbedding =
+          await embeddingService.getUserPartialIntervalWeightedEmbedding(
+            userId,
+          );
+      }
+    }
+
+    const goalEmbeddingArr = await embeddingService.getEmbeddingBySentences([
+      goal,
+    ]);
     const goalEmbedding = goalEmbeddingArr[0];
 
-    const goalWeight = 0.3;
+    const goalWeight = EMBEDDING_WEIGHTS.goal;
 
     const mixedEmbedding = lastIntervelEmbedding.map((value, index) => {
       return value * (1 - goalWeight) + goalEmbedding[index] * goalWeight;
@@ -35,7 +54,7 @@ export const recommendationService = {
       filter: `userId != '${userId}'`,
       group_by_field: 'userId',
       vector: mixedEmbedding,
-      limit,
+      limit: RECOMMENDATION_LIMIT,
     });
 
     const similarUserIds = res.results.map((result) => {
@@ -44,150 +63,41 @@ export const recommendationService = {
         similarity: result.score,
         startFootprintId: result.startFootprintId,
         endFootprintId: result.endFootprintId,
+        startFootprintAge: 0,
+        endFootprintAge: 0,
       };
     });
-    return similarUserIds;
-  },
-  getEmbeddingBySentences: async (sentences: string[]): Promise<number[][]> => {
-    const res = await fetch(
-      `http://${process.env.EMBEDDING_SERVER_URL}:${process.env.EMBEDDING_SERVER_PORT}/embed`,
-      {
-        method: 'POST',
-        body: JSON.stringify({ sentences }),
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
 
-    const data = (await res.json()) as GetSimilarUser.IEmbeddingResponse;
-    return data.embeddings;
-  },
-  getLastIntervelEmbeddingByUserId: async (
-    userId: string,
-  ): Promise<number[]> => {
-    const milvusClient = getMilvusClient();
-    const res = await milvusClient.query({
-      collection_name: 'user_intervals_embedding',
-      filter: `userId == '${userId}'`,
-      output_fields: ['endFootprintId', 'embedding'],
-    });
-
-    const lastIntervel = res.data.reduce((prev, current) => {
-      return prev.endFootprintId > current.endFootprintId ? prev : current;
-    });
-
-    return lastIntervel.embedding;
-  },
-  calculateUserEmbedding: async (
-    userData: GetSimilarUser.IEmbeddingUserData,
-  ): Promise<GetSimilarUser.IEmbeddingUserVector> => {
-    const sentences = recommendationService.collectSentences(userData);
-
-    const embedding =
-      await recommendationService.getEmbeddingBySentences(sentences);
-
-    let index = 0;
-    const userEmbedding = {
-      userId: userData.userId,
-      selfIntro: embedding[index],
-      goal: embedding[++index],
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      profileTags: userData.profileTags.map((_) => embedding[++index]),
-      footprints: userData.footPrints.map((footPrint) => {
-        return {
-          footPrintId: footPrint.footPrintId,
-          title: embedding[++index],
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          tags: footPrint.tags.map((_) => embedding[++index]),
-          description: embedding[++index],
-        };
-      }),
-    };
-
-    return userEmbedding;
-  },
-
-  getUserWeightedEmbedding: async (
-    userEmbedding: GetSimilarUser.IEmbeddingUserVector,
-    intervalSize: number,
-  ): Promise<GetSimilarUser.IIntervalEmbedding[]> => {
-    const embeddingWeights = {
-      selfIntro: 0.1,
-      goal: 0.3,
-      profileTags: 0.2,
-      footprints: {
-        title: 0.2,
-        tags: 0.1,
-        description: 0.05,
-      },
-      questionnaire: 0.05,
-    };
-
-    const weightedIntervalsEmbedding = [];
-    for (let i = 0; i <= userEmbedding.footprints.length - intervalSize; i++) {
-      const intervalFootprints = userEmbedding.footprints.slice(
-        i,
-        i + intervalSize,
+    // 計算start footprint與end footprint的用戶年齡
+    for (const similarUser of similarUserIds) {
+      const startFootprint = await footprintRepo.findById(
+        similarUser.startFootprintId,
+      );
+      const endFootprint = await footprintRepo.findById(
+        similarUser.endFootprintId,
       );
 
-      const intervalEmbedding = Array(userEmbedding.selfIntro.length).fill(0);
+      if (!startFootprint || !endFootprint) {
+        throw new DatabaseError();
+      }
 
-      const addIntervalEmbedding = (embedding: number[], weight: number) => {
-        for (let i = 0; i < embedding.length; i++) {
-          intervalEmbedding[i] += embedding[i] * weight;
-        }
-      };
+      const user = await userRepo.findById(similarUser.userId);
 
-      addIntervalEmbedding(userEmbedding.selfIntro, embeddingWeights.selfIntro);
+      const birthday = user?.birthday ? new Date(user.birthday) : null;
 
-      addIntervalEmbedding(userEmbedding.goal, embeddingWeights.goal);
+      if (!user || !birthday) {
+        throw new DatabaseError();
+      }
 
-      userEmbedding.profileTags.forEach((tagEmbedding) => {
-        addIntervalEmbedding(tagEmbedding, embeddingWeights.profileTags);
-      });
+      const startFootprintAge =
+        startFootprint.occurAt.getFullYear() - birthday.getFullYear();
+      const endFootprintAge =
+        endFootprint.occurAt.getFullYear() - birthday.getFullYear();
 
-      intervalFootprints.forEach((footprint) => {
-        addIntervalEmbedding(
-          footprint.title,
-          embeddingWeights.footprints.title,
-        );
-        footprint.tags.forEach((tagEmbedding) => {
-          addIntervalEmbedding(tagEmbedding, embeddingWeights.footprints.tags);
-        });
-        addIntervalEmbedding(
-          footprint.description,
-          embeddingWeights.footprints.description,
-        );
-      });
-
-      weightedIntervalsEmbedding.push({
-        userId: userEmbedding.userId,
-        startFootprintId: intervalFootprints[0].footPrintId,
-        endFootprintId:
-          intervalFootprints[intervalFootprints.length - 1].footPrintId,
-        embedding: intervalEmbedding,
-      });
+      similarUser.startFootprintAge = startFootprintAge;
+      similarUser.endFootprintAge = endFootprintAge;
     }
 
-    return weightedIntervalsEmbedding;
-  },
-
-  addUserDataToMilvus: async (
-    userData: GetSimilarUser.IEmbeddingUserData,
-    intervalSize: number,
-  ) => {
-    const userEmbedding =
-      await recommendationService.calculateUserEmbedding(userData);
-
-    const userWeightedIntervalsEmbedding =
-      await recommendationService.getUserWeightedEmbedding(
-        userEmbedding,
-        intervalSize,
-      );
-
-    const milvusClient = getMilvusClient();
-    await milvusClient.insert({
-      collection_name: 'user_intervals_embedding',
-      data: userWeightedIntervalsEmbedding,
-    });
+    return similarUserIds;
   },
 };

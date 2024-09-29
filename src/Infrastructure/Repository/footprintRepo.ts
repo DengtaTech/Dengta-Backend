@@ -57,15 +57,20 @@ export const footprintRepo = {
   },
   findByUserIdWithAllRelations: async (
     userId: User['id'],
+    publicOnly: boolean = false,
     offset: number = 1,
     limit: number = 10,
   ): Promise<View.FootprintDto[]> => {
-    const [footprints] = await buildFootprintWithAllRelationsQuery()
+    const query = buildFootprintWithAllRelationsQuery()
       .where('footprint.userId = :userId', { userId })
+      .andWhere(publicOnly ? 'footprint.status = :status' : '1=1', {
+        status: 'published',
+      })
       .orderBy('footprint.occurAt', 'DESC')
       .skip((offset - 1) * limit)
-      .take(limit)
-      .getManyAndCount();
+      .take(limit);
+
+    const [footprints] = await query.getManyAndCount();
 
     return footprints.map(mapFootprintData);
   },
@@ -89,5 +94,10 @@ export const footprintRepo = {
       );
       throw error;
     }
+  },
+  getPublishedFootprintCountByUserId: async (
+    userId: User['id'],
+  ): Promise<number> => {
+    return await Footprint.count({ where: { userId, status: 'published' } });
   },
 };

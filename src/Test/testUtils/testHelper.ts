@@ -17,6 +17,12 @@ import {
   type NativeReaction,
 } from '../../../src/Application/Features/Footprint/Reaction/Types/reactions.js';
 
+import { signUpHandler } from '../../Application/Features/User/SignUp/signUpHandler.js';
+import { initFootprintHandler } from '../../Application/Features/Footprint/InitFootprint/initFootprintHandler.js';
+import { publishFootprintHandler } from '../../Application/Features/Footprint/PublishFootprint/publishFootprintHandler.js';
+import { patchUserInfoHandler } from '../../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
+import { v4 as uuidv4 } from 'uuid';
+
 export type TFootprintJson = Footprint & {
   hashtags: string[];
   reactions: Record<NativeReaction, number>;
@@ -57,28 +63,34 @@ export const testHelper = {
     const userDataParsed = JSON.parse(usersJsonFile);
     const userIds: string[] = [];
 
-    const userRepo = dataSource.getRepository(User);
-    const userCredRepo = dataSource.getRepository(UserCredential);
-    const linkRepo = dataSource.getRepository(Link);
+    // const userRepo = dataSource.getRepository(User);
+    // const userCredRepo = dataSource.getRepository(UserCredential);
+    // const linkRepo = dataSource.getRepository(Link);
     const hashtagRepo = dataSource.getRepository(ProfileHashTag);
     const mUserProfileHashTagRepo =
       dataSource.getRepository(MUserProfileHashTag);
 
     for (const userRaw of userDataParsed) {
-      const { password, links, hashtags, ...user } = userRaw;
+      const { password, links, hashtags } = userRaw;
 
-      const newUser = await userRepo.save(user);
-      const userId = newUser.id;
+      const signUpRes = await signUpHandler.handle({
+        firstName: userRaw.firstName,
+        lastName: userRaw.lastName,
+        lifeRole: userRaw.lifeRole,
+        gender: userRaw.gender,
+        birthday: new Date('1990-01-01'),
+        email: userRaw.email,
+        password: password,
+        links: [...links],
+        clerkId: userRaw.clerkId,
+        provider: 'native',
+      });
+      const userId = signUpRes.data.user.id;
       userIds.push(userId);
 
-      const userCredPromise = userCredRepo.save({
-        userId,
-        password,
-      });
-
-      const linksPromise = links.length
-        ? linkRepo.save(links.map((link: Link) => ({ ...link, userId })))
-        : Promise.resolve();
+      // const linksPromise = links.length
+      //   ? linkRepo.save(links.map((link: Link) => ({ ...link, userId })))
+      //   : Promise.resolve();
 
       // Process hashtags
       let hashtagIds: string[] = [];
@@ -120,11 +132,7 @@ export const testHelper = {
           )
         : Promise.resolve();
 
-      await Promise.all([
-        userCredPromise,
-        linksPromise,
-        mUserProfileHashTagPromise,
-      ]);
+      await Promise.all([mUserProfileHashTagPromise]);
     }
 
     return userIds;
@@ -256,5 +264,56 @@ export const testHelper = {
     }
 
     return notificationData;
+  },
+  createFakeUsersForRecommendation: async (): Promise<string[]> => {
+    const usertsJsonFile = fs.readFileSync(
+      'src/Test/mockData/fakeUser-ch.json',
+      'utf8',
+    );
+    const userDataParsed = JSON.parse(usertsJsonFile);
+
+    const fakeUserIds: string[] = [];
+    for (const userData of userDataParsed) {
+      const signUpRes = await signUpHandler.handle({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        lifeRole: userData.lifeRole,
+        gender: userData.gender,
+        birthday: new Date('1990-01-01'),
+        email: userData.email,
+        password: '123456',
+        links: [],
+        clerkId: uuidv4(),
+        provider: 'native',
+      });
+
+      await patchUserInfoHandler.handle(signUpRes.data.user.id, {
+        selfIntro: userData.selfIntro,
+        hashtags: userData.hashtags,
+        links: [],
+      });
+
+      for (const footprintData of userData.footprints) {
+        const footprintInitRes = await initFootprintHandler.handle(
+          signUpRes.data.user.id,
+          'draft',
+        );
+
+        await publishFootprintHandler.handle(signUpRes.data.user.id, {
+          footprintId: footprintInitRes.data.footprint.id,
+          title: footprintData.title,
+          content: footprintData.content,
+          tags: footprintData.tags,
+          category: 'career',
+          milestone: false,
+          occurAt: new Date('2021-01-01'),
+          status: 'published',
+        });
+      }
+
+      fakeUserIds.push(signUpRes.data.user.id);
+    }
+
+    return fakeUserIds;
   },
 };

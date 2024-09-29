@@ -1,0 +1,41 @@
+services:
+  mysql:
+    extends:
+      file: docker-compose.yml
+      service: mysql
+
+  cache:
+    extends:
+      file: docker-compose.yml
+      service: cache
+    ports:
+      - ${REDIS_PORT}:6379
+
+  etcd:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: etcd
+
+  minio:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: minio
+
+  milvus:
+    extends:
+      file: ./src/Database/VectorDB/docker-compose.yml
+      service: standalone
+
+volumes:
+  dengta_mysql_volume:
+    name: ${MYSQL_VOLUME_PATH}
+  dengta_milvus_etcd_volume:
+    name: ${MILVUS_ETCD_VOLUME_PATH}
+  dengta_milvus_minio_volume:
+    name: ${MILVUS_MINIO_VOLUME_PATH}
+  dengta_milvus_volume:
+    name: ${MILVUS_VOLUME_PATH}
+
+networks:
+  backend_network:
+    name: dengta_backend_network

@@ -12,7 +12,7 @@ import { ProfileHashTag } from './profileHashTag.js';
 
 @Entity({ name: 'MUserProfileHashTag' })
 export class MUserProfileHashTag extends BaseEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   userId!: string;
 
   @PrimaryColumn('uuid')

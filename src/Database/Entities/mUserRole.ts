@@ -12,7 +12,7 @@ import { Role } from './role.js';
 
 @Entity({ name: 'MUserRole' })
 export class MUserRole extends BaseEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   userId!: string;
 
   @PrimaryColumn('uuid')

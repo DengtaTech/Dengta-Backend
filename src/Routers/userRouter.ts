@@ -45,4 +45,10 @@ router.get(
   wrapAsync(userController.getFootprints),
 );
 
+router.get(
+  '/followees',
+  jwtAuthentication,
+  wrapAsync(userController.searchFollowees),
+);
+
 export default router;

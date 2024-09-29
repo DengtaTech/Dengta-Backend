@@ -6,6 +6,7 @@ import {
   InputEmptyError,
   NoTokenError,
   InvalidInputError,
+  SameOperatingTargetingUserError,
 } from '../Errors/errors.js';
 import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 import { signInHandler } from '../Application/Features/User/SignIn/signInHandler.js';
@@ -17,49 +18,18 @@ import { validatePatchUserInfoReqBody } from '../Application/Features/User/Patch
 import { followHandler } from '../Application/Features/User/Follow/followHandler.js';
 import { unFollowHandler } from '../Application/Features/User/UnFollow/unFollowHandler.js';
 import { getFootprintsHandler } from '../Application/Features/User/GetFootprints/getFootprints.js';
+import { validateSignUpReqBodyReqBody } from '../Application/Features/User/SignUp/Types/signupDto.js';
+import { userService } from '../Infrastructure/Service/userService.js';
+import { searchFolloweesHandler } from '../Application/Features/User/SearchFollowees/searchFolloweesHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
-    const {
-      firstName,
-      lastName,
-      lifeRole,
-      gender,
-      birthday,
-      email,
-      password,
-      links,
-      clerkId,
-    } = req.body;
-    if (
-      !firstName ||
-      !lastName ||
-      !lifeRole ||
-      !gender ||
-      !birthday ||
-      !email ||
-      !password ||
-      !clerkId
-    ) {
-      throw new InputEmptyError();
+    const validationErrors = await validateSignUpReqBodyReqBody(req.body);
+    if (validationErrors.length > 0) {
+      throw new InvalidInputError(validationErrors.join(', '));
     }
-    if (!(await tool.checkEmail(email))) {
-      throw new EmailFormatError();
-    }
-    const birthdayDate = new Date(birthday);
-    const userDto: Signup.ISignUpReq = {
-      firstName,
-      lastName,
-      lifeRole,
-      gender,
-      birthday: birthdayDate,
-      email,
-      password,
-      links,
-      clerkId,
-    };
-    const response = await signUpHandler.handle(userDto);
 
+    const response = await signUpHandler.handle(req.body as Signup.ISignUpReq);
     res.status(200).json(response);
   },
   signIn: async (req: Request, res: Response): Promise<void> => {
@@ -134,6 +104,9 @@ export const userController = {
     if (!followeeId) {
       throw new InvalidInputError('followeeId is inlegal');
     }
+    if (followerId === followeeId) {
+      throw new SameOperatingTargetingUserError();
+    }
 
     const response = await followHandler.handle({ followerId, followeeId });
     res.status(200).json(response);
@@ -148,6 +121,9 @@ export const userController = {
     if (!followeeId) {
       throw new InvalidInputError('followeeId is illegal');
     }
+    if (followerId === followeeId) {
+      throw new SameOperatingTargetingUserError();
+    }
 
     const response = await unFollowHandler.handle({
       followerId,
@@ -159,14 +135,37 @@ export const userController = {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
     }
-
     const { id: userId } = req.decodedToken;
+    const queryUserId = req.params.userId;
+    const isUserIdExists = await userService.isUserIdExists(queryUserId);
+    if (!isUserIdExists) {
+      throw new InvalidInputError('No such user');
+    }
+
     const page = parseInt(req.query.page as string) || 1;
-    if (page < 0) {
+    if (page <= 0) {
       throw new InvalidInputError('page must be a positive integer');
     }
-    const footprints = await getFootprintsHandler.handle(userId, page);
+
+    const isPublicRequest = queryUserId !== userId;
+    const footprints = await getFootprintsHandler.handle(
+      queryUserId,
+      isPublicRequest,
+      page,
+    );
 
     res.status(200).json(footprints);
+  },
+  searchFollowees: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+    const keywords = req.query.keywords;
+    if (typeof keywords !== 'string' && typeof keywords !== 'undefined') {
+      throw new InvalidInputError('keywords must be a string');
+    }
+    const response = await searchFolloweesHandler.handle(userId, keywords);
+    res.status(200).json(response);
   },
 };

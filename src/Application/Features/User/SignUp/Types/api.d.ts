@@ -10,20 +10,20 @@ declare namespace Signup {
     | 'birthday'
     | 'gender'
     | 'email'
-    | 'clerkId'
+    | 'provider'
   > & {
+    clerkId: string;
     links: Dengta.ILink[];
   };
 
   type SignupCredentialsInput = Pick<UserCredential, 'password'>;
 
   interface ISignUpReq extends SignupUserInput, SignupCredentialsInput {
-    provider?: string;
     avatar?: string;
   }
   //Dto專門用於Service層組資料，回傳給Handler用
   interface ISignUpDto
-    extends Pick<User, 'id' | 'fullName' | 'lifeRole' | 'email' | 'clerkId'> {
+    extends Pick<User, 'id' | 'fullName' | 'lifeRole' | 'email'> {
     links: Dengta.ILink[];
   }
   interface ISignUpResponse {

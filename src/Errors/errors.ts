@@ -10,6 +10,12 @@ export class BaseError extends Error {
   }
 }
 
+export class FootprintNotEnoughError extends BaseError {
+  constructor() {
+    super('Footprint not enough', 403);
+  }
+}
+
 export class EmailExistsError extends BaseError {
   constructor() {
     super('Email already exists', 403);
@@ -57,14 +63,32 @@ export class InvalidInputError extends BaseError {
   }
 }
 
+export class SameOperatingTargetingUserError extends BaseError {
+  constructor() {
+    super("Client error - You can't do this to yourself", 400);
+  }
+}
+
 export class EmailFormatError extends BaseError {
   constructor() {
     super('Email format problem', 403);
   }
 }
 
+export class UnauthorizedError extends BaseError {
+  constructor() {
+    super('Unauthorized - Admin privileges required', 403);
+  }
+}
+
 export class DatabaseError extends BaseError {
   constructor() {
     super('Database Error', 500);
+  }
+}
+
+export class EmbeddingServerError extends BaseError {
+  constructor() {
+    super('Embedding Server Error', 500);
   }
 }

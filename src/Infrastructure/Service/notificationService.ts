@@ -1,3 +1,4 @@
+import { UnauthorizedError } from '../../Errors/errors.js';
 import { notificationRepo } from '../Repository/notificationRepo.js';
 import { NotificationRetrieve } from '../../Application/Features/Notification/GetNotification/Types/api.js';
 import { PostOfficialNotification } from '../../Application/Features/Notification/PostOfficialNotification/Types/api.js';
@@ -26,7 +27,7 @@ export const notificationService = {
       const userRoles = await userRepo.getUserRoles(body.senderId);
 
       if (userRoles.some((role) => role.name === 'admin') === false) {
-        throw new Error('Unauthorized');
+        throw new UnauthorizedError();
       }
 
       const allUsers = await userRepo.getAllUsers();
