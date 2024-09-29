@@ -62,8 +62,8 @@ jobs:
             done
           }
 
-          wait_for milvus-standalone-staging 19533 300
-          wait_for mysql-staging 3309 300
+          wait_for localhost 19533 300
+          wait_for localhost 3309 300
       - name: Install
         run: |
           cd /srv/dengta-ci
