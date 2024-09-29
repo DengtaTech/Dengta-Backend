@@ -71,7 +71,7 @@ jobs:
       - name: Run tests
         run: |
           cd /srv/dengta-ci
-          npm test
+          npm run test:ci
       - name: Send Notification to Discord
         if: success()
         uses: appleboy/discord-action@master
