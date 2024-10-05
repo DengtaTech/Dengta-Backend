@@ -2,29 +2,75 @@ import { UserNotFoundError, InvalidInputError } from '../../Errors/errors.js';
 import { userRepo } from '../Repository/userRepo.js';
 import { questionItemRepo } from '../Repository/questionItemRepo.js';
 import { MUserQuestionItem } from '../../Database/Entities/mUserQuestionItem.js';
+import { InsertResponse } from '../../Application/Features/QuestionItem/InsertResponse/Types/api.js';
+import { Database } from '../../Database/data-source.js';
+import { QuestionItem } from '../../Database/Entities/questionItems.js';
+import { In } from 'typeorm';
 
 export const questionItemService = {
   insertQuestionResponse: async (
     userId: string,
-    questionItemId: number,
-    response: string | null,
-  ): Promise<MUserQuestionItem> => {
+    reqBody: InsertResponse.IReqBody,
+  ): Promise<void> => {
     const user = await userRepo.findById(userId);
     if (!user) {
       throw new UserNotFoundError();
     }
+    const { questionRes } = reqBody;
+    const questionIds = questionRes.map((item) => item.id);
+    return Database.transaction(async (transactionManager) => {
+      try {
+        const questionItems = await transactionManager.find(QuestionItem, {
+          where: {
+            id: In(questionIds),
+          },
+        });
+        const foundQuestionIds = questionItems.map((item) => item.id);
+        const missingQuestionIds = questionIds.filter(
+          (id) => !foundQuestionIds.includes(id),
+        );
+        if (missingQuestionIds.length > 0) {
+          throw new Error(
+            `QuestionItems not found: ${missingQuestionIds.join(', ')}`,
+          );
+        }
+        const existingResponses = await transactionManager.find(
+          MUserQuestionItem,
+          {
+            where: { userId, questionItemId: In(questionIds) },
+          },
+        );
+        const existingResponsesMap = new Map<number, MUserQuestionItem>();
+        existingResponses.forEach((response) => {
+          existingResponsesMap.set(response.questionItemId, response);
+        });
 
-    const questionItem = await questionItemRepo.findById(questionItemId); // Assuming you have a questionRepo
-    if (!questionItem) {
-      throw new InvalidInputError('Question item not found');
-    }
+        const responsesToSave: MUserQuestionItem[] = [];
+        const currentDate = new Date();
 
-    const userQuestionItem = new MUserQuestionItem();
-    userQuestionItem.userId = userId;
-    userQuestionItem.questionItemId = questionItemId;
-    userQuestionItem.response = response;
+        for (const item of questionRes) {
+          let mUserQuestionItem = existingResponsesMap.get(item.id);
 
-    return await userQuestionItem.save();
+          if (mUserQuestionItem) {
+            mUserQuestionItem.response = item.response;
+            mUserQuestionItem.updatedAt = currentDate;
+          } else {
+            mUserQuestionItem = new MUserQuestionItem();
+            mUserQuestionItem.userId = userId;
+            mUserQuestionItem.questionItemId = item.id;
+            mUserQuestionItem.response = item.response;
+          }
+
+          responsesToSave.push(mUserQuestionItem);
+        }
+
+        // 批量更新插入所有紀錄
+        await transactionManager.save(responsesToSave);
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
   },
   getAllQuestionItems: async () => {
     return await questionItemRepo.getAllItems();

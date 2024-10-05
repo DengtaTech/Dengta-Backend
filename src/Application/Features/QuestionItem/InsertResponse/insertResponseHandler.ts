@@ -1,4 +1,3 @@
-import { MUserQuestionItem } from '../../../../Database/Entities/mUserQuestionItem.js';
 import { questionItemService } from '../../../../Infrastructure/Service/questionItemService.js';
 import { insertResponseRes } from './insertResponseRes.js';
 import { InsertResponse } from './Types/api.js';
@@ -6,17 +5,9 @@ import { InsertResponse } from './Types/api.js';
 export const insertResponseHandler = {
   handle: async (
     userId: string,
-    questionItemId: number,
-    response: MUserQuestionItem['response'],
+    reqBody: InsertResponse.IReqBody,
   ): Promise<InsertResponse.TRes> => {
-    const userQuestionItem = await questionItemService.insertQuestionResponse(
-      userId,
-      questionItemId,
-      response,
-    );
-    if (!userQuestionItem) {
-      throw new Error('Failed to insert response');
-    }
+    await questionItemService.insertQuestionResponse(userId, reqBody);
     return insertResponseRes.customize();
   },
 };
