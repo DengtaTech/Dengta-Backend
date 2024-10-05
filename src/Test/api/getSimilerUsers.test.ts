@@ -32,8 +32,8 @@ describe('GET /api/1.0/recommendation/similar_users', () => {
     expect(similarUsers.length).toBe(RECOMMENDATION_LIMIT);
 
     for (const similarUser of similarUsers) {
-      expect(similarUser).toHaveProperty('userId');
-      expect(typeof similarUser.userId).toBe('string');
+      expect(similarUser).toHaveProperty('user');
+      expect(typeof similarUser.user.id).toBe('string');
 
       expect(similarUser).toHaveProperty('similarity');
       expect(typeof similarUser.similarity).toBe('number');
@@ -68,8 +68,8 @@ describe('GET /api/1.0/recommendation/similar_users', () => {
     expect(similarUsers.length).toBe(RECOMMENDATION_LIMIT);
 
     for (const similarUser of similarUsers) {
-      expect(similarUser).toHaveProperty('userId');
-      expect(typeof similarUser.userId).toBe('string');
+      expect(similarUser).toHaveProperty('user');
+      expect(typeof similarUser.user.id).toBe('string');
 
       expect(similarUser).toHaveProperty('similarity');
       expect(typeof similarUser.similarity).toBe('number');
@@ -104,8 +104,8 @@ describe('GET /api/1.0/recommendation/similar_users', () => {
     expect(similarUsers.length).toBe(RECOMMENDATION_LIMIT);
 
     for (const similarUser of similarUsers) {
-      expect(similarUser).toHaveProperty('userId');
-      expect(typeof similarUser.userId).toBe('string');
+      expect(similarUser).toHaveProperty('user');
+      expect(typeof similarUser.user.id).toBe('string');
 
       expect(similarUser).toHaveProperty('similarity');
       expect(typeof similarUser.similarity).toBe('number');

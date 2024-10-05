@@ -1,9 +1,15 @@
+import { User } from '@zilliz/milvus2-sdk-node';
+
 declare namespace GetSimilarUser {
   interface IGetSimilarUserReq {
     goal: string;
   }
-  interface ISimilarUser {
-    userId: string;
+  interface ISimilarUser
+    extends Pick<User, 'id' | 'fullName' | 'lifeRole' | 'selfIntro'> {
+    hashtags: string[];
+  }
+  interface ISimilarUserDto {
+    user: ISimilarUser;
     similarity: number;
     startFootprintId: string;
     endFootprintId: string;
@@ -12,7 +18,7 @@ declare namespace GetSimilarUser {
   }
   interface IGetSimilarUserResponse {
     data: {
-      similarUsers: ISimilarUser[];
+      similarUsers: ISimilarUserDto[];
     };
   }
 }
