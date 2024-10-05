@@ -50,5 +50,5 @@ export class PublishFootprintDto {
 
   @IsNotEmpty()
   @IsArray()
-  tags!: string[];
+  hashtags!: string[];
 }
