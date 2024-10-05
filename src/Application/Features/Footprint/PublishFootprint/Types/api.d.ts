@@ -8,7 +8,7 @@ declare namespace PublishFootprint {
       Footprint,
       'title' | 'content' | 'category' | 'milestone' | 'occurAt' | 'status'
     > {
-    tags: string[];
+    hashtags: string[];
     footprintId: string;
   }
   // 未來需要再回傳 tags 因為還額外多query或join

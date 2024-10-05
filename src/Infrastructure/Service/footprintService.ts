@@ -144,7 +144,7 @@ export const footprintService = {
           transactionManager,
         );
 
-        for (const tagContent of footprintObj.tags) {
+        for (const tagContent of footprintObj.hashtags) {
           let footprintHashTag =
             await footprintHashTagRepo.findOrCreateByContent(
               tagContent,
@@ -191,19 +191,19 @@ export const footprintService = {
       throw new FootprintNotFoundError();
     }
 
-    const { tags, ...otherFields } = updateFields;
+    const { hashtags, ...otherFields } = updateFields;
 
     Object.assign(footprint, otherFields);
     // transaction begin
     return Database.transaction(async (transactionManager) => {
       try {
-        if (tags && tags.length > 0) {
+        if (hashtags && hashtags.length > 0) {
           await transactionManager.delete(MFootprintFootprintHashTag, {
             footprintId: footprint.id,
           });
 
           const newHashtags = await Promise.all(
-            tags.map((hashtag) => {
+            hashtags.map((hashtag) => {
               return footprintHashTagRepo.findOrCreateByContent(
                 hashtag,
                 transactionManager,

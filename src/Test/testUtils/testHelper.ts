@@ -303,7 +303,7 @@ export const testHelper = {
           footprintId: footprintInitRes.data.footprint.id,
           title: footprintData.title,
           content: footprintData.content,
-          tags: footprintData.tags,
+          hashtags: footprintData.tags,
           category: 'career',
           milestone: false,
           occurAt: new Date('2021-01-01'),

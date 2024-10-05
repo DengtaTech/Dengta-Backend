@@ -8,12 +8,14 @@ import {
   RECOMMENDATION_LIMIT,
 } from '../../Config/constants.js';
 import { DatabaseError } from '../../Errors/errors.js';
+import { GetSimilarUser } from '../../Application/Features/Recommendation/GetSimilarUser/Types/api.js';
+import { followshipRepo } from '../Repository/followshipRepo.js';
 
 export const recommendationService = {
   getSimilarUsers: async (
     userId: string,
     goal: string,
-  ): Promise<GetSimilarUser.ISimilarUser[]> => {
+  ): Promise<GetSimilarUser.ISimilarUserDto[]> => {
     let lastIntervelEmbedding =
       await milvusUserIntervalsEmbeddingRepo.getLastIntervelEmbeddingByUserId(
         userId,
@@ -59,7 +61,14 @@ export const recommendationService = {
 
     const similarUserIds = res.results.map((result) => {
       return {
-        userId: result.userId,
+        user: {
+          id: result.userId,
+          fullName: '',
+          lifeRole: '',
+          selfIntro: ('' as string) || null,
+          followerCount: 0,
+          hashtags: ([] as string[]) || [],
+        },
         similarity: result.score,
         startFootprintId: result.startFootprintId,
         endFootprintId: result.endFootprintId,
@@ -81,13 +90,25 @@ export const recommendationService = {
         throw new DatabaseError();
       }
 
-      const user = await userRepo.findById(similarUser.userId);
+      const user = await userRepo.findById(similarUser.user.id, undefined, [
+        'mUserProfileHashTag',
+        'mUserProfileHashTag.profileHashTag',
+      ]);
 
-      const birthday = user?.birthday ? new Date(user.birthday) : null;
-
-      if (!user || !birthday) {
+      if (!user) {
         throw new DatabaseError();
       }
+      const followerCount = await followshipRepo.getFollowerCountByUserId(
+        user.id,
+      );
+      similarUser.user.fullName = user.fullName;
+      similarUser.user.lifeRole = user.lifeRole;
+      similarUser.user.selfIntro = user.selfIntro;
+      similarUser.user.hashtags = user.hashtags;
+      similarUser.user.followerCount = followerCount;
+
+      if (!user.birthday) throw new DatabaseError();
+      const birthday = new Date(user.birthday);
 
       const startFootprintAge =
         startFootprint.occurAt.getFullYear() - birthday.getFullYear();
@@ -97,7 +118,6 @@ export const recommendationService = {
       similarUser.startFootprintAge = startFootprintAge;
       similarUser.endFootprintAge = endFootprintAge;
     }
-
     return similarUserIds;
   },
 };

@@ -43,5 +43,5 @@ export class PatchFootprintSettingReqBodyDto {
 
   @IsNotEmpty()
   @IsArray()
-  tags!: string[];
+  hashtags!: string[];
 }

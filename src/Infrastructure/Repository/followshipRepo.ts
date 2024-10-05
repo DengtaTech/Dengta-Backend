@@ -50,4 +50,10 @@ export const followshipRepo = {
       await followship.remove();
     }
   },
+  getFollowerCountByUserId: async (userId: string): Promise<number> => {
+    const count = await Followship.count({
+      where: { followeeId: userId },
+    });
+    return count;
+  },
 };
