@@ -11,7 +11,7 @@ export const userRepo = {
     userId: string,
     transactionManager?: EntityManager | undefined,
     joinColumns?: string[],
-  ): Promise<User | GetUserInfo.UserWithHashtags | null> => {
+  ): Promise<GetUserInfo.UserWithHashtagsAndLinks | null> => {
     try {
       const findOneOptions = {
         where: { id: userId },
@@ -26,27 +26,36 @@ export const userRepo = {
       }
 
       if (user) {
-        if (joinColumns?.includes('links') && user.links) {
-          user.links = user.links.map((link) => {
-            const { sourceName, url } = link;
-            return { sourceName, url };
-          }) as Relation<Link[]>;
+        // 處理 links
+        if (joinColumns?.includes('links')) {
+          if (user.links && user.links.length > 0) {
+            user.links = user.links.map((link) => {
+              const { sourceName, url } = link;
+              return { sourceName, url };
+            }) as Relation<Link[]>;
+          } else {
+            user.links = [] as Relation<Link[]>;
+          }
         }
 
+        // 處理 mUserProfileHashTag，並改名為 hashtags
         if (
           joinColumns?.includes('mUserProfileHashTag') &&
-          joinColumns?.includes('mUserProfileHashTag.profileHashTag') &&
-          user.mUserProfileHashTag
+          joinColumns?.includes('mUserProfileHashTag.profileHashTag')
         ) {
-          const userWithHashtags = {
-            ...user,
-            hashtags: user.mUserProfileHashTag.map(
+          if (user.mUserProfileHashTag && user.mUserProfileHashTag.length > 0) {
+            const hashtags = user.mUserProfileHashTag.map(
               (hashTag) => hashTag.profileHashTag?.content,
-            ) as string[],
-          } as GetUserInfo.UserWithHashtags;
-          delete userWithHashtags.mUserProfileHashTag;
-          return userWithHashtags;
+            ) as string[];
+            delete user.mUserProfileHashTag;
+            (user as any).hashtags = hashtags; // 添加新的 hashtags 屬性
+          } else {
+            // 如果 mUserProfileHashTag 不存在或為空，設置 hashtags 為空陣列
+            delete user.mUserProfileHashTag;
+            (user as any).hashtags = [];
+          }
         }
+        return user as GetUserInfo.UserWithHashtagsAndLinks;
       }
       return user;
     } catch (error) {
