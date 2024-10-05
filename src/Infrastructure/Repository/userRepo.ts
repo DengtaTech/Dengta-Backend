@@ -18,46 +18,41 @@ export const userRepo = {
         relations: joinColumns,
       };
 
-      let user: User | null;
-      if (transactionManager) {
-        user = await transactionManager.findOne(User, findOneOptions);
-      } else {
-        user = await User.findOne(findOneOptions);
+      const user = transactionManager
+        ? await transactionManager.findOne(User, findOneOptions)
+        : await User.findOne(findOneOptions);
+      if (!user) {
+        return null;
       }
-
-      if (user) {
-        // 處理 links
-        if (joinColumns?.includes('links')) {
-          if (user.links && user.links.length > 0) {
-            user.links = user.links.map((link) => {
-              const { sourceName, url } = link;
-              return { sourceName, url };
-            }) as Relation<Link[]>;
-          } else {
-            user.links = [] as Relation<Link[]>;
-          }
+      // 處理 links
+      if (joinColumns?.includes('links')) {
+        if (user.links && user.links.length > 0) {
+          user.links = user.links.map((link) => {
+            const { sourceName, url } = link;
+            return { sourceName, url };
+          }) as Relation<Link[]>;
+        } else {
+          user.links = [] as Relation<Link[]>;
         }
-
-        // 處理 mUserProfileHashTag，並改名為 hashtags
-        if (
-          joinColumns?.includes('mUserProfileHashTag') &&
-          joinColumns?.includes('mUserProfileHashTag.profileHashTag')
-        ) {
-          if (user.mUserProfileHashTag && user.mUserProfileHashTag.length > 0) {
-            const hashtags = user.mUserProfileHashTag.map(
-              (hashTag) => hashTag.profileHashTag?.content,
-            ) as string[];
-            delete user.mUserProfileHashTag;
-            (user as any).hashtags = hashtags; // 添加新的 hashtags 屬性
-          } else {
-            // 如果 mUserProfileHashTag 不存在或為空，設置 hashtags 為空陣列
-            delete user.mUserProfileHashTag;
-            (user as any).hashtags = [];
-          }
-        }
-        return user as GetUserInfo.UserWithHashtagsAndLinks;
       }
-      return user;
+      // 處理 mUserProfileHashTag，並改名為 hashtags
+      if (
+        joinColumns?.includes('mUserProfileHashTag') &&
+        joinColumns?.includes('mUserProfileHashTag.profileHashTag')
+      ) {
+        if (user.mUserProfileHashTag && user.mUserProfileHashTag.length > 0) {
+          const hashtags = user.mUserProfileHashTag.map(
+            (hashTag) => hashTag.profileHashTag?.content,
+          ) as string[];
+          delete user.mUserProfileHashTag;
+          (user as any).hashtags = hashtags; // 添加新的 hashtags 屬性
+        } else {
+          // 如果 mUserProfileHashTag 不存在或為空，設置 hashtags 為空陣列
+          delete user.mUserProfileHashTag;
+          (user as any).hashtags = [];
+        }
+      }
+      return user as GetUserInfo.UserWithHashtagsAndLinks;
     } catch (error) {
       console.error('Error finding user by id:', error);
       throw error;
