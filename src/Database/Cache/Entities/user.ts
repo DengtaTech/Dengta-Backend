@@ -12,13 +12,13 @@ export class User extends BaseEntity {
 
   public static async getById(
     id: number,
-  ): Promise<Dengta.Cache.IUserDetailObject | undefined> {
+  ): Promise<DengtaC.Cache.IUserDetailObject | undefined> {
     return await super.get<User>(id);
   }
 
   public static async setById(
     id: number,
-    value: Dengta.Cache.IUserDetailObject,
+    value: DengtaC.Cache.IUserDetailObject,
     expireTime?: Partial<KeyToType<Property<User>, number>> | undefined,
   ) {
     await super.set<User>(id, value, expireTime);

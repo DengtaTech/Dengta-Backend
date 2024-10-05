@@ -1,6 +1,5 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   BaseEntity,
   OneToMany,
@@ -49,7 +48,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 50, nullable: false })
   lifeRole!: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'date', nullable: false })
   birthday!: Date;
 
   @Column({ type: 'varchar', default: 'native' })

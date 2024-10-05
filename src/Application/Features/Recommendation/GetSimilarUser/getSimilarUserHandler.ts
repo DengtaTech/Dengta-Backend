@@ -1,5 +1,6 @@
 import { recommendationService } from '../../../../Infrastructure/Service/recommendationService.js';
 import { getSimilarUserRes } from './getSimilarUserRes.js';
+import { GetSimilarUser } from './Types/api.js';
 
 export const getSimilarUserHandler = {
   getSimilarUser: async (
