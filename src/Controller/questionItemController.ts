@@ -1,13 +1,7 @@
 import { Request, Response } from 'express';
-import {
-  InputEmptyError,
-  InvalidInputError,
-  NoTokenError,
-} from '../Errors/errors.js';
-import { MUserQuestionItem } from '../Database/Entities/mUserQuestionItem.js';
+import { InvalidInputError, NoTokenError } from '../Errors/errors.js';
 import { insertResponseHandler } from '../Application/Features/QuestionItem/InsertResponse/insertResponseHandler.js';
 import { getAllQuestionItemsHandler } from '../Application/Features/QuestionItem/GetAllQuestionItems/getAllQuestionItemsHandler.js';
-import { InsertResponse } from '../Application/Features/QuestionItem/InsertResponse/Types/api.js';
 import { validateInsertResponseReqBody } from '../Application/Features/QuestionItem/InsertResponse/Types/insertResDto.js';
 export const questionItemController = {
   insertQuestionResponse: async (req: Request, res: Response) => {

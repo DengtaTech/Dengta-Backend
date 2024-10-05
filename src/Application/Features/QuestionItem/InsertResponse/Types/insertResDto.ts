@@ -1,18 +1,14 @@
 import {
-  IsOptional,
-  IsString,
   ValidateNested,
   validate,
   IsArray,
   IsNumber,
   IsNotEmpty,
-  IsDefined,
-  ValidateIf,
   registerDecorator,
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-import { Expose, plainToInstance, Type } from 'class-transformer';
+import { plainToInstance, Type } from 'class-transformer';
 import { extractErrors } from '../../../../../Errors/errors.js';
 
 export function IsStringOrNull(validationOptions?: ValidationOptions) {
