@@ -6,7 +6,7 @@ import { jwtAuthentication } from '../Middlewares/auth.js';
 const questionRouter = Router();
 
 questionRouter.post(
-  '/:questionItemId',
+  '/response',
   jwtAuthentication,
   wrapAsync(questionItemController.insertQuestionResponse),
 );
