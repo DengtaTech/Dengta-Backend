@@ -11,7 +11,7 @@ describe('GET /api/1.0/recommendation/similar_users', () => {
     await initMilvus(true);
 
     const newFakeUserIdsForRecommendation =
-      await testHelper.createFakeUsersForRecommendation();
+      await testHelper.createFakeUsersForRecommendation(12);
     fakeUserIdsForRecommendation.push(...newFakeUserIdsForRecommendation);
   }, 100000);
 
