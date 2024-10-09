@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
 import 'reflect-metadata';
-import { Database, initFixedDbData } from './Database/data-source.js';
+import {
+  Database,
+  initFakeData,
+  initFixedDbData,
+} from './Database/data-source.js';
 import { initMilvus } from './Database/VectorDB/vector-db.js';
 import fs from 'fs';
 import path from 'path';
@@ -77,7 +81,6 @@ if (process.env.NODE_ENV !== 'test') {
   } catch (err) {
     console.error('Failed to initialize the database:', err);
   }
-
   await initFixedDbData();
   initDbCache();
   console.log('all database initialized successfully');
@@ -87,6 +90,8 @@ if (process.env.NODE_ENV !== 'test') {
       console.log('test');
       await initMilvus(true);
       console.log('Milvus initialized successfully');
+      // 給前端用的假資料
+      await initFakeData();
     })(),
   ]);
 

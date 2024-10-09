@@ -1,8 +1,6 @@
 import { DataSource } from 'typeorm';
 import fs from 'fs';
-import { User } from '../../../src/Database/Entities/user.js';
-import { UserCredential } from '../../../src/Database/Entities/userCredential.js';
-import { Link } from '../../../src/Database/Entities/link.js';
+import { Readable } from 'stream';
 import { MUserProfileHashTag } from '../../../src/Database/Entities/mUserProfileHashTag.js';
 import { ProfileHashTag } from '../../Database/Entities/profileHashTag.js';
 import { Footprint } from '../../../src/Database/Entities/footprint.js';
@@ -22,7 +20,12 @@ import { initFootprintHandler } from '../../Application/Features/Footprint/InitF
 import { publishFootprintHandler } from '../../Application/Features/Footprint/PublishFootprint/publishFootprintHandler.js';
 import { patchUserInfoHandler } from '../../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
 import { v4 as uuidv4 } from 'uuid';
-
+import path from 'path';
+import { uploadAvatarHandler } from '../../Application/Features/User/UploadAvatar/uploadAvatarHandler.js';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 export type TFootprintJson = Footprint & {
   hashtags: string[];
   reactions: Record<NativeReaction, number>;
@@ -273,27 +276,65 @@ export const testHelper = {
     const userDataParsed = JSON.parse(usertsJsonFile);
 
     const fakeUserIds: string[] = [];
-    for (const userData of userDataParsed) {
+    const uploadPromises = [];
+    for (const [index, userRaw] of userDataParsed.entries()) {
       const signUpRes = await signUpHandler.handle({
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        lifeRole: userData.lifeRole,
-        gender: userData.gender,
+        firstName: userRaw.firstName,
+        lastName: userRaw.lastName,
+        lifeRole: userRaw.lifeRole,
+        gender: userRaw.gender,
         birthday: new Date('1990-01-01'),
-        email: userData.email,
-        password: '123456',
+        email: userRaw.email,
+        password: 'test',
         links: [],
-        clerkId: uuidv4(),
+        clerkId: userRaw.clerkId,
         provider: 'native',
       });
 
       await patchUserInfoHandler.handle(signUpRes.data.user.id, {
-        selfIntro: userData.selfIntro,
-        hashtags: userData.hashtags,
+        selfIntro: userRaw.selfIntro,
+        hashtags: userRaw.hashtags,
         links: [],
       });
+      const avatarFilename = `avatar${index + 1}.jpg`;
+      const avatarPath = path.join(
+        'src/Test/mockData',
+        'avatars',
+        avatarFilename,
+      );
+      if (fs.existsSync(avatarPath)) {
+        const fileBuffer = fs.readFileSync(avatarPath);
 
-      for (const footprintData of userData.footprints) {
+        const mockFile: Express.Multer.File = {
+          fieldname: 'avatar',
+          originalname: avatarFilename,
+          encoding: '7bit',
+          mimetype: 'image/jpeg',
+          buffer: fileBuffer,
+          size: fileBuffer.length,
+          stream: Readable.from(fileBuffer),
+          destination: '',
+          filename: '',
+          path: '',
+        };
+
+        const uploadPromise = uploadAvatarHandler
+          .handle(signUpRes.data.user.id, mockFile)
+          .catch((error) => {
+            console.error(
+              `Failed to upload avatar for user ${signUpRes.data.user.id}:`,
+              error,
+            );
+          });
+
+        uploadPromises.push(uploadPromise);
+      } else {
+        console.warn(
+          `Avatar file not found for user ${signUpRes.data.user.id}: ${avatarFilename}`,
+        );
+      }
+
+      for (const footprintData of userRaw.footprints) {
         const footprintInitRes = await initFootprintHandler.handle(
           signUpRes.data.user.id,
           'draft',
@@ -313,7 +354,7 @@ export const testHelper = {
 
       fakeUserIds.push(signUpRes.data.user.id);
     }
-
+    await Promise.all(uploadPromises);
     return fakeUserIds;
   },
 };

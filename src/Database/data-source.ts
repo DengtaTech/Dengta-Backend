@@ -31,6 +31,7 @@ import { questionItemRepo } from '../Infrastructure/Repository/questionItemRepo.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { testHelper } from '../Test/testUtils/testHelper.js';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
@@ -150,4 +151,8 @@ export async function initFixedDbData() {
 
     await mUserRole.save();
   }
+}
+
+export async function initFakeData() {
+  await testHelper.createFakeUsersForRecommendation();
 }
