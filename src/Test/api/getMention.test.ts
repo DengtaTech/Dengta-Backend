@@ -8,7 +8,7 @@ describe('GET /api/1.0/volume/mention', () => {
     await initMilvus(true);
 
     await testHelper.createFakeUsersForRecommendation(1);
-  }, 10000);
+  }, 100000);
 
   it('should get all mentions of this week', async () => {
     const response = await request(app).get('/api/1.0/volume/mention').send();

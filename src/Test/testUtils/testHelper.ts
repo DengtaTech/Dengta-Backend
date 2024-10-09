@@ -19,13 +19,9 @@ import { signUpHandler } from '../../Application/Features/User/SignUp/signUpHand
 import { initFootprintHandler } from '../../Application/Features/Footprint/InitFootprint/initFootprintHandler.js';
 import { publishFootprintHandler } from '../../Application/Features/Footprint/PublishFootprint/publishFootprintHandler.js';
 import { patchUserInfoHandler } from '../../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
-import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import { uploadAvatarHandler } from '../../Application/Features/User/UploadAvatar/uploadAvatarHandler.js';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+
 export type TFootprintJson = Footprint & {
   hashtags: string[];
   reactions: Record<NativeReaction, number>;
