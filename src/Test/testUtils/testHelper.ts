@@ -268,7 +268,7 @@ export const testHelper = {
 
     return notificationData;
   },
-  createFakeUsersForRecommendation: async (): Promise<string[]> => {
+  createFakeUsersForRecommendation: async (userNumber: number) => {
     const usertsJsonFile = fs.readFileSync(
       'src/Test/mockData/fakeUser-ch.json',
       'utf8',
@@ -276,6 +276,7 @@ export const testHelper = {
     const userDataParsed = JSON.parse(usertsJsonFile);
 
     const fakeUserIds: string[] = [];
+    let counter = 0;
     const uploadPromises = [];
     for (const [index, userRaw] of userDataParsed.entries()) {
       const signUpRes = await signUpHandler.handle({
@@ -353,6 +354,11 @@ export const testHelper = {
       }
 
       fakeUserIds.push(signUpRes.data.user.id);
+
+      counter++;
+      if (counter >= userNumber) {
+        break;
+      }
     }
     await Promise.all(uploadPromises);
     return fakeUserIds;

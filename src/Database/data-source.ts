@@ -28,6 +28,7 @@ import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 import { MUserQuestionItem } from './Entities/mUserQuestionItem.js';
 import { QuestionItem } from './Entities/questionItems.js';
 import { questionItemRepo } from '../Infrastructure/Repository/questionItemRepo.js';
+import { Mention } from './Entities/mention.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -76,6 +77,7 @@ export const Database = new DataSource({
     SearchHistory,
     QuestionItem,
     MUserQuestionItem,
+    Mention,
   ],
 });
 
@@ -154,5 +156,5 @@ export async function initFixedDbData() {
 }
 
 export async function initFakeData() {
-  await testHelper.createFakeUsersForRecommendation();
+  await testHelper.createFakeUsersForRecommendation(12);
 }
