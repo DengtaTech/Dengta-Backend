@@ -204,4 +204,20 @@ export const userService = {
       }
     });
   },
+  editLink: async (userId: string, editLink: string): Promise<string> => {
+    return Database.transaction(async (transactionManager) => {
+      try {
+        const user = await userRepo.findById(userId, transactionManager);
+        if (!user) {
+          throw new UserNotFoundError();
+        }
+        user.cardUrl = `https://dengta.org/${editLink}`;
+        await transactionManager.save(user);
+        return user.cardUrl;
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
+  },
 };

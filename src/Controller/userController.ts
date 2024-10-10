@@ -21,6 +21,8 @@ import { getFootprintsHandler } from '../Application/Features/User/GetFootprints
 import { validateSignUpReqBodyReqBody } from '../Application/Features/User/SignUp/Types/signupDto.js';
 import { userService } from '../Infrastructure/Service/userService.js';
 import { searchFolloweesHandler } from '../Application/Features/User/SearchFollowees/searchFolloweesHandler.js';
+import { editCardLinkRes } from '../Application/Features/User/EditCardLink/editCardLinkRes.js';
+import { editCardLinkHandler } from '../Application/Features/User/EditCardLink/editCardLinkHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -166,6 +168,18 @@ export const userController = {
       throw new InvalidInputError('keywords must be a string');
     }
     const response = await searchFolloweesHandler.handle(userId, keywords);
+    res.status(200).json(response);
+  },
+  editLink: async (req: Request, res: Response) => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+    const urlContext = req.body.urlContext;
+    if (!urlContext) {
+      throw new InvalidInputError('urlContext is illegal');
+    }
+    const response = await editCardLinkHandler.handle(userId, urlContext);
     res.status(200).json(response);
   },
 };

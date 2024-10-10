@@ -70,6 +70,9 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   selfIntro!: string | null;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  cardUrl!: string | null;
+
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
