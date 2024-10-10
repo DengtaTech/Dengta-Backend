@@ -2,9 +2,13 @@ import { mentionRepo } from '../Repository/mentionRepo.js';
 import { GetMention } from '../../Application/Features/Volume/Mention/getMention/Types/api.js';
 import nodejieba from 'nodejieba';
 
+nodejieba.load({
+  stopWordDict: './src/Config/stopwords.txt',
+});
+
 export const mentionService = {
   analyzeContent: (content: string, date: Date, type: string) => {
-    const keywords = nodejieba.extract(content, 10);
+    const keywords = nodejieba.extract(content, 5);
 
     keywords.forEach(async (keyword) => {
       const count: GetMention.IMentionCount = {
