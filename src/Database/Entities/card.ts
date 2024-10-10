@@ -14,8 +14,8 @@ export class Card extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  cardUrl!: string | null;
+  @Column({ type: 'varchar', length: 255, nullable: false, unique: true })
+  cardUrl!: string;
 
   @Column({ type: 'int', default: 0 })
   clickTime!: number;

@@ -11,6 +11,11 @@ router.get(
   wrapAsync(footprintController.getFootprintDetail),
 );
 
+router.get(
+  '/detail/card/:footprintId',
+  wrapAsync(footprintController.getCardFootprintDetail),
+);
+
 router.put(
   '/emotion',
   jwtAuthentication,
