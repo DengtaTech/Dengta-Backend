@@ -1,53 +1,58 @@
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
-import { EntityManager, Relation } from 'typeorm';
+import { EntityManager, Relation, Brackets } from 'typeorm';
 import { Link } from '../../Database/Entities/link.js';
 import { Role } from '../../Database/Entities/role.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
+import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 
 export const userRepo = {
   findById: async (
     userId: string,
     transactionManager?: EntityManager | undefined,
     joinColumns?: string[],
-  ): Promise<User | GetUserInfo.UserWithHashtags | null> => {
+  ): Promise<GetUserInfo.UserWithHashtagsAndLinks | null> => {
     try {
       const findOneOptions = {
         where: { id: userId },
         relations: joinColumns,
       };
 
-      let user: User | null;
-      if (transactionManager) {
-        user = await transactionManager.findOne(User, findOneOptions);
-      } else {
-        user = await User.findOne(findOneOptions);
+      const user = transactionManager
+        ? await transactionManager.findOne(User, findOneOptions)
+        : await User.findOne(findOneOptions);
+      if (!user) {
+        return null;
       }
-
-      if (user) {
-        if (joinColumns?.includes('links') && user.links) {
+      // 處理 links
+      if (joinColumns?.includes('links')) {
+        if (user.links && user.links.length > 0) {
           user.links = user.links.map((link) => {
             const { sourceName, url } = link;
             return { sourceName, url };
           }) as Relation<Link[]>;
-        }
-
-        if (
-          joinColumns?.includes('mUserProfileHashTag') &&
-          joinColumns?.includes('mUserProfileHashTag.profileHashTag') &&
-          user.mUserProfileHashTag
-        ) {
-          const userWithHashtags = {
-            ...user,
-            hashtags: user.mUserProfileHashTag.map(
-              (hashTag) => hashTag.profileHashTag?.content,
-            ) as string[],
-          } as GetUserInfo.UserWithHashtags;
-          delete userWithHashtags.mUserProfileHashTag;
-          return userWithHashtags;
+        } else {
+          user.links = [] as Relation<Link[]>;
         }
       }
-      return user;
+      // 處理 mUserProfileHashTag，並改名為 hashtags
+      if (
+        joinColumns?.includes('mUserProfileHashTag') &&
+        joinColumns?.includes('mUserProfileHashTag.profileHashTag')
+      ) {
+        if (user.mUserProfileHashTag && user.mUserProfileHashTag.length > 0) {
+          const hashtags = user.mUserProfileHashTag.map(
+            (hashTag) => hashTag.profileHashTag?.content,
+          ) as string[];
+          delete user.mUserProfileHashTag;
+          (user as any).hashtags = hashtags; // 添加新的 hashtags 屬性
+        } else {
+          // 如果 mUserProfileHashTag 不存在或為空，設置 hashtags 為空陣列
+          delete user.mUserProfileHashTag;
+          (user as any).hashtags = [];
+        }
+      }
+      return user as GetUserInfo.UserWithHashtagsAndLinks;
     } catch (error) {
       console.error('Error finding user by id:', error);
       throw error;
@@ -71,15 +76,15 @@ export const userRepo = {
   ): Promise<User> => {
     try {
       const newUser = new User();
+      newUser.id = userInfoObj.clerkId;
       newUser.email = userInfoObj.email;
       newUser.firstName = userInfoObj.firstName;
       newUser.lastName = userInfoObj.lastName;
       newUser.lifeRole = userInfoObj.lifeRole;
       newUser.birthday = userInfoObj.birthday;
       newUser.provider = userInfoObj.provider as string;
-      newUser.avatar = userInfoObj.avatar as string;
+      newUser.avatar = '';
       newUser.gender = userInfoObj.gender;
-      newUser.clerkId = userInfoObj.clerkId;
       const savedUser = await transactionManager.save(newUser);
       return savedUser;
     } catch (error) {
@@ -87,54 +92,74 @@ export const userRepo = {
       throw error;
     }
   },
-  findByNameAndTag: async (
-    keywords: string,
-    transactionManager?: EntityManager,
-  ): Promise<User[]> => {
+  findByNameAndTag: (async ({
+    keywords,
+    followerId,
+    transactionManager,
+  }: {
+    keywords?: string;
+    followerId?: User['id'];
+    transactionManager?: EntityManager;
+  }) => {
     try {
-      if (transactionManager) {
-        const users = await transactionManager
-          .getRepository(User)
-          .createQueryBuilder('user')
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-          .where(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .orWhere(
-            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .addSelect(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-            'relevance_score',
-          )
-          .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords)
-          .getMany();
-        return users;
-      } else {
-        const users = await User.createQueryBuilder('user')
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-          .where(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .orWhere(
-            'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-          )
-          .addSelect(
-            'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) + MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-            'relevance_score',
-          )
-          .orderBy('relevance_score', 'DESC')
-          .setParameter('keywords', keywords)
-          .getMany();
-        return users;
+      if (!keywords && !followerId) {
+        throw new Error(
+          'keywords and followerId cannot be both undefined. This operation should have been blocked by TS type guard',
+        );
       }
+
+      const query = transactionManager
+        ? transactionManager.getRepository(User).createQueryBuilder('user')
+        : User.createQueryBuilder('user');
+
+      if (keywords) {
+        query
+          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
+          .where(
+            new Brackets((qb) =>
+              qb
+                .where(
+                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                )
+                .orWhere(
+                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+                ),
+            ),
+          )
+          .addSelect(
+            `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
+             MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
+            'relevance_score',
+          )
+          .orderBy('relevance_score', 'DESC')
+          .setParameter('keywords', keywords);
+      }
+
+      if (followerId) {
+        query
+          .leftJoinAndSelect('user.followedBy', 'followedBy')
+          .andWhere('followedBy.followerId = :followerId', {
+            followerId: followerId,
+          });
+      }
+
+      return await query.getMany();
     } catch (error) {
       console.error('Error finding user by name and tag:');
       throw error;
     }
+  }) as {
+    (_: {
+      keywords?: string;
+      followerId: User['id'];
+      transactionManager?: EntityManager;
+    }): Promise<SearchFollowees.ISearchFolloweesDto[]>;
+    (_: {
+      keywords: string;
+      followerId?: never;
+      transactionManager?: EntityManager;
+    }): Promise<User[]>;
   },
   updateLink: async (
     user: User,

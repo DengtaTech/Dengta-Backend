@@ -7,7 +7,7 @@ declare namespace PatchFootprintSetting {
       'category' | 'milestone' | 'occurAt' | 'status' | 'title' | 'content'
     >
   > & {
-    tags: string[];
+    hashtags: string[];
     footprintId: string;
   };
   interface IPatchFootprintSettingResponse {

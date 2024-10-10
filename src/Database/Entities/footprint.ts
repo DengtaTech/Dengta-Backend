@@ -62,7 +62,7 @@ export class Footprint extends BaseEntity {
   })
   occurAt!: Date;
 
-  @Column('uuid')
+  @Column({ type: 'varchar', length: 50 })
   userId!: string;
 
   @ManyToOne(() => User, (user) => user.footprints, { onDelete: 'CASCADE' })

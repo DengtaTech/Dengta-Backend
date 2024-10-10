@@ -25,17 +25,45 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S mkdir -p /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp -r ./* /srv/dengta-ci
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
-      # - name: scp .env.dev to server
-      #   run: |
-      #     echo "${{ secrets.COMPOSE_ENV_FILE_TEST }}" > .env.development
-      #     echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.development /srv/dengta-ci/.env.development
-      #     echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
-      # - name: run test db and redis
-      #   run: |
-      #     docker compose -f /srv/dengta-ci/docker-compose-dev.yml down -v
-      #     docker compose -f /srv/dengta-ci/docker-compose-dev.yml --env-file /srv/dengta-ci/.env.development up --build -d
-      # - name: Wait for db to start
-      #   run: sleep 30
+      - name: scp .env.dev to server
+        run: |
+          echo "${{ secrets.COMPOSE_ENV_FILE_CI }}" > .env.staging
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S cp .env.staging /srv/dengta-ci/.env.staging
+          echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
+      - name: run the container test needs
+        run: |
+          docker compose -f /srv/dengta-ci/docker-compose-ci.yml down -v
+          docker compose -f /srv/dengta-ci/docker-compose-ci.yml --env-file /srv/dengta-ci/.env.staging up --build -d
+      - name: Wait for Milvus and MySQL to be Ready
+        run: |
+          wait_for() {
+            local host="$1"
+            local port="$2"
+            local timeout="$3"
+            local start_time=$(date +%s)
+
+            echo "等待 ${host}:${port} 啟動..."
+
+            while true; do
+              if nc -z "$host" "$port"; then
+                echo "${host}:${port} 已啟動。"
+                break
+              fi
+
+              current_time=$(date +%s)
+              elapsed=$(( current_time - start_time ))
+
+              if [ "$elapsed" -ge "$timeout" ]; then
+                echo "等待 ${host}:${port} 超時 (${timeout} 秒)。"
+                exit 1
+              fi
+
+              sleep 5
+            done
+          }
+
+          wait_for localhost 19533 300
+          wait_for localhost 3309 300
       - name: Install
         run: |
           cd /srv/dengta-ci
@@ -43,7 +71,7 @@ jobs:
       - name: Run tests
         run: |
           cd /srv/dengta-ci
-          npm test
+          npm run test:ci
       - name: Send Notification to Discord
         if: success()
         uses: appleboy/discord-action@master

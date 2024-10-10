@@ -11,7 +11,7 @@ type KeyToType<SrcObject, Target> = {
   [U in keyof SrcObject]: Target;
 };
 
-declare namespace Dengta {
+declare namespace DengtaC {
   namespace Cache {
     interface IUserDetailObject {
       id: number;

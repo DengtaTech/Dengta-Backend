@@ -18,6 +18,9 @@ import { mFootprintFootprintHashTagRepo } from '../Repository/mFootprintFootprin
 import { PatchFootprintSetting } from '../../Application/Features/Footprint/UpdateFootprintSetting/Types/api.js';
 import { MFootprintFootprintHashTag } from '../../Database/Entities/mFootprintFootprintHashTag.js';
 import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFootprintDetail/Types/api.js';
+import { embeddingService } from './embeddingService.js';
+import { Notification } from '../../Database/Entities/notification.js';
+import { notificationRepo } from '../Repository/notificationRepo.js';
 
 export const footprintService = {
   expressReaction: async (
@@ -32,12 +35,11 @@ export const footprintService = {
           throw new UserNotFoundError();
         }
 
-        if (
-          (await footprintRepo.findById(
-            reaction.footprintId,
-            transactionManager,
-          )) === null
-        ) {
+        const footprint = await footprintRepo.findById(
+          reaction.footprintId,
+          transactionManager,
+        );
+        if (footprint === null) {
           throw new FootprintNotFoundError();
         }
 
@@ -48,14 +50,32 @@ export const footprintService = {
           throw new InvalidInputError('No such reaction type');
         }
 
-        return await mUserFootprintReactionRepo.expressReaction(
-          {
-            userId: reaction.userId,
-            footprintId: reaction.footprintId,
-            reactionTypeId: reactionType.id,
-          },
+        const mUserFootprintReaction =
+          await mUserFootprintReactionRepo.expressReaction(
+            {
+              userId: reaction.userId,
+              footprintId: reaction.footprintId,
+              reactionTypeId: reactionType.id,
+            },
+            transactionManager,
+          );
+
+        // build notification
+        const notification = Notification.create({
+          userId: footprint.userId,
+          type: 'footprint_reaction',
+          title: '有人對您的足跡做出了表情',
+          content: `您的足跡得到了 ${reaction.reaction}`,
+          relatedUserId: reaction.userId,
+          relatedFootprintId: reaction.footprintId,
+        });
+
+        await notificationRepo.insertNewNotification(
+          notification,
           transactionManager,
         );
+
+        return mUserFootprintReaction;
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
@@ -123,7 +143,8 @@ export const footprintService = {
           footprintObj,
           transactionManager,
         );
-        for (const tagContent of footprintObj.tags) {
+
+        for (const tagContent of footprintObj.hashtags) {
           let footprintHashTag =
             await footprintHashTagRepo.findOrCreateByContent(
               tagContent,
@@ -133,6 +154,14 @@ export const footprintService = {
           await mFootprintFootprintHashTagRepo.insertNewRecord(
             updatedFootprint.id,
             footprintHashTag.id,
+            transactionManager,
+          );
+
+          await embeddingService.findOrinsertFootprintHashTagEmbedding(
+            {
+              id: footprintHashTag.id,
+              content: tagContent,
+            },
             transactionManager,
           );
         }
@@ -162,19 +191,19 @@ export const footprintService = {
       throw new FootprintNotFoundError();
     }
 
-    const { tags, ...otherFields } = updateFields;
+    const { hashtags, ...otherFields } = updateFields;
 
     Object.assign(footprint, otherFields);
     // transaction begin
     return Database.transaction(async (transactionManager) => {
       try {
-        if (tags && tags.length > 0) {
+        if (hashtags && hashtags.length > 0) {
           await transactionManager.delete(MFootprintFootprintHashTag, {
             footprintId: footprint.id,
           });
 
           const newHashtags = await Promise.all(
-            tags.map((hashtag) => {
+            hashtags.map((hashtag) => {
               return footprintHashTagRepo.findOrCreateByContent(
                 hashtag,
                 transactionManager,
@@ -215,9 +244,14 @@ export const footprintService = {
       }
     });
   },
-  getFootprintByUserId: async (userId: string, offset: number) => {
+  getFootprintByUserId: async (
+    userId: string,
+    publicOnly: boolean,
+    offset: number,
+  ) => {
     const footprints = await footprintRepo.findByUserIdWithAllRelations(
       userId,
+      publicOnly,
       offset,
     );
     return {

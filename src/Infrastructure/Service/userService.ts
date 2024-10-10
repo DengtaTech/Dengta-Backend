@@ -9,14 +9,25 @@ import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
 import { PatchUserInfo } from '../../Application/Features/User/PatchUserInfo/Types/api.js';
 import { MUserProfileHashTag } from '../../Database/Entities/mUserProfileHashTag.js';
 import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
+import { User } from '../../Database/Entities/user.js';
+import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
+import { embeddingService } from './embeddingService.js';
 
 export const userService = {
+  isUserIdExists: async (userId: string): Promise<boolean> => {
+    const user = await userRepo.findById(userId);
+    return !!user;
+  },
   signUp: async (
     userInfoObj: Signup.ISignUpReq,
   ): Promise<Signup.ISignUpDto> => {
     // try {
-    const checkUserExist = await userRepo.findByEmail(userInfoObj.email);
+    const checkUserExist = await userRepo.findById(
+      userInfoObj.clerkId,
+      undefined,
+      undefined,
+    );
 
     if (checkUserExist) {
       throw new EmailExistsError();
@@ -30,7 +41,7 @@ export const userService = {
           transactionManager,
         );
         await userCredentialRepo.insertNewUser(
-          newUser,
+          newUser.id,
           userInfoObj.password,
           transactionManager,
         );
@@ -47,7 +58,6 @@ export const userService = {
           fullName: newUser.fullName,
           lifeRole: newUser.lifeRole,
           email: newUser.email,
-          clerkId: newUser.clerkId,
           links: initLinks.map((link) => {
             const { sourceName, url } = link;
             return { sourceName, url };
@@ -67,11 +77,13 @@ export const userService = {
     return {
       id: checkUserExist.id,
       email: checkUserExist.email,
-      password: checkUserExist.userCredential.password,
+      password: checkUserExist.userCredential.password as string,
     };
   },
 
-  getUserInfo: async (id: string): Promise<GetUserInfo.UserWithHashtags> => {
+  getUserInfo: async (
+    id: string,
+  ): Promise<GetUserInfo.UserWithHashtagsAndLinks> => {
     const userInfo = await userRepo.findById(id, undefined, [
       'links',
       'mUserProfileHashTag',
@@ -80,11 +92,7 @@ export const userService = {
     if (!userInfo) {
       throw new UserNotFoundError();
     }
-    if ('hashtags' in userInfo) {
-      return userInfo;
-    } else {
-      throw new Error('userInfo without hashtags should not happen');
-    }
+    return userInfo;
   },
 
   updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
@@ -151,6 +159,20 @@ export const userService = {
             .values(newMUserProfileHashTags)
             .orIgnore()
             .execute();
+
+          await Promise.all(
+            newHashtags.map(async (hashTag) => {
+              const hashTagInfo = {
+                id: hashTag.id,
+                content: hashTag.content,
+              };
+
+              await embeddingService.findOrInsertProfileHashTagEmbedding(
+                hashTagInfo,
+                transactionManager,
+              );
+            }),
+          );
         }
 
         await transactionManager.save(user);
@@ -159,5 +181,27 @@ export const userService = {
       console.error('Error in DB ->', error);
       throw error;
     }
+  },
+  searchFollowees: async (
+    followerId: User['id'],
+    keywords?: string,
+  ): Promise<SearchFollowees.ISearchFolloweesDto[]> => {
+    return Database.transaction(async (transactionManager) => {
+      try {
+        if (
+          (await userRepo.findById(followerId, transactionManager)) === null
+        ) {
+          throw new UserNotFoundError();
+        }
+        return await userRepo.findByNameAndTag({
+          keywords,
+          followerId,
+          transactionManager,
+        });
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
   },
 };

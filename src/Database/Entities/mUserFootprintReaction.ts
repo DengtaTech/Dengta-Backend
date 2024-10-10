@@ -13,7 +13,7 @@ import { ReactionType } from './reactionType.js';
 
 @Entity({ name: 'MUserFootprintReaction' })
 export class MUserFootprintReaction extends BaseEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   userId!: string;
 
   @PrimaryColumn('uuid')

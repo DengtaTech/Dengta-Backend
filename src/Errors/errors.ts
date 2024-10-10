@@ -1,5 +1,20 @@
 // errors.ts - Define custom error classes
+import { ValidationError } from 'class-validator';
 
+export function extractErrors(errors: ValidationError[]): string[] {
+  const errorMessages: string[] = [];
+
+  for (const error of errors) {
+    if (error.constraints) {
+      errorMessages.push(...Object.values(error.constraints));
+    }
+    if (error.children && error.children.length > 0) {
+      errorMessages.push(...extractErrors(error.children));
+    }
+  }
+
+  return errorMessages;
+}
 export class BaseError extends Error {
   statusCode: number;
   constructor(message: string, statusCode: number) {
@@ -7,6 +22,12 @@ export class BaseError extends Error {
     this.statusCode = statusCode;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export class FootprintNotEnoughError extends BaseError {
+  constructor() {
+    super('Footprint not enough', 403);
   }
 }
 
@@ -78,5 +99,11 @@ export class UnauthorizedError extends BaseError {
 export class DatabaseError extends BaseError {
   constructor() {
     super('Database Error', 500);
+  }
+}
+
+export class EmbeddingServerError extends BaseError {
+  constructor() {
+    super('Embedding Server Error', 500);
   }
 }

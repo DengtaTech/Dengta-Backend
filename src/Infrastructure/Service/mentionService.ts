@@ -1,0 +1,40 @@
+import { mentionRepo } from '../Repository/mentionRepo.js';
+import { GetMention } from '../../Application/Features/Volume/Mention/getMention/Types/api.js';
+import nodejieba from 'nodejieba';
+
+export const mentionService = {
+  analyzeContent: (content: string, date: Date, type: string) => {
+    const keywords = nodejieba.extract(content, 10);
+
+    keywords.forEach(async (keyword) => {
+      const count: GetMention.IMentionCount = {
+        footprints: 0,
+        search: 0,
+      };
+
+      if (type === 'footprints') {
+        count.footprints = 1;
+      } else if (type === 'search') {
+        count.search = 1;
+      }
+
+      await mentionRepo.insertOrUpdate(keyword.word, date, count);
+    });
+  },
+
+  getAllMentionsInThisWeek: async () => {
+    const nowDate = new Date();
+
+    const mentions = await mentionRepo.getMentionsInWeek(nowDate);
+
+    return mentions;
+  },
+
+  getAllMentionsTotalCountInThisWeek: async () => {
+    const nowDate = new Date();
+
+    const mentions = await mentionRepo.getMentionsTotalCountInWeek(nowDate);
+
+    return mentions;
+  },
+};

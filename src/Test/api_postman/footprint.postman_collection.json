@@ -1,0 +1,124 @@
+{
+  "info": {
+    "_postman_id": "7b60a126-2f82-4c62-86d1-3c05817d4b69",
+    "name": "footprint",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33305762"
+  },
+  "item": [
+    {
+      "name": "初始化新足跡",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.globals.set(\"init_footprint_id\", pm.response.json()[\"data\"][\"footprint\"][\"id\"])"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"status\": \"draft\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/footprint/init",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "footprint", "init"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "發布新足跡",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"footprintId\": \"{{init_footprint_id}}\",\r\n    \"title\": \"足跡標題\",\r\n    \"content\": \"足跡的內容在這邊\",\r\n    \"category\": \"life\",\r\n    \"milestone\": false,\r\n    \"occurAt\": \"2010-01-30\",\r\n    \"status\": \"published\",\r\n    \"tags\": []\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/footprint/publish",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "footprint", "publish"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "對足跡按表情",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"footprintId\": \"{{init_footprint_id}}\",\r\n    \"reaction\": \"like\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/footprint/emotion",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "footprint", "emotion"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
