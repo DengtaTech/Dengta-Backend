@@ -96,6 +96,12 @@ export class CardUrlAlreadyExistsError extends BaseError {
   }
 }
 
+export class CardUrlNotExistsError extends BaseError {
+  constructor() {
+    super('Card url not exists', 403);
+  }
+}
+
 export class UnauthorizedError extends BaseError {
   constructor() {
     super('Unauthorized - Admin privileges required', 403);

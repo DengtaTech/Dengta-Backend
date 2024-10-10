@@ -57,4 +57,10 @@ router.put(
   wrapAsync(userController.editLink),
 );
 
+router.get(
+  '/card/url',
+  jwtAuthentication,
+  wrapAsync(userController.getCardUrl),
+);
+
 export default router;

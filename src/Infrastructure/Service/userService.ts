@@ -4,6 +4,7 @@ import { userCredentialRepo } from '../Repository/userCredentialRepo.js';
 import { linkRepo } from '../Repository/linkRepo.js';
 import {
   CardUrlAlreadyExistsError,
+  CardUrlNotExistsError,
   EmailExistsError,
   UserNotFoundError,
 } from '../../Errors/errors.js';
@@ -216,22 +217,41 @@ export const userService = {
           throw new UserNotFoundError();
         }
         const cardUrl = `https://dengta.org/${editLink}`;
-        let card = await Card.findOne({
+        let isConflict = await Card.findOne({
           where: { cardUrl: cardUrl },
         });
-        if (card) {
+        if (isConflict) {
           throw new CardUrlAlreadyExistsError();
         }
-        card = new Card();
-        card.cardUrl = cardUrl;
-        card.userId = userId;
-        await transactionManager.save(card);
-
+        const card = await Card.findOne({
+          where: { userId: userId },
+        });
+        if (card) {
+          card.cardUrl = cardUrl;
+          await transactionManager.save(card);
+        } else {
+          const card = new Card();
+          card.cardUrl = cardUrl;
+          card.userId = userId;
+          await transactionManager.save(card);
+        }
         return cardUrl;
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
       }
     });
+  },
+  getCardUrl: async (userId: string): Promise<string> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserNotFoundError();
+    }
+    const card = await Card.findOne({
+      where: { userId: userId },
+    });
+    if (!card) {
+      throw new CardUrlNotExistsError();
+    }
+    return card.cardUrl as string;
   },
 };
