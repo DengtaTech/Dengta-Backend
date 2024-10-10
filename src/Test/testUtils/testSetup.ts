@@ -12,6 +12,7 @@ const fakeNotifications: Notification[] = [];
 
 beforeAll(async () => {
   await Database.initialize();
+  console.log('Initializing Database success');
   await testHelper.clearDatabase(Database);
   await testHelper.initReactionTypes(Database);
   const newfakeUserIds = await testHelper.createFakeUsers(Database);
@@ -34,7 +35,14 @@ beforeAll(async () => {
 }, 50000);
 
 afterAll(async () => {
-  await Database.destroy();
+  try {
+    console.log('Destroying Database...');
+    await Database.destroy();
+    console.log('Database destroyed.');
+  } catch (error) {
+    console.error('Error during test teardown:', error);
+    throw error;
+  }
 });
 
 export {
