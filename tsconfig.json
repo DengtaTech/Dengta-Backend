@@ -31,6 +31,12 @@
   "ts-node": {
     "files": true
   },
-  "include": ["./**/*.ts", "./**/*.js", "./**/*.json"],
+  "include": [
+    "./**/*.ts",
+    "./**/*.js",
+    "./**/*.json",
+    "src/Test/api/getMention.test.ts",
+    "src/Test/api/getSimilerUsers.test.ts"
+  ],
   "exclude": ["node_modules", "coverage", "dist"]
 }

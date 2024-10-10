@@ -22,42 +22,47 @@ export const mentionRepo = {
   ): Promise<void> => {
     const startTimestamp = getMonday(date);
 
-    if (transactionManager) {
-      let mention = await transactionManager.findOne(Mention, {
-        where: { keyword, startTimestamp },
-      });
+    try {
+      if (transactionManager) {
+        let mention = await transactionManager.findOne(Mention, {
+          where: { keyword, startTimestamp },
+        });
 
-      if (mention) {
-        mention.footprints += count.footprints;
-        mention.search += count.search;
-        await transactionManager.save(mention);
+        if (mention) {
+          mention.footprints += count.footprints;
+          mention.search += count.search;
+          await transactionManager.save(mention);
+        } else {
+          mention = new Mention();
+          mention.id = uuidv4();
+          mention.keyword = keyword;
+          mention.startTimestamp = startTimestamp;
+          mention.footprints = count.footprints;
+          mention.search = count.search;
+          await transactionManager.save(mention);
+        }
       } else {
-        mention = new Mention();
-        mention.id = uuidv4();
-        mention.keyword = keyword;
-        mention.startTimestamp = startTimestamp;
-        mention.footprints = count.footprints;
-        mention.search = count.search;
-        await transactionManager.save(mention);
-      }
-    } else {
-      let mention = await Mention.findOne({
-        where: { keyword, startTimestamp },
-      });
+        let mention = await Mention.findOne({
+          where: { keyword, startTimestamp },
+        });
 
-      if (mention) {
-        mention.footprints += count.footprints;
-        mention.search += count.search;
-        await mention.save();
-      } else {
-        mention = new Mention();
-        mention.id = uuidv4();
-        mention.keyword = keyword;
-        mention.startTimestamp = startTimestamp;
-        mention.footprints = count.footprints;
-        mention.search = count.search;
-        await mention.save();
+        if (mention) {
+          mention.footprints += count.footprints;
+          mention.search += count.search;
+          await mention.save();
+        } else {
+          mention = new Mention();
+          mention.id = uuidv4();
+          mention.keyword = keyword;
+          mention.startTimestamp = startTimestamp;
+          mention.footprints = count.footprints;
+          mention.search = count.search;
+          await mention.save();
+        }
       }
+    } catch (error) {
+      console.error('Error insert or update mention:');
+      throw error;
     }
   },
   getAllMentions: async (
@@ -90,33 +95,37 @@ export const mentionRepo = {
     transactionManager?: EntityManager,
   ): Promise<GetMention.IMentionTotalCount[]> => {
     const weekStart = getMonday(startTimestamp);
-
     let result;
-    if (transactionManager) {
-      result = await transactionManager
-        .createQueryBuilder()
-        .select('keyword')
-        .addSelect('SUM(footprints + search)', 'totalCount')
-        .from(Mention, 'mention')
-        .where('startTimestamp = :startTimestamp', {
-          startTimestamp: weekStart,
-        })
-        .groupBy('keyword')
-        .getRawMany();
-    } else {
-      result = await Mention.createQueryBuilder()
-        .select('keyword')
-        .addSelect('SUM(footprints + search)', 'totalCount')
-        .where('startTimestamp = :startTimestamp', {
-          startTimestamp: weekStart,
-        })
-        .groupBy('keyword')
-        .getRawMany();
-    }
+    try {
+      if (transactionManager) {
+        result = await transactionManager
+          .createQueryBuilder()
+          .select('keyword')
+          .addSelect('SUM(footprints + search)', 'totalCount')
+          .from(Mention, 'mention')
+          .where('startTimestamp = :startTimestamp', {
+            startTimestamp: weekStart,
+          })
+          .groupBy('keyword')
+          .getRawMany();
+      } else {
+        result = await Mention.createQueryBuilder()
+          .select('keyword')
+          .addSelect('SUM(footprints + search)', 'totalCount')
+          .where('startTimestamp = :startTimestamp', {
+            startTimestamp: weekStart,
+          })
+          .groupBy('keyword')
+          .getRawMany();
+      }
 
-    return result.map((r) => ({
-      keyword: r.keyword,
-      totalCount: parseInt(r.totalCount),
-    }));
+      return result.map((r) => ({
+        keyword: r.keyword,
+        totalCount: parseInt(r.totalCount),
+      }));
+    } catch (error) {
+      console.error('Error get mentions total count in week:');
+      throw error;
+    }
   },
 };

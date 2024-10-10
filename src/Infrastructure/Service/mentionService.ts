@@ -17,8 +17,12 @@ export const mentionService = {
       } else if (type === 'search') {
         count.search = 1;
       }
-
-      await mentionRepo.insertOrUpdate(keyword.word, date, count);
+      try {
+        await mentionRepo.insertOrUpdate(keyword.word, date, count);
+      } catch (error) {
+        console.error('Error insert or update mention:');
+        throw error;
+      }
     });
   },
 

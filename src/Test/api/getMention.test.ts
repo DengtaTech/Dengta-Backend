@@ -5,6 +5,7 @@ import { initMilvus } from '../../Database/VectorDB/vector-db.js';
 
 describe('GET /api/1.0/volume/mention', () => {
   beforeAll(async () => {
+    console.log('Initializing Milvus...');
     await initMilvus(true);
 
     await testHelper.createFakeUsersForRecommendation(1);
