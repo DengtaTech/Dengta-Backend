@@ -21,6 +21,7 @@ import { SearchHistory } from './searchHistory.js';
 import { MUserProfileHashTag } from './mUserProfileHashTag.js';
 import { Notification } from './notification.js';
 import { MUserQuestionItem } from './mUserQuestionItem.js';
+import { Card } from './card.js';
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 50 })
@@ -70,14 +71,8 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   selfIntro!: string | null;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  cardUrl!: string | null;
-
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
-
-  // @Column({ type: 'varchar', length: 255, nullable: true })
-  // clerkId!: string | null;
 
   @Column({
     type: 'timestamp',
@@ -125,6 +120,11 @@ export class User extends BaseEntity {
     cascade: true,
   })
   userCredential?: Relation<UserCredential>;
+
+  @OneToOne(() => Card, (card) => card.user, {
+    cascade: true,
+  })
+  card?: Relation<Card>;
 
   @OneToOne(() => UserEmbedding, (userEmbedding) => userEmbedding.user, {
     cascade: true,

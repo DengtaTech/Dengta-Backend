@@ -90,6 +90,12 @@ export class EmailFormatError extends BaseError {
   }
 }
 
+export class CardUrlAlreadyExistsError extends BaseError {
+  constructor() {
+    super('Card url already exists', 403);
+  }
+}
+
 export class UnauthorizedError extends BaseError {
   constructor() {
     super('Unauthorized - Admin privileges required', 403);

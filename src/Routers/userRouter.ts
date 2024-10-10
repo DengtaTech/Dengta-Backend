@@ -51,6 +51,10 @@ router.get(
   wrapAsync(userController.searchFollowees),
 );
 
-router.put('/editLink', jwtAuthentication, wrapAsync(userController.editLink));
+router.put(
+  '/card/editLink',
+  jwtAuthentication,
+  wrapAsync(userController.editLink),
+);
 
 export default router;
