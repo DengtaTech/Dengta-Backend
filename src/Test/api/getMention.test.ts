@@ -5,10 +5,11 @@ import { initMilvus } from '../../Database/VectorDB/vector-db.js';
 
 describe('GET /api/1.0/volume/mention', () => {
   beforeAll(async () => {
+    console.log('Initializing Milvus...');
     await initMilvus(true);
 
     await testHelper.createFakeUsersForRecommendation(1);
-  }, 100000);
+  }, 10000);
 
   it('should get all mentions of this week', async () => {
     const response = await request(app).get('/api/1.0/volume/mention').send();
