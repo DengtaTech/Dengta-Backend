@@ -2,6 +2,7 @@ import { footprintService } from '../../../../Infrastructure/Service/footprintSe
 import { embeddingService } from '../../../../Infrastructure/Service/embeddingService.js';
 import { PublishFootprint } from './Types/api.js';
 import { publishFootprintRes } from './publishFootprintRes.js';
+import { mentionService } from '../../../../Infrastructure/Service/mentionService.js';
 
 export const publishFootprintHandler = {
   handle: async (
@@ -22,6 +23,12 @@ export const publishFootprintHandler = {
     });
 
     await embeddingService.addNewIntervalInMilvus(userId);
+
+    mentionService.analyzeContent(
+      result.title + ' ' + result.content,
+      result.createdAt,
+      'footprints',
+    );
 
     return response;
   },

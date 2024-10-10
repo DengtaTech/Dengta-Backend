@@ -28,9 +28,11 @@ import { Signup } from '../Application/Features/User/SignUp/Types/api.js';
 import { MUserQuestionItem } from './Entities/mUserQuestionItem.js';
 import { QuestionItem } from './Entities/questionItems.js';
 import { questionItemRepo } from '../Infrastructure/Repository/questionItemRepo.js';
+import { Mention } from './Entities/mention.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { testHelper } from '../Test/testUtils/testHelper.js';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
@@ -75,6 +77,7 @@ export const Database = new DataSource({
     SearchHistory,
     QuestionItem,
     MUserQuestionItem,
+    Mention,
   ],
 });
 
@@ -150,4 +153,8 @@ export async function initFixedDbData() {
 
     await mUserRole.save();
   }
+}
+
+export async function initFakeData() {
+  await testHelper.createFakeUsersForRecommendation(12);
 }

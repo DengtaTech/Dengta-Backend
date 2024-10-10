@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
 import 'reflect-metadata';
-import { Database, initFixedDbData } from './Database/data-source.js';
+import {
+  Database,
+  initFakeData,
+  initFixedDbData,
+} from './Database/data-source.js';
 import { initMilvus } from './Database/VectorDB/vector-db.js';
 import fs from 'fs';
 import path from 'path';
@@ -25,6 +29,7 @@ import recommendationRouter from './Routers/recommendationRouter.js';
 import searchHistoryRouter from './Routers/searchHistoryRouter.js';
 import notificationRouter from './Routers/notificationRouter.js';
 import questionItemRouter from './Routers/questionItemRouter.js';
+import volumeRouter from './Routers/volumeRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yaml';
@@ -45,6 +50,7 @@ app.use('/api/1.0/search', searchHistoryRouter);
 app.use('/api/1.0/footprint', footprintRouter);
 app.use('/api/1.0/notification', notificationRouter);
 app.use('/api/1.0/question', questionItemRouter);
+app.use('/api/1.0/volume', volumeRouter);
 
 app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
@@ -77,7 +83,6 @@ if (process.env.NODE_ENV !== 'test') {
   } catch (err) {
     console.error('Failed to initialize the database:', err);
   }
-
   await initFixedDbData();
   initDbCache();
   console.log('all database initialized successfully');
@@ -87,6 +92,8 @@ if (process.env.NODE_ENV !== 'test') {
       console.log('test');
       await initMilvus(true);
       console.log('Milvus initialized successfully');
+      // 給前端用的假資料
+      await initFakeData();
     })(),
   ]);
 
