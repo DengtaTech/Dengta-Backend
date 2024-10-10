@@ -2,7 +2,12 @@ import { Database } from '../../Database/data-source.js';
 import { userRepo } from '../Repository/userRepo.js';
 import { userCredentialRepo } from '../Repository/userCredentialRepo.js';
 import { linkRepo } from '../Repository/linkRepo.js';
-import { EmailExistsError, UserNotFoundError } from '../../Errors/errors.js';
+import {
+  CardUrlAlreadyExistsError,
+  CardUrlNotExistsError,
+  EmailExistsError,
+  UserNotFoundError,
+} from '../../Errors/errors.js';
 import { Signup } from '../../Application/Features/User/SignUp/Types/api.js';
 import { Link } from '../../Database/Entities/link.js';
 import { Signin } from '../../Application/Features/User/SignIn/Types/api.js';
@@ -13,6 +18,7 @@ import { User } from '../../Database/Entities/user.js';
 import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 import { embeddingService } from './embeddingService.js';
+import { Card } from '../../Database/Entities/card.js';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -203,5 +209,49 @@ export const userService = {
         throw error;
       }
     });
+  },
+  editLink: async (userId: string, editLink: string): Promise<string> => {
+    return Database.transaction(async (transactionManager) => {
+      try {
+        if ((await userRepo.findById(userId, transactionManager)) === null) {
+          throw new UserNotFoundError();
+        }
+        const cardUrl = `https://dengta.org/${editLink}`;
+        let isConflict = await Card.findOne({
+          where: { cardUrl: cardUrl },
+        });
+        if (isConflict) {
+          throw new CardUrlAlreadyExistsError();
+        }
+        const card = await Card.findOne({
+          where: { userId: userId },
+        });
+        if (card) {
+          card.cardUrl = cardUrl;
+          await transactionManager.save(card);
+        } else {
+          const card = new Card();
+          card.cardUrl = cardUrl;
+          card.userId = userId;
+          await transactionManager.save(card);
+        }
+        return cardUrl;
+      } catch (error) {
+        console.error('Error in DB ->', error);
+        throw error;
+      }
+    });
+  },
+  getCardUrl: async (userId: string): Promise<string> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserNotFoundError();
+    }
+    const card = await Card.findOne({
+      where: { userId: userId },
+    });
+    if (!card) {
+      throw new CardUrlNotExistsError();
+    }
+    return card.cardUrl as string;
   },
 };

@@ -1,0 +1,36 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  OneToOne,
+  JoinColumn,
+  Relation,
+} from 'typeorm';
+import { User } from './user.js';
+
+@Entity({ name: 'Card' })
+export class Card extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  cardUrl!: string | null;
+
+  @Column({ type: 'int', default: 0 })
+  clickTime!: number;
+
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt!: Date;
+
+  @Column('uuid')
+  userId!: string;
+
+  @OneToOne(() => User, (user) => user.card, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user?: Relation<User>;
+}
