@@ -67,8 +67,6 @@ export const emailService = {
     userName: string,
   ): Promise<void> => {
     try {
-      console.log('Sending weekly keyword notification email to:', to);
-
       const keywords = await mentionRepo.getTopKeywordsInWeek(
         new Date(),
         KEYWORDS_LIMIT,
