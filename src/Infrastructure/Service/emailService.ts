@@ -25,40 +25,23 @@ const mailTransport = nodemailer.createTransport({
 });
 
 export const emailService = {
-  sendBasicEmail: async (
+  sendEmail: async (
     to: string,
     subject: string,
-    text: string,
+    content: string,
   ): Promise<void> => {
     const mailOptions = {
       from: GMAIL_USER,
       to,
       subject,
-      text,
+      html: content,
     };
 
     try {
       await mailTransport.sendMail(mailOptions);
     } catch (err) {
       console.error('Error:', err);
-    }
-  },
-  sendHtmlEmail: async (
-    to: string,
-    subject: string,
-    html: string,
-  ): Promise<void> => {
-    const mailOptions = {
-      from: GMAIL_USER,
-      to,
-      subject,
-      html,
-    };
-
-    try {
-      await mailTransport.sendMail(mailOptions);
-    } catch (err) {
-      console.error('Error:', err);
+      throw err;
     }
   },
   sendWeeklyKeywordOfficialNotificationEmail: async (
@@ -105,9 +88,10 @@ export const emailService = {
 
       const { html } = mjml2html(renderedTemplate);
 
-      await emailService.sendHtmlEmail(to, subject, html);
+      await emailService.sendEmail(to, subject, html);
     } catch (err) {
       console.error('Error:', err);
+      throw err;
     }
   },
 };
