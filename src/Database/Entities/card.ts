@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { User } from './user.js';
 
-@Entity({ name: 'Card' })
+@Entity({ name: 'Cards' })
 export class Card extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
