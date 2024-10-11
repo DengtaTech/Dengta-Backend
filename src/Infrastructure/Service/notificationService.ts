@@ -71,7 +71,6 @@ export const notificationService = {
 
       Promise.all(
         allUsers.map(async (user) => {
-          if (user.email !== 'joshtu0627@gmail.com') return;
           await emailService.sendWeeklyKeywordOfficialNotificationEmail(
             user.email,
             'Dengta 本周的熱門關鍵字出爐了！',
