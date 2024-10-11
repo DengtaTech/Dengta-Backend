@@ -23,6 +23,7 @@ const fakeUserCh = JSON.parse(
 import { recommendationService } from './Infrastructure/Service/recommendationService.js';
 
 import userRouter from './Routers/userRouter.js';
+import bowlRouter from './Routers/bowlRouter.js';
 import imageRouter from './Routers/imageRouter.js';
 import footprintRouter from './Routers/footprintRouter.js';
 import recommendationRouter from './Routers/recommendationRouter.js';
@@ -51,6 +52,7 @@ app.use('/api/1.0/footprint', footprintRouter);
 app.use('/api/1.0/notification', notificationRouter);
 app.use('/api/1.0/question', questionItemRouter);
 app.use('/api/1.0/volume', volumeRouter);
+app.use('/api/1.0/bowl', bowlRouter);
 
 app.get('/api/1.0/health', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');

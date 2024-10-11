@@ -34,6 +34,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { testHelper } from '../Test/testUtils/testHelper.js';
 import { Card } from './Entities/card.js';
+import { Bowl } from './Entities/bowl.js';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
@@ -80,6 +81,7 @@ export const Database = new DataSource({
     MUserQuestionItem,
     Mention,
     Card,
+    Bowl,
   ],
 });
 

@@ -22,6 +22,7 @@ import { MUserProfileHashTag } from './mUserProfileHashTag.js';
 import { Notification } from './notification.js';
 import { MUserQuestionItem } from './mUserQuestionItem.js';
 import { Card } from './card.js';
+import { Bowl } from './bowl.js';
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 50 })
@@ -83,6 +84,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Footprint, (footprint) => footprint.user, { cascade: true })
   footprints?: Relation<Footprint[]>;
+
+  @OneToMany(() => Bowl, (bowl) => bowl.user, { cascade: true })
+  bowls?: Relation<Bowl[]>;
 
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
   links?: Relation<Link[]>;
