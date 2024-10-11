@@ -30,4 +30,17 @@ export const bowlService = {
       }
     });
   },
+  getBowlList: async (userId: string): Promise<Bowl[]> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new Error('When getting Bowl List, user should exist');
+    }
+    const bowls = await Bowl.find({
+      where: { userId },
+      order: {
+        pushCount: 'DESC',
+        createdAt: 'DESC',
+      },
+    });
+    return bowls;
+  },
 };

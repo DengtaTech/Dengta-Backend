@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { InputEmptyError, NoTokenError } from '../Errors/errors.js';
 import { publishBowlHandler } from '../Application/Features/Bowl/PublishBowl/publishBowlHandler.js';
+import { getBowlListHandler } from '../Application/Features/Bowl/GetBowlList/getBowlListHandler.js';
 
 export const bowlController = {
   publishBowl: async (req: Request, res: Response): Promise<void> => {
@@ -18,6 +19,14 @@ export const bowlController = {
       authorId,
       comment,
     );
+    res.status(200).json(response);
+  },
+  getBowlList: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { userId } = req.params;
+    const response = await getBowlListHandler.handle(userId);
     res.status(200).json(response);
   },
 };
