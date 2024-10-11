@@ -31,6 +31,18 @@ export const footprintController = {
     const response = await getFootprintDetailHandler.handle(footprintId);
     res.status(200).json(response);
   },
+  getCardFootprintDetail: async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const { footprintId } = req.params;
+    if (!footprintId) {
+      throw new InputEmptyError();
+    }
+
+    const response = await getFootprintDetailHandler.handle(footprintId);
+    res.status(200).json(response);
+  },
   emotion: async (req: Request, res: Response): Promise<void> => {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();

@@ -21,6 +21,8 @@ router.get(
   wrapAsync(userController.getOthersInfo),
 );
 
+router.get('/:cardUrl/public-info', wrapAsync(userController.getPublicInfo));
+
 router.post(
   '/avatar',
   [jwtAuthentication, upload.single('avatar')],
@@ -43,6 +45,11 @@ router.get(
   '/:userId/footprints',
   jwtAuthentication,
   wrapAsync(userController.getFootprints),
+);
+
+router.get(
+  '/:cardUrl/public-footprints',
+  wrapAsync(userController.getPublicFootprints),
 );
 
 router.get(

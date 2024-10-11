@@ -5,6 +5,7 @@ import {
   InvalidInputError,
   UserNotFoundError,
   FootprintNotFoundError,
+  CardUrlNotExistsError,
 } from '../../Errors/errors.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { mUserFootprintReactionRepo } from '../Repository/mUserFootprintReactionRepo.js';
@@ -21,6 +22,7 @@ import { GetFootprintDetail } from '../../Application/Features/Footprint/GetFoot
 import { embeddingService } from './embeddingService.js';
 import { Notification } from '../../Database/Entities/notification.js';
 import { notificationRepo } from '../Repository/notificationRepo.js';
+import { Card } from '../../Database/Entities/card.js';
 
 export const footprintService = {
   expressReaction: async (
@@ -264,5 +266,15 @@ export const footprintService = {
     const footprint =
       await footprintRepo.findOneByIdWithAllRelations(footprintId);
     return footprint as GetFootprintDetail.FootprintDetailDto;
+  },
+  getPublicFootprintByCardUrl: async (cardUrl: string, page: number) => {
+    const url = `https://dengta.org/${cardUrl}`;
+    const card = await Card.findOne({
+      where: { cardUrl: url },
+    });
+    if (!card) {
+      throw new CardUrlNotExistsError();
+    }
+    return await footprintService.getFootprintByUserId(card.userId, true, page);
   },
 };

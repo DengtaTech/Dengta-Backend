@@ -21,6 +21,9 @@ import { userService } from '../Infrastructure/Service/userService.js';
 import { searchFolloweesHandler } from '../Application/Features/User/SearchFollowees/searchFolloweesHandler.js';
 import { editCardLinkHandler } from '../Application/Features/User/EditCardLink/editCardLinkHandler.js';
 import { getCardUrlHandler } from '../Application/Features/User/GetCardLink/getCardUrlHandler.js';
+import { getPublicUserInfoHandler } from '../Application/Features/User/GetPublicUserInfo/getPublicUserInfoHandler.js';
+import { get } from 'http';
+import { getPublicFootprintsHandler } from '../Application/Features/User/GetPublicFootprints/getPublicFootprintsHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -186,6 +189,21 @@ export const userController = {
     }
     const { id: userId } = req.decodedToken;
     const response = await getCardUrlHandler.handle(userId);
+    res.status(200).json(response);
+  },
+  getPublicInfo: async (req: Request, res: Response): Promise<void> => {
+    const { cardUrl } = req.params;
+
+    const response = await getPublicUserInfoHandler.handle(cardUrl);
+    res.status(200).json(response);
+  },
+  getPublicFootprints: async (req: Request, res: Response): Promise<void> => {
+    const { cardUrl } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    if (page <= 0) {
+      throw new InvalidInputError('page must be a positive integer');
+    }
+    const response = await getPublicFootprintsHandler.handle(cardUrl, page);
     res.status(200).json(response);
   },
 };

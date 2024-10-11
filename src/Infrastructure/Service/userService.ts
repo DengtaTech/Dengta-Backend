@@ -252,6 +252,18 @@ export const userService = {
     if (!card) {
       throw new CardUrlNotExistsError();
     }
-    return card.cardUrl as string;
+    return card.cardUrl;
+  },
+  getPublicUserInfo: async (
+    cardUrl: string,
+  ): Promise<GetUserInfo.UserWithHashtagsAndLinks> => {
+    const url = `https://dengta.org/${cardUrl}`;
+    const card = await Card.findOne({
+      where: { cardUrl: url },
+    });
+    if (!card) {
+      throw new CardUrlNotExistsError();
+    }
+    return await userService.getUserInfo(card.userId);
   },
 };
