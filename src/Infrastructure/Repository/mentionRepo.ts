@@ -2,16 +2,7 @@ import { EntityManager } from 'typeorm';
 import { Mention } from '../../Database/Entities/mention.js';
 import { GetMention } from '../../Application/Features/Volume/Mention/getMention/Types/api.js';
 import { v4 as uuidv4 } from 'uuid';
-
-const getMonday = (date: Date): string => {
-  const copyDate = new Date(date);
-  copyDate.setHours(12);
-
-  const day = copyDate.getDay();
-  const diff = copyDate.getDate() - day + (day === 0 ? -6 : 1);
-  const monday = new Date(copyDate.setDate(diff));
-  return monday.toISOString().split('T')[0];
-};
+import { dateUtils } from '../../utils/dateUtils.js';
 
 export const mentionRepo = {
   insertOrUpdate: async (
@@ -20,7 +11,7 @@ export const mentionRepo = {
     count: GetMention.IMentionCount,
     transactionManager?: EntityManager,
   ): Promise<void> => {
-    const startTimestamp = getMonday(date);
+    const startTimestamp = dateUtils.getMonday(date);
 
     try {
       if (transactionManager) {
@@ -78,7 +69,7 @@ export const mentionRepo = {
     startTimestamp: Date,
     transactionManager?: EntityManager,
   ): Promise<Mention[]> => {
-    const weekStart = getMonday(startTimestamp);
+    const weekStart = dateUtils.getMonday(startTimestamp);
 
     if (transactionManager) {
       return await transactionManager.find(Mention, {
@@ -94,7 +85,7 @@ export const mentionRepo = {
     startTimestamp: Date,
     transactionManager?: EntityManager,
   ): Promise<GetMention.IMentionTotalCount[]> => {
-    const weekStart = getMonday(startTimestamp);
+    const weekStart = dateUtils.getMonday(startTimestamp);
     let result;
     try {
       if (transactionManager) {
@@ -127,5 +118,44 @@ export const mentionRepo = {
       console.error('Error get mentions total count in week:');
       throw error;
     }
+  },
+  getTopKeywordsInWeek: async (
+    startTimestamp: Date,
+    limit: number,
+    transactionManager?: EntityManager,
+  ): Promise<GetMention.IMentionTotalCount[]> => {
+    const weekStart = dateUtils.getMonday(startTimestamp);
+
+    let result;
+    if (transactionManager) {
+      result = await transactionManager
+        .createQueryBuilder()
+        .select('keyword')
+        .addSelect('SUM(footprints + search)', 'totalCount')
+        .from(Mention, 'mention')
+        .where('startTimestamp = :startTimestamp', {
+          startTimestamp: weekStart,
+        })
+        .groupBy('keyword')
+        .orderBy('totalCount', 'DESC')
+        .limit(limit)
+        .getRawMany();
+    } else {
+      result = await Mention.createQueryBuilder()
+        .select('keyword')
+        .addSelect('SUM(footprints + search)', 'totalCount')
+        .where('startTimestamp = :startTimestamp', {
+          startTimestamp: weekStart,
+        })
+        .groupBy('keyword')
+        .orderBy('totalCount', 'DESC')
+        .limit(limit)
+        .getRawMany();
+    }
+
+    return result.map((r) => ({
+      keyword: r.keyword,
+      totalCount: parseInt(r.totalCount),
+    }));
   },
 };

@@ -17,4 +17,10 @@ router.post(
   wrapAsync(notificationController.postOfficialNotification),
 );
 
+router.post(
+  '/keyword',
+  jwtAuthentication,
+  wrapAsync(notificationController.postWeeklyKeywordNotification),
+);
+
 export default router;
