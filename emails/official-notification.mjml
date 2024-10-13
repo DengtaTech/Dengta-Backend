@@ -1,0 +1,75 @@
+<mjml>
+  <mj-head>
+    <mj-raw>
+      <style>
+        .header-gradient {
+          background: linear-gradient(
+            90deg,
+            #242526 0%,
+            #242526 30%,
+            rgba(64, 57, 33, 1) 100%
+          );
+        }
+      </style>
+    </mj-raw>
+  </mj-head>
+  <mj-body background-color="#ffffff" width="600px">
+    <mj-section padding="20px" css-class="header-gradient">
+      <mj-column vertical-align="top">
+        <mj-image
+          src="https://storage.googleapis.com/dengta-email-image-bucket/dengta-header-logo-small-v2.png"
+          width="150px"
+          alt="DengTa Logo"
+          align="left"
+        />
+      </mj-column>
+    </mj-section>
+    <mj-section padding="30px 0px 20px">
+      <mj-column> <%= it.content %> </mj-column>
+    </mj-section>
+    <mj-section padding="30px 0px 20px">
+      <mj-column>
+        <mj-divider border-color="#7E7E7E" border-width="1px" width="100%" />
+        <mj-text font-size="20px" font-weight="700" align="center">
+          <span style="color: #ffc500">Deng</span>Ta 是您尋找生涯方向的最佳助手
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#242526" padding="20px">
+      <mj-column width="50%">
+        <!-- 左邊 Logo 和版權信息 -->
+        <mj-image
+          src="https://storage.googleapis.com/dengta-email-image-bucket/dengta-header-logo-small-v2.png"
+          width="100px"
+          alt="DengTa Logo"
+          align="left"
+        />
+        <mj-text color="#ffffff" font-size="10px" align="left">
+          © 2024 DengTa
+        </mj-text>
+      </mj-column>
+      <mj-column width="50%">
+        <!-- 右邊社交圖標 -->
+        <mj-social
+          font-size="15px"
+          icon-size="30px"
+          mode="horizontal"
+          align="right"
+        >
+          <mj-social-element
+            name="instagram"
+            href="https://instagram.com"
+            background-color="#242526"
+          >
+          </mj-social-element>
+          <mj-social-element
+            name="facebook"
+            href="https://facebook.com"
+            background-color="#242526"
+          >
+          </mj-social-element>
+        </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
