@@ -1,0 +1,176 @@
+<mjml>
+  <mj-head>
+    <mj-raw>
+      <style>
+        .header-gradient {
+          background: linear-gradient(
+            90deg,
+            #242526 0%,
+            #242526 30%,
+            rgba(64, 57, 33, 1) 100%
+          );
+        }
+      </style>
+    </mj-raw>
+  </mj-head>
+  <mj-body background-color="#ffffff" width="600px">
+    <!-- Header 部分 -->
+    <mj-section padding="20px" css-class="header-gradient">
+      <mj-column vertical-align="top">
+        <mj-image
+          src="https://storage.googleapis.com/dengta-email-image-bucket/dengta-header-logo-small-v2.png"
+          width="150px"
+          alt="DengTa Logo"
+          align="left"
+        />
+      </mj-column>
+    </mj-section>
+
+    <!-- 通知標題 -->
+    <mj-section padding="50px 0px 0px">
+      <mj-column>
+        <mj-text
+          font-size="24px"
+          font-weight="700"
+          color="#000000"
+          align="center"
+        >
+          <%= it.userName %>新增了一個新足跡，快來看看吧！
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="30px 0px 20px">
+      <mj-column>
+        <mj-divider border-color="#7E7E7E" border-width="1px" width="100%" />
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="0px 20px">
+      <mj-column width="20%" vertical-align="middle">
+        <mj-image
+          src="https://th.bing.com/th/id/OIG.69nPvzou81d8KVDyZl__?pid=ImgDetMain"
+          width="60px"
+          alt="張閔英"
+          border-radius="50%"
+          align="center"
+          padding="0px"
+        />
+      </mj-column>
+      <mj-column width="30%" vertical-align="middle">
+        <mj-text
+          font-size="20px"
+          color="#000000"
+          font-weight="700"
+          align="left"
+          padding="5px 0px"
+        >
+          <%= it.userName %>
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-weight="700"
+          align="left"
+          padding="5px 0px"
+        >
+          <%= it.userLifeRole %>
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="50%" vertical-align="bottom">
+        <mj-text font-size="14px" color="#333333" align="right">
+          September 13, 2024
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-spacer height="18px" />
+
+    <mj-section padding="0px 20px">
+      <mj-column>
+        <mj-text
+          font-size="28px"
+          color="#000000"
+          font-weight="700"
+          align="left"
+        >
+          <%= it.footprintTitle %>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="0px 20px">
+      <mj-column>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-weight="700"
+          align="left"
+        >
+          <%= it.footprintTruncatedContent %>
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-weight="700"
+          align="left"
+        >
+          ... more
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- 按鈕 -->
+    <mj-section padding="20px 0px 50px">
+      <mj-column>
+        <mj-button
+          background-color="#ffc500"
+          color="#ffffff"
+          href="https://your-link.com"
+          align="center"
+        >
+          查看完整足跡 &#8594;
+        </mj-button>
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer 部分 -->
+    <mj-section background-color="#242526" padding="20px">
+      <mj-column width="50%">
+        <!-- 左邊 Logo 和版權信息 -->
+        <mj-image
+          src="https://storage.googleapis.com/dengta-email-image-bucket/dengta-header-logo-small-v2.png"
+          width="100px"
+          alt="DengTa Logo"
+          align="left"
+        />
+        <mj-text color="#ffffff" font-size="10px" align="left">
+          © 2024 DengTa
+        </mj-text>
+      </mj-column>
+      <mj-column width="50%">
+        <!-- 右邊社交圖標 -->
+        <mj-social
+          font-size="15px"
+          icon-size="30px"
+          mode="horizontal"
+          align="right"
+        >
+          <mj-social-element
+            name="instagram"
+            href="https://instagram.com"
+            background-color="#242526"
+          >
+          </mj-social-element>
+          <mj-social-element
+            name="facebook"
+            href="https://facebook.com"
+            background-color="#242526"
+          >
+          </mj-social-element>
+        </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
