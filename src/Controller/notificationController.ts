@@ -50,15 +50,6 @@ export const notificationController = {
     req: Request,
     res: Response,
   ): Promise<void> => {
-    if (req.decodedToken === undefined) {
-      throw new NoTokenError();
-    }
-    const { id: userId } = req.decodedToken;
-
-    res.status(201).json(
-      await postWeeklyKeywordHandler.handle({
-        senderId: userId,
-      }),
-    );
+    res.status(201).json(await postWeeklyKeywordHandler.handle());
   },
 };
