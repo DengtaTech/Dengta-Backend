@@ -57,37 +57,30 @@ export const notificationService = {
       },
     };
   },
-  postWeeklyKeywordNotificationEmail: async (
-    body: PostWeeklyKeyword.IPostWeeklyKeywordReq,
-  ): Promise<PostWeeklyKeyword.IPostWeeklyKeywordResponse> => {
-    try {
-      const userRoles = await userRepo.getUserRoles(body.senderId);
+  postWeeklyKeywordNotificationEmail:
+    async (): Promise<PostWeeklyKeyword.IPostWeeklyKeywordResponse> => {
+      try {
+        const allUsers = await userRepo.getAllUsers();
 
-      if (userRoles.some((role) => role.name === 'admin') === false) {
-        throw new UnauthorizedError();
+        Promise.all(
+          allUsers.map(async (user) => {
+            await emailService.sendWeeklyKeywordOfficialNotificationEmail(
+              user.email,
+              'Dengta 本周的熱門關鍵字出爐了！',
+              user.fullName,
+            );
+          }),
+        );
+      } catch (error) {
+        console.error('Error posting official notification:');
+        throw error;
       }
 
-      const allUsers = await userRepo.getAllUsers();
-
-      Promise.all(
-        allUsers.map(async (user) => {
-          await emailService.sendWeeklyKeywordOfficialNotificationEmail(
-            user.email,
-            'Dengta 本周的熱門關鍵字出爐了！',
-            user.fullName,
-          );
-        }),
-      );
-    } catch (error) {
-      console.error('Error posting official notification:');
-      throw error;
-    }
-
-    return {
-      data: {
-        success: true,
-        message: 'Notification sent to all users',
-      },
-    };
-  },
+      return {
+        data: {
+          success: true,
+          message: 'Notification sent to all users',
+        },
+      };
+    },
 };
