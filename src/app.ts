@@ -92,10 +92,10 @@ if (process.env.NODE_ENV !== 'test') {
     usingRedisExample(),
     (async () => {
       console.log('test');
-      await initMilvus(true);
+      await initMilvus(false);
       console.log('Milvus initialized successfully');
       // 給前端用的假資料
-      // await initFakeData();
+      await initFakeData();
     })(),
   ]);
 
