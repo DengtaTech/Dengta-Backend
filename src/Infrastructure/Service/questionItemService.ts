@@ -5,7 +5,7 @@ import { MUserQuestionItem } from '../../Database/Entities/mUserQuestionItem.js'
 import { InsertResponse } from '../../Application/Features/QuestionItem/InsertResponse/Types/api.js';
 import { Database } from '../../Database/data-source.js';
 import { QuestionItem } from '../../Database/Entities/questionItems.js';
-import { In } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 
 export const questionItemService = {
   insertQuestionResponse: async (
@@ -74,5 +74,17 @@ export const questionItemService = {
   },
   getAllQuestionItems: async () => {
     return await questionItemRepo.getAllItems();
+  },
+  checkFillOrNot: async (userId: string): Promise<boolean> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserNotFoundError();
+    }
+    const exists = await MUserQuestionItem.createQueryBuilder('m')
+      .select('1')
+      .where('m.userId = :userId', { userId })
+      .limit(1)
+      .getRawOne();
+
+    return !!exists;
   },
 };
