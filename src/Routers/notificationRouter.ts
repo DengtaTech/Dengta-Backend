@@ -17,4 +17,9 @@ router.post(
   wrapAsync(notificationController.postOfficialNotification),
 );
 
+router.post(
+  '/keyword',
+  wrapAsync(notificationController.postWeeklyKeywordNotification),
+);
+
 export default router;

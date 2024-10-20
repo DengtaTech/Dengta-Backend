@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getNotificationHandler } from '../Application/Features/Notification/GetNotification/GetNotificationHandler.js';
 import { postOfficialNotificationHandler } from '../Application/Features/Notification/PostOfficialNotification/PostOfficialNotificationHandler.js';
+import { postWeeklyKeywordHandler } from '../Application/Features/Notification/PostWeeklyKeyword/PostWeeklyKeywordHandler.js';
 import {
   NoTokenError,
   InputEmptyError,
@@ -44,5 +45,11 @@ export const notificationController = {
     });
 
     res.status(201).json(response);
+  },
+  postWeeklyKeywordNotification: async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    res.status(201).json(await postWeeklyKeywordHandler.handle());
   },
 };

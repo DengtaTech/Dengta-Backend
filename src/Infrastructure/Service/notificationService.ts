@@ -4,6 +4,8 @@ import { NotificationRetrieve } from '../../Application/Features/Notification/Ge
 import { PostOfficialNotification } from '../../Application/Features/Notification/PostOfficialNotification/Types/api.js';
 import { userRepo } from '../Repository/userRepo.js';
 import { Notification } from '../../Database/Entities/notification.js';
+import { emailService } from './emailService.js';
+import { PostWeeklyKeyword } from '../../Application/Features/Notification/PostWeeklyKeyword/Types/api.js';
 
 export const notificationService = {
   getNotificationByUserId: async (
@@ -55,4 +57,30 @@ export const notificationService = {
       },
     };
   },
+  postWeeklyKeywordNotificationEmail:
+    async (): Promise<PostWeeklyKeyword.IPostWeeklyKeywordResponse> => {
+      try {
+        const allUsers = await userRepo.getAllUsers();
+
+        Promise.all(
+          allUsers.map(async (user) => {
+            await emailService.sendWeeklyKeywordOfficialNotificationEmail(
+              user.email,
+              'Dengta 本周的熱門關鍵字出爐了！',
+              user.fullName,
+            );
+          }),
+        );
+      } catch (error) {
+        console.error('Error posting official notification:');
+        throw error;
+      }
+
+      return {
+        data: {
+          success: true,
+          message: 'Notification sent to all users',
+        },
+      };
+    },
 };

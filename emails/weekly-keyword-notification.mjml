@@ -1,0 +1,126 @@
+<mjml>
+  <mj-head>
+    <mj-raw>
+      <style>
+        .header-gradient {
+          background: linear-gradient(
+            90deg,
+            #242526 0%,
+            #242526 30%,
+            rgba(64, 57, 33, 1) 100%
+          );
+        }
+
+        .content {
+          color: #000000;
+          padding: 0px 40px;
+        }
+      </style>
+    </mj-raw>
+  </mj-head>
+  <mj-body background-color="#ffffff" width="600px">
+    <mj-section padding="20px" css-class="header-gradient">
+      <mj-column vertical-align="top">
+        <mj-image
+          src="https://storage.googleapis.com/dengta-email-image-bucket/dengta-header-logo-small-v2.png"
+          width="150px"
+          alt="DengTa Logo"
+          align="left"
+        />
+      </mj-column>
+    </mj-section>
+    <mj-section padding="30px 20px 0px">
+      <mj-column>
+        <mj-text
+          font-size="24px"
+          font-weight="700"
+          color="#000000"
+          align="left"
+        >
+          <%= it.name %>您好，
+        </mj-text>
+        <mj-text
+          font-size="18px"
+          color="#000000"
+          align="left"
+          line-height="24px"
+        >
+          以下是我們 Dengta 本周 <%= it.week %> 最受矚目的
+          <b>流行關鍵字！🔥</b>
+        </mj-text>
+        <mj-text
+          font-size="18px"
+          color="#000000"
+          align="left"
+          line-height="24px"
+        >
+          這些關鍵字就像網路世界的風向標，帶領著大家討論最熱門的話題。你是否也跟上了這股熱潮？快來看看大家都在聊什麼吧！👇
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="0px 0px 20px 20px">
+      <mj-column>
+        <mj-table>
+          <tr
+            style="
+              border-bottom: 1px solid #ecedee;
+              text-align: left;
+              padding: 15px 0;
+              font-size: 20px;
+              margin-top: 30px;
+            "
+          >
+            <th style="padding: 10px 15px 10px 0px">排名</th>
+            <th style="padding: 10px 15px">關鍵字</th>
+            <th style="padding: 10px 0px 10px 15px">出現次數</th>
+          </tr>
+          %%keywords-table%%
+        </mj-table>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="30px 0px 20px">
+      <mj-column>
+        <mj-divider border-color="#7E7E7E" border-width="1px" width="100%" />
+        <mj-text font-size="20px" font-weight="700" align="center">
+          <span style="color: #ffc500">Deng</span>Ta 是您尋找生涯方向的最佳助手
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#242526" padding="20px">
+      <mj-column width="50%">
+        <!-- 左邊 Logo 和版權資訊 -->
+        <mj-image
+          src="https://storage.googleapis.com/dengta-email-image-bucket/dengta-header-logo-small-v2.png"
+          width="100px"
+          alt="DengTa Logo"
+          align="left"
+        />
+        <mj-text color="#ffffff" font-size="10px" align="left">
+          © 2024 DengTa
+        </mj-text>
+      </mj-column>
+      <mj-column width="50%">
+        <!-- 右邊社交圖標 -->
+        <mj-social
+          font-size="15px"
+          icon-size="30px"
+          mode="horizontal"
+          align="right"
+        >
+          <mj-social-element
+            name="instagram"
+            href="https://instagram.com"
+            background-color="#242526"
+          >
+          </mj-social-element>
+          <mj-social-element
+            name="facebook"
+            href="https://facebook.com"
+            background-color="#242526"
+          >
+          </mj-social-element>
+        </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

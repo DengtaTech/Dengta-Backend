@@ -33,3 +33,5 @@ export const TOTAL_WEIGHT_WITHOUT_FOOTPRINTS = calculateTotalWeight({
     content: 0,
   },
 });
+
+export const KEYWORDS_LIMIT = 3;
