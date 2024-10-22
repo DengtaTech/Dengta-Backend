@@ -60,10 +60,10 @@ export const userEmbeddingRepo = {
       throw error;
     }
   },
-  getUserWithProfileHashTagEmbedding: async (
+  getUserEmbeddingWithAllrelations: async (
     userId: string,
     transactionManager?: EntityManager,
-  ): Promise<Embedding.IEmbeddingUserWithHashTagEmbedding> => {
+  ): Promise<Embedding.IEmbeddingUserWithAllRelationsEmbedding> => {
     const query = (
       transactionManager?.createQueryBuilder(User, 'user') ||
       User.createQueryBuilder('user')
@@ -72,6 +72,11 @@ export const userEmbeddingRepo = {
       .leftJoinAndSelect('user.mUserProfileHashTag', 'mUserProfileHashTag')
       .leftJoinAndSelect('mUserProfileHashTag.profileHashTag', 'profileHashTag')
       .leftJoinAndSelect('profileHashTag.embedding', 'profileHashTagEmbedding')
+      .leftJoinAndSelect('user.questionResponses', 'questionResponses')
+      .leftJoinAndSelect(
+        'questionResponses.embedding',
+        'questionResponseEmbedding',
+      )
       .where('user.id = :userId', { userId });
 
     const user = await query.getOne();
@@ -87,6 +92,10 @@ export const userEmbeddingRepo = {
       profileHashTagsEmbedding:
         user?.mUserProfileHashTag?.map((tag) => {
           return tag.profileHashTag?.embedding?.contentEmbedding || [];
+        }) || [],
+      questionResponsesEmbedding:
+        user?.questionResponses?.map((response) => {
+          return response.embedding?.responseEmbedding || [];
         }) || [],
     };
 

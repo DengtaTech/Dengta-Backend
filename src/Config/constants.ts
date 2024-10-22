@@ -11,7 +11,7 @@ export const EMBEDDING_WEIGHTS: Embedding.IEmbeddingWeights = {
     tags: 0.09638881389573006,
     content: 0.45620581710468733,
   },
-  questionnaire: 0,
+  questionResponses: 0.2837710806425091,
 };
 export const RECOMMENDATION_LIMIT = 8;
 
@@ -35,3 +35,11 @@ export const TOTAL_WEIGHT_WITHOUT_FOOTPRINTS = calculateTotalWeight({
 });
 
 export const KEYWORDS_LIMIT = 3;
+
+export const QUESTION_TEMPLATES = [
+  '',
+  '我在未來有興趣投入{{goal}}領域',
+  '我具體想要投入的領域是{{goal}}',
+  '我設定這個目標的原因是{{goal}}',
+  '我日常生活中的成長目標是{{goal}}',
+];

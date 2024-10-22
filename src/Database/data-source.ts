@@ -29,6 +29,7 @@ import { MUserQuestionItem } from './Entities/mUserQuestionItem.js';
 import { QuestionItem } from './Entities/questionItems.js';
 import { questionItemRepo } from '../Infrastructure/Repository/questionItemRepo.js';
 import { Mention } from './Entities/mention.js';
+import { MUserQuestionItemEmbedding } from './Entities/mUserQuestionItemEmbedding.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -56,6 +57,7 @@ export const Database = new DataSource({
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE,
   synchronize: true,
+  dropSchema: true,
   logging: false,
   entities: [
     User,
@@ -82,6 +84,7 @@ export const Database = new DataSource({
     Mention,
     Card,
     Bowl,
+    MUserQuestionItemEmbedding,
   ],
 });
 

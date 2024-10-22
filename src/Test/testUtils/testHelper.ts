@@ -19,6 +19,7 @@ import { signUpHandler } from '../../Application/Features/User/SignUp/signUpHand
 import { initFootprintHandler } from '../../Application/Features/Footprint/InitFootprint/initFootprintHandler.js';
 import { publishFootprintHandler } from '../../Application/Features/Footprint/PublishFootprint/publishFootprintHandler.js';
 import { patchUserInfoHandler } from '../../Application/Features/User/PatchUserInfo/patchUserInfoHandler.js';
+import { insertResponseHandler } from '../../Application/Features/QuestionItem/InsertResponse/insertResponseHandler.js';
 import path from 'path';
 import { uploadAvatarHandler } from '../../Application/Features/User/UploadAvatar/uploadAvatarHandler.js';
 
@@ -293,6 +294,18 @@ export const testHelper = {
         hashtags: userRaw.hashtags,
         links: [],
       });
+
+      const questionRes = userRaw.questionResponses.map(
+        (response: string, index: number) => ({
+          id: index + 1,
+          response,
+        }),
+      );
+
+      await insertResponseHandler.handle(signUpRes.data.user.id, {
+        questionRes,
+      });
+
       const avatarFilename = `avatar${index + 1}.jpg`;
       const avatarPath = path.join(
         'src/Test/mockData',
