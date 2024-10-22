@@ -22,6 +22,7 @@ import { patchUserInfoHandler } from '../../Application/Features/User/PatchUserI
 import { insertResponseHandler } from '../../Application/Features/QuestionItem/InsertResponse/insertResponseHandler.js';
 import path from 'path';
 import { uploadAvatarHandler } from '../../Application/Features/User/UploadAvatar/uploadAvatarHandler.js';
+import { initFixedDbData } from '../../Database/data-source.js';
 
 export type TFootprintJson = Footprint & {
   hashtags: string[];
@@ -266,6 +267,8 @@ export const testHelper = {
     return notificationData;
   },
   createFakeUsersForRecommendation: async (userNumber: number) => {
+    await initFixedDbData();
+
     const usertsJsonFile = fs.readFileSync(
       'src/Test/mockData/fakeUser-ch.json',
       'utf8',
