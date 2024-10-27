@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import 'reflect-metadata';
 import {
   Database,
@@ -42,7 +43,7 @@ import { multerErrorHandling } from './Middlewares/multer.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
-
+app.use(cors());
 app.use(express.json());
 app.use('/image', imageRouter);
 app.use('/api/1.0/user', userRouter);
