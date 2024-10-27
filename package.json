@@ -5,6 +5,8 @@
   "main": "src/app.js",
   "type": "module",
   "scripts": {
+    "start": "node dist/src/app.js",
+    "stop": "pkill -f 'node dist/src/app.js'",
     "build": "rm -rf dist && npx tsc && cp -r src/Test/mockData dist/src/Test/",
     "dev:setenv": "docker compose -f ./docker-compose-dev.yml --env-file ./.env.dev up -d --build",
     "dev:run": "nodemon --exec node --enable-source-maps --no-warnings=ExperimentalWarning --loader ts-node/esm --env-file=./.env.dev ./src/app.ts",
@@ -13,6 +15,8 @@
     "devi": "infisical run --env=dev --path=/share -- concurrently -c 'blue.bold,red.bold' 'npx tsc --watch' 'nodemon -q dist/src/app.js'",
     "test": "infisical run --env=dev --path=/share --command=\"cross-env NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test npx jest --runInBand --coverage --forceExit\"",
     "test:ci": "infisical run --env=staging --path=/share --command=\"cross-env NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test npx jest --runInBand --coverage --forceExit\"",
+    "load-test": "infisical run --env=dev --path=/share --command=\"k6 run src/Test/k6_tests/main.js\"",
+    "load-test:ci": "infisical run --env=staging --path=/share --command=\"npm run start & sleep 5 && k6 run src/Test/k6_tests/main.js && npm run stop\"",
     "staging": "docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
     "lint": "npx eslint .",
     "prettier": "npx prettier --write .",
