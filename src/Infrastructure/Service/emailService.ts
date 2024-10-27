@@ -91,7 +91,7 @@ export const emailService = {
       await emailService.sendEmail(to, subject, html);
     } catch (err) {
       console.error('Error:', err);
-      throw err;
+      return;
     }
   },
 };

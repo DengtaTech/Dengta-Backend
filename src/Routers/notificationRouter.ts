@@ -19,7 +19,6 @@ router.post(
 
 router.post(
   '/keyword',
-  jwtAuthentication,
   wrapAsync(notificationController.postWeeklyKeywordNotification),
 );
 
