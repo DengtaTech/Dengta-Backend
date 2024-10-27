@@ -16,7 +16,7 @@
     "test": "infisical run --env=dev --path=/share --command=\"cross-env NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test npx jest --runInBand --coverage --forceExit\"",
     "test:ci": "infisical run --env=staging --path=/share --command=\"cross-env NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test npx jest --runInBand --coverage --forceExit\"",
     "load-test": "infisical run --env=dev --path=/share --command=\"k6 run src/Test/k6_tests/main.js\"",
-    "load-test:ci": "infisical run --env=staging --path=/share --command=\"npm run start & sleep 5 && k6 run src/Test/k6_tests/main.js && npm run stop\"",
+    "load-test:ci": "infisical run --env=staging --path=/share --command=\"npm run build && npm run start & sleep 5 && k6 run src/Test/k6_tests/main.js && npm run stop\"",
     "staging": "docker compose -f ./docker-compose.yml --env-file ./.env.staging up -d --build",
     "lint": "npx eslint .",
     "prettier": "npx prettier --write .",
