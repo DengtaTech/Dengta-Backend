@@ -15,7 +15,7 @@ export default function searchKeyword(token) {
     };
 
     const searchKeywordRes = http.post(
-      `http://localhost:${__ENV.EXPRESS_PORT}/api/1.0/search`,
+      `${__ENV.BACKEND_DOMAIN}/api/1.0/search`,
       searchKeywordPayload,
       params,
     );

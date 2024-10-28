@@ -30,7 +30,7 @@ export default function getSimilarUser(token) {
     };
 
     const getSimilarUserRes = http.post(
-      `http://localhost:${__ENV.EXPRESS_PORT}/api/1.0/recommendation/similar_users`,
+      `${__ENV.BACKEND_DOMAIN}/api/1.0/recommendation/similar_users`,
       getSimilarUserPayload,
       params,
     );

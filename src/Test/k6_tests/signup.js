@@ -26,7 +26,7 @@ export default function signup() {
     };
 
     let res = http.post(
-      `http://localhost:${__ENV.EXPRESS_PORT}/api/1.0/user/signup`,
+      `${__ENV.BACKEND_DOMAIN}/api/1.0/user/signup`,
       payload,
       params,
     );

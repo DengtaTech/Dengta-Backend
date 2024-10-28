@@ -91,7 +91,7 @@ export default function postFootprint(token) {
     };
 
     let initFootprintRes = http.post(
-      `http://localhost:${__ENV.EXPRESS_PORT}/api/1.0/footprint/init`,
+      `${__ENV.BACKEND_DOMAIN}/api/1.0/footprint/init`,
       initFootprintPayload,
       params,
     );
@@ -116,7 +116,7 @@ export default function postFootprint(token) {
     });
 
     let publishFootprintRes = http.post(
-      `http://localhost:${__ENV.EXPRESS_PORT}/api/1.0/footprint/publish`,
+      `${__ENV.BACKEND_DOMAIN}/api/1.0/footprint/publish`,
       publishFootprintPayload,
       params,
     );
