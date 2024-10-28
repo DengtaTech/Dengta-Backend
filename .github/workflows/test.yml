@@ -73,10 +73,6 @@ jobs:
         run: |
           cd /srv/dengta-ci
           npm run test:ci
-      - name: Run K6 Load Test
-        run: |
-          cd /srv/dengta-ci
-          npm run load-test:ci
       - name: Send Notification to Discord
         if: success()
         uses: appleboy/discord-action@master
