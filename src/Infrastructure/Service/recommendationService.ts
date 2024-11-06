@@ -68,6 +68,7 @@ export const recommendationService = {
           selfIntro: ('' as string) || null,
           followerCount: 0,
           hashtags: ([] as string[]) || [],
+          avatar: '',
         },
         similarity: result.score,
         startFootprintId: result.startFootprintId,
@@ -106,6 +107,7 @@ export const recommendationService = {
       similarUser.user.selfIntro = user.selfIntro;
       similarUser.user.hashtags = user.hashtags;
       similarUser.user.followerCount = followerCount;
+      similarUser.user.avatar = user.avatar;
 
       if (!user.birthday) throw new DatabaseError();
       const birthday = new Date(user.birthday);
