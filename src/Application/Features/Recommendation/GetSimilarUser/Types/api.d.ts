@@ -5,7 +5,10 @@ declare namespace GetSimilarUser {
     goal: string;
   }
   interface ISimilarUser
-    extends Pick<User, 'id' | 'fullName' | 'lifeRole' | 'selfIntro'> {
+    extends Pick<
+      User,
+      'id' | 'fullName' | 'lifeRole' | 'selfIntro' | 'avatar'
+    > {
     hashtags: string[];
   }
   interface ISimilarUserDto {
