@@ -145,10 +145,7 @@ export const embeddingService = {
     mUserQuestionItemInfo: Embedding.IMUserQuestionItemDto,
   ): Promise<void> => {
     return Database.transaction(async (transactionManager) => {
-      if (
-        !mUserQuestionItemInfo.response ||
-        mUserQuestionItemInfo.response === ''
-      ) {
+      if (!mUserQuestionItemInfo.response) {
         return;
       }
 
