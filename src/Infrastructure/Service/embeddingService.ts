@@ -6,12 +6,14 @@ import { footprintEmbeddingRepo } from '../Repository/footprintEmbeddingRepo.js'
 import { profileHashtagEmbeddingRepo } from '../Repository/profileHashtagEmbeddingRepo.js';
 import { footprintHashTagEmbeddingRepo } from '../Repository/footprintHashTagEmbeddingRepo.js';
 import { milvusUserIntervalsEmbeddingRepo } from '../Repository/milvusUserIntervalsEmbeddingRepo.js';
+import { mUserQuestionItemEmbeddingRepo } from '../Repository/mUserQuestionItemEmbeddingRepo.js';
 import { EntityManager } from 'typeorm';
 import {
   FOOTPRINT_INTERVAL_SIZE,
   EMBEDDING_WEIGHTS,
   TOTAL_WEIGHT,
   TOTAL_WEIGHT_WITHOUT_FOOTPRINTS,
+  QUESTION_TEMPLATES,
 } from '../../Config/constants.js';
 import { EmbeddingServerError } from '../../Errors/errors.js';
 
@@ -131,6 +133,66 @@ export const embeddingService = {
       try {
         await footprintEmbeddingRepo.insertFootprintEmbedding(
           footprintEmbedding,
+          transactionManager,
+        );
+      } catch (error) {
+        console.error('Error in DB ->');
+        throw error;
+      }
+    });
+  },
+  insertMUserQuestionItemEmbedding: async (
+    mUserQuestionItemInfo: Embedding.IMUserQuestionItemDto,
+  ): Promise<void> => {
+    return Database.transaction(async (transactionManager) => {
+      if (!mUserQuestionItemInfo.response) {
+        return;
+      }
+
+      const template = QUESTION_TEMPLATES[mUserQuestionItemInfo.questionItemId];
+      const sentence = template.replace(
+        '{{goal}}',
+        mUserQuestionItemInfo.response,
+      );
+
+      const sentences = [sentence];
+
+      let embedding: number[][] = [];
+      try {
+        embedding = await embeddingService.getEmbeddingBySentences(sentences);
+      } catch (error) {
+        console.error('Error in embedding service ->');
+        throw error;
+      }
+
+      const mUserQuestionItemEmbedding = {
+        userId: mUserQuestionItemInfo.userId,
+        questionItemId: mUserQuestionItemInfo.questionItemId,
+        responseEmbedding: embedding[0],
+      };
+
+      try {
+        const existingEmbedding =
+          await mUserQuestionItemEmbeddingRepo.findByUserIdAndQuestionItemId(
+            mUserQuestionItemInfo.userId,
+            mUserQuestionItemInfo.questionItemId,
+            transactionManager,
+          );
+
+        if (existingEmbedding) {
+          await mUserQuestionItemEmbeddingRepo.updateMUserQuestionItemEmbedding(
+            mUserQuestionItemInfo.userId,
+            mUserQuestionItemInfo.questionItemId,
+            {
+              responseEmbedding: embedding[0],
+            },
+            transactionManager,
+          );
+          return;
+        }
+
+        await mUserQuestionItemEmbeddingRepo.insertMUserQuestionItemEmbedding(
+          mUserQuestionItemEmbedding,
           transactionManager,
         );
       } catch (error) {
@@ -273,7 +335,7 @@ export const embeddingService = {
   ): Promise<number[]> => {
     try {
       const userEmbedding =
-        await userEmbeddingRepo.getUserWithProfileHashTagEmbedding(userId);
+        await userEmbeddingRepo.getUserEmbeddingWithAllrelations(userId);
 
       if (!userEmbedding) {
         throw new EmbeddingServerError();
@@ -284,7 +346,7 @@ export const embeddingService = {
         selfIntro: userEmbedding.selfIntroEmbedding,
         lifeRole: userEmbedding.lifeRoleEmbedding,
         profileTags: userEmbedding.profileHashTagsEmbedding,
-        questionnaire: [],
+        questionResponses: userEmbedding.questionResponsesEmbedding,
       };
 
       const weightedEmbedding =
@@ -302,10 +364,10 @@ export const embeddingService = {
     userId: string,
   ): Promise<number[]> => {
     try {
-      const userWithProfileHashTagEmbedding =
-        await userEmbeddingRepo.getUserWithProfileHashTagEmbedding(userId);
+      const userWithAllRelationsEmbedding =
+        await userEmbeddingRepo.getUserEmbeddingWithAllrelations(userId);
 
-      if (!userWithProfileHashTagEmbedding) {
+      if (!userWithAllRelationsEmbedding) {
         throw new EmbeddingServerError();
       }
 
@@ -317,10 +379,10 @@ export const embeddingService = {
         );
 
       const userEmbedding: Embedding.IEmbeddingUser = {
-        userId: userWithProfileHashTagEmbedding.userId,
-        selfIntro: userWithProfileHashTagEmbedding.selfIntroEmbedding,
-        lifeRole: userWithProfileHashTagEmbedding.lifeRoleEmbedding,
-        profileTags: userWithProfileHashTagEmbedding.profileHashTagsEmbedding,
+        userId: userWithAllRelationsEmbedding.userId,
+        selfIntro: userWithAllRelationsEmbedding.selfIntroEmbedding,
+        lifeRole: userWithAllRelationsEmbedding.lifeRoleEmbedding,
+        profileTags: userWithAllRelationsEmbedding.profileHashTagsEmbedding,
         footprints: footprintsWithHashTagEmbedding.map((footprint) => {
           return {
             footPrintId: footprint.id,
@@ -329,7 +391,8 @@ export const embeddingService = {
             tags: footprint.hashTagEmbeddings || [],
           };
         }),
-        questionnaire: [],
+        questionResponses:
+          userWithAllRelationsEmbedding.questionResponsesEmbedding,
       };
 
       const weightedEmbedding =
@@ -353,13 +416,13 @@ export const embeddingService = {
         return;
       }
 
-      const userWithProfileHashTagEmbedding =
-        await userEmbeddingRepo.getUserWithProfileHashTagEmbedding(
+      const userWithAllRelationsEmbedding =
+        await userEmbeddingRepo.getUserEmbeddingWithAllrelations(
           userId,
           transactionManager,
         );
 
-      if (!userWithProfileHashTagEmbedding) {
+      if (!userWithAllRelationsEmbedding) {
         throw new Error('UserEmbedding not found');
       }
 
@@ -377,10 +440,10 @@ export const embeddingService = {
       }
 
       const userEmbedding: Embedding.IEmbeddingUser = {
-        userId: userWithProfileHashTagEmbedding.userId,
-        selfIntro: userWithProfileHashTagEmbedding.selfIntroEmbedding,
-        lifeRole: userWithProfileHashTagEmbedding.lifeRoleEmbedding,
-        profileTags: userWithProfileHashTagEmbedding.profileHashTagsEmbedding,
+        userId: userWithAllRelationsEmbedding.userId,
+        selfIntro: userWithAllRelationsEmbedding.selfIntroEmbedding,
+        lifeRole: userWithAllRelationsEmbedding.lifeRoleEmbedding,
+        profileTags: userWithAllRelationsEmbedding.profileHashTagsEmbedding,
         footprints: lastKFootprintWithHashTagEmbedding.map((footprint) => {
           return {
             footPrintId: footprint.id,
@@ -389,7 +452,8 @@ export const embeddingService = {
             tags: footprint.hashTagEmbeddings || [],
           };
         }),
-        questionnaire: [],
+        questionResponses:
+          userWithAllRelationsEmbedding.questionResponsesEmbedding,
       };
 
       const userWeightedEmbedding =
@@ -419,13 +483,13 @@ export const embeddingService = {
           return;
         }
 
-        const userWithProfileHashTagEmbedding =
-          await userEmbeddingRepo.getUserWithProfileHashTagEmbedding(
+        const userWithAllRelationsEmbedding =
+          await userEmbeddingRepo.getUserEmbeddingWithAllrelations(
             userId,
             transactionManager,
           );
 
-        if (!userWithProfileHashTagEmbedding) {
+        if (!userWithAllRelationsEmbedding) {
           throw new Error('UserEmbedding not found');
         }
 
@@ -441,10 +505,10 @@ export const embeddingService = {
         }
 
         const userEmbedding: Embedding.IEmbeddingUser = {
-          userId: userWithProfileHashTagEmbedding.userId,
-          selfIntro: userWithProfileHashTagEmbedding.selfIntroEmbedding,
-          lifeRole: userWithProfileHashTagEmbedding.lifeRoleEmbedding,
-          profileTags: userWithProfileHashTagEmbedding.profileHashTagsEmbedding,
+          userId: userWithAllRelationsEmbedding.userId,
+          selfIntro: userWithAllRelationsEmbedding.selfIntroEmbedding,
+          lifeRole: userWithAllRelationsEmbedding.lifeRoleEmbedding,
+          profileTags: userWithAllRelationsEmbedding.profileHashTagsEmbedding,
           footprints: footprintsWithHashTagEmbedding.map((footprint) => {
             return {
               footPrintId: footprint.id,
@@ -453,7 +517,8 @@ export const embeddingService = {
               tags: footprint.hashTagEmbeddings || [],
             };
           }),
-          questionnaire: [],
+          questionResponses:
+            userWithAllRelationsEmbedding.questionResponsesEmbedding,
         };
 
         const userWeightedEmbedding =
@@ -529,15 +594,20 @@ export const embeddingService = {
     userWithoutFootprintEmbedding.profileTags.forEach((tagEmbedding) => {
       addWeightedEmbedding(
         tagEmbedding,
-        EMBEDDING_WEIGHTS.profileTags,
+        EMBEDDING_WEIGHTS.profileTags /
+          userWithoutFootprintEmbedding.profileTags.length,
         weightedEmbedding,
       );
     });
 
-    userWithoutFootprintEmbedding.questionnaire.forEach((question) => {
+    const validQuestionResponses =
+      userWithoutFootprintEmbedding.questionResponses.filter(
+        (response) => response !== undefined,
+      );
+    validQuestionResponses.forEach((responseEmbedding) => {
       addWeightedEmbedding(
-        question.answer,
-        EMBEDDING_WEIGHTS.questionnaire,
+        responseEmbedding,
+        EMBEDDING_WEIGHTS.questionResponses / validQuestionResponses.length,
         weightedEmbedding,
       );
     });
@@ -584,10 +654,13 @@ export const embeddingService = {
       addWeightedEmbedding(weightedEmbedding, 1, weightedEmbedding);
     }
 
-    userEmbedding.questionnaire.forEach((question) => {
+    const validQuestionResponses = userEmbedding.questionResponses.filter(
+      (response) => response.length !== undefined,
+    );
+    validQuestionResponses.forEach((responseEmbedding) => {
       addWeightedEmbedding(
-        question.answer,
-        EMBEDDING_WEIGHTS.questionnaire,
+        responseEmbedding,
+        EMBEDDING_WEIGHTS.questionResponses,
         weightedEmbedding,
       );
     });
@@ -643,10 +716,13 @@ export const embeddingService = {
         addWeightedEmbedding(weightedEmbedding, 1, intervalEmbedding);
       }
 
-      userEmbedding.questionnaire.forEach((question) => {
+      const validQuestionResponses = userEmbedding.questionResponses.filter(
+        (response) => response.length !== undefined,
+      );
+      validQuestionResponses.forEach((responseEmbedding) => {
         addWeightedEmbedding(
-          question.answer,
-          EMBEDDING_WEIGHTS.questionnaire,
+          responseEmbedding,
+          EMBEDDING_WEIGHTS.questionResponses,
           intervalEmbedding,
         );
       });
