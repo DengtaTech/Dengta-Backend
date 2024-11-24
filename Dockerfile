@@ -21,7 +21,7 @@ ENV CUSTOM_ENV=${CUSTOM_ENV}
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --legacy-peer-deps \
     && npx tsc \
-    && cp -r src/Test/mockData dist/src/Test/ \
+    # && cp -r src/Test/mockData dist/src/Test/ \
     && npm ci --omit=dev --omit=optional --legacy-peer-deps \
     && npm cache clean --force
 
