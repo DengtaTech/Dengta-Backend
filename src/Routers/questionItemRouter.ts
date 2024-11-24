@@ -13,4 +13,10 @@ questionRouter.post(
 
 questionRouter.get('/', wrapAsync(questionItemController.getAllQuestionItems));
 
+questionRouter.get(
+  '/check',
+  jwtAuthentication,
+  wrapAsync(questionItemController.checkFill),
+);
+
 export default questionRouter;
