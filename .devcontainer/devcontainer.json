@@ -11,19 +11,19 @@
   "dockerComposeFile": "docker-compose.devcontainer.yml",
   "service": "dengta_backend",
   // "runServices": [],
-  "overrideCommand": false,
+  // "overrideCommand": false,
 
   // ## Environment ##
   "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind,consistency=cached"
-  ],
+  // "mounts": [
+  //   "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind,consistency=cached"
+  // ],
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
-    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-      "packages": "bash,vim,curl,git",
-      "upgradePackages": true
-    }
+    // "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+    //   "packages": "bash,vim,curl,git",
+    //   "upgradePackages": true
+    // }
     // "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   // "runArgs": [
@@ -48,9 +48,9 @@
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "cd ${containerWorkspaceFolder} && npm install --legacy-peer-deps",
   // "postStartCommand": "",
-  "postAttachCommand": {
-    "port forwarding": "service socat start"
-  },
+  // "postAttachCommand": {
+  //   "port forwarding": "service socat start"
+  // },
 
   // ## Tool-specific properties ##
   "customizations": {

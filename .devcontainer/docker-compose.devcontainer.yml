@@ -11,6 +11,8 @@ services:
     environment: !reset [] # remove all environment variables and set as empty array
     env_file:
       - .env
+    volumes:
+      - ..:/workspace/Dengta-Backend:rw,cached
     ports:
       - '3000:3000'
     depends_on:
