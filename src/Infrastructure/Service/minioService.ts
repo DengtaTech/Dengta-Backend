@@ -60,6 +60,34 @@ export const minioService = {
       return null;
     }
   },
+  uploadFootprintContentImg: async (
+    footprintId: string,
+    sourceFile: Express.Multer.File,
+  ): Promise<string | null> => {
+    try {
+      const exists = await minioClient.bucketExists(footprintBucket);
+      if (!exists) {
+        throw new Error('Bucket does not exist');
+      }
+      const fileExtension = sourceFile.mimetype.split('/')[1];
+      const timestamp = Date.now();
+      const filename = `${footprintId}-${timestamp}.${fileExtension}`;
+      await minioClient.putObject(
+        footprintBucket,
+        filename,
+        sourceFile.buffer,
+        sourceFile.size,
+        {
+          'Content-Type': sourceFile.mimetype,
+        },
+      );
+      const permanentURL = `${BACKEND_DOMAIN}/image/${footprintBucket}/${filename}`;
+      return permanentURL;
+    } catch (err) {
+      console.error('Error:', err);
+      return null;
+    }
+  },
   getPresignedImgUrl: async (
     bucketName: string,
     filename: string,

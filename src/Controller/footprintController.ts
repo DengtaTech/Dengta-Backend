@@ -16,6 +16,7 @@ import { PatchFootprintSetting } from '../Application/Features/Footprint/UpdateF
 import { patchFootprintSettingHandler } from '../Application/Features/Footprint/UpdateFootprintSetting/UpdateFootprintSettingHandler.js';
 import { deleteFootprintHandler } from '../Application/Features/Footprint/DeleteFootprint/deleteFootprintHandler.js';
 import { getFootprintDetailHandler } from '../Application/Features/Footprint/GetFootprintDetail/GetFootprintDetailHandler.js';
+import { uploadFootprintContentImgHandler } from '../Application/Features/Footprint/UploadFootprintContentImg/uploadFootprintContentImgHandler.js';
 
 export const footprintController = {
   getFootprintDetail: async (req: Request, res: Response): Promise<void> => {
@@ -110,6 +111,27 @@ export const footprintController = {
       return;
     }
     const response = await uploadFootprintHeadImgHandler.handle(
+      footprintId,
+      file,
+    );
+    res.status(200).json(response);
+  },
+  uploadFootprintContentImg: async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const file = req.file;
+    const { footprintId } = req.body;
+
+    if (!file) {
+      res.status(400).send({ message: 'Please upload an image file.' });
+      return;
+    }
+    const response = await uploadFootprintContentImgHandler.handle(
       footprintId,
       file,
     );
