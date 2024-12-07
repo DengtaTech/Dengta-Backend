@@ -1,9 +1,12 @@
 import { mentionRepo } from '../Repository/mentionRepo.js';
 import { GetMention } from '../../Application/Features/Volume/Mention/getMention/Types/api.js';
 import nodejieba from 'nodejieba';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename);
 nodejieba.load({
-  stopWordDict: '../../Config/stopwords.txt',
+  stopWordDict: path.resolve(__dirname, '../../Config/stopwords.txt'),
 });
 
 export const mentionService = {
