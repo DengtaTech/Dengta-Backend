@@ -3,7 +3,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 import { readFileSync } from 'fs';
-import { join } from 'path';
+
 import path from 'path';
 import { redisClient } from '../Database/Cache/redisClient.js';
 import { fileURLToPath } from 'url';
@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 const RATE_LIMIT_WINDOW_SIZE = 1;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 const luaScript = readFileSync(
-  join(__dirname, '../utils/rateLimit.lua'),
+  path.join(__dirname, '../utils/rateLimit.lua'),
   'utf8',
 );
 
