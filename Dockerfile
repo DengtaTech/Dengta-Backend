@@ -1,12 +1,19 @@
-FROM node:20.4-alpine
+FROM node:20.4-alpine AS builder
 
 WORKDIR /app
 
 COPY . .
 
-# RUN apk add --no-cache bash curl && curl -1sLf \
-# 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash \
-# && apk add infisical
+
+RUN npm ci --legacy-peer-deps \
+    && npx tsc \
+    && cp src/utils/rateLimit.lua dist/src/utils/rateLimit.lua \
+    && npm cache clean --force
+
+
+FROM node:20.4-alpine
+
+WORKDIR /app
 
 # -sLf --> Without the -1 option, curl is free to negotiate HTTP/2 if it's available, which can provide performance benefits such as reduced latency and header compression
 RUN apk add --no-cache bash curl \
@@ -15,18 +22,15 @@ RUN apk add --no-cache bash curl \
     && apk del bash curl \
     && rm -rf /var/cache/apk/* /tmp/*
 
+COPY --from=builder /app/dist ./dist
+
 ARG CUSTOM_ENV
 ENV CUSTOM_ENV=${CUSTOM_ENV}
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
-    && npm ci --legacy-peer-deps \
-    && npx tsc \
-    # && cp -r src/Test/mockData dist/src/Test/ \
-    && cp src/utils/rateLimit.lua dist/src/utils/rateLimit.lua \
     && npm ci --omit=dev --omit=optional --legacy-peer-deps \
-    && npm cache clean --force
-
-COPY --chown=appuser:appgroup . .
+    && npm cache clean --force \
+    && chown -R appuser:appgroup /app
 
 USER appuser
 
