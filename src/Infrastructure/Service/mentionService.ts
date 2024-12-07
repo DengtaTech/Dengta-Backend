@@ -3,7 +3,7 @@ import { GetMention } from '../../Application/Features/Volume/Mention/getMention
 import nodejieba from 'nodejieba';
 
 nodejieba.load({
-  stopWordDict: './src/Config/stopwords.txt',
+  stopWordDict: '../../Config/stopwords.txt',
 });
 
 export const mentionService = {
