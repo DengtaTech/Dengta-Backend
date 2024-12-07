@@ -8,6 +8,7 @@ COPY . .
 RUN npm ci --legacy-peer-deps \
     && npx tsc \
     && cp src/utils/rateLimit.lua dist/src/utils/rateLimit.lua \
+    && cp src/Config/stopwords.txt dist/src/Config/stopwords.txt \
     && npm cache clean --force
 
 
