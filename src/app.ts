@@ -64,8 +64,12 @@ app.get('/api/1.0/health', (req: Request, res: Response) => {
 app.use(multerErrorHandling);
 app.use(errorHandler);
 
-const file = fs.readFileSync('./swagger.yaml', 'utf8');
-const swaggerDocument = YAML.parse(file);
+// const file = fs.readFileSync('./swagger.yaml', 'utf8');
+const swagger = fs.readFileSync(
+  path.resolve(__dirname, '../../swagger.yaml'),
+  'utf8',
+);
+const swaggerDocument = YAML.parse(swagger);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 async function usingRedisExample() {
@@ -98,7 +102,7 @@ if (process.env.NODE_ENV !== 'test') {
       await initMilvus(false);
       console.log('Milvus initialized successfully');
       // 給前端用的假資料
-      await initFakeData();
+      // await initFakeData();
     })(),
   ]);
 
