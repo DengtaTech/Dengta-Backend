@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node dist/src/app.js",
     "stop": "pkill -f 'node dist/src/app.js'",
-    "build": "rm -rf dist && npx tsc && cp -r src/Test/mockData dist/src/Test/",
+    "build": "rm -rf dist && npx tsc && cp src/utils/rateLimit.lua dist/src/utils/rateLimit.lua",
     "dev:setenv": "docker compose -f ./docker-compose-dev.yml --env-file ./.env.dev up -d --build",
     "dev:run": "cross-env NODE_ENV=development nodemon --exec node --enable-source-maps --no-warnings=ExperimentalWarning --loader ts-node/esm --env-file=./.env.dev ./src/app.ts",
     "dev": "npm run dev:setenv && npm run dev:run",
@@ -27,6 +27,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/redis": "^4.0.10",
     "@zilliz/milvus2-sdk-node": "^2.4.4",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
@@ -43,8 +44,8 @@
     "mjml": "^4.15.3",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.2",
-    "nodemailer": "^6.9.15",
     "nodejieba": "^3.4.3",
+    "nodemailer": "^6.9.15",
     "reflect-metadata": "^0.2.2",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",

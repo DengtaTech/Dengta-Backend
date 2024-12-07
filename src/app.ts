@@ -39,11 +39,13 @@ import YAML from 'yaml';
 import { User as CacheUser } from './Database/Cache/Entities/user.js';
 import { errorHandler } from './Middlewares/errorHandler.js';
 import { multerErrorHandling } from './Middlewares/multer.js';
+import { rateLimiter } from './Middlewares/rateLimiter.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
 
 app.use(express.json());
+app.use(rateLimiter);
 app.use('/image', imageRouter);
 app.use('/api/1.0/user', userRouter);
 app.use('/api/1.0/recommendation', recommendationRouter);
