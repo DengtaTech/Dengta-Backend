@@ -5,6 +5,8 @@ import { FootprintEmbedding } from '../../../../../Database/Entities/footprintEm
 import { FootprintHashTagEmbedding } from '../../../../../Database/Entities/footprintHashTagEmbedding.ts';
 import { ProfileHashTag } from '../../../../../Database/Entities/profileHashTag.ts';
 import { Footprint } from '../../../../../Database/Entities/footprintEmbedding.ts';
+import { MUserQuestionItem } from '../../../../../Database/Entities/mUserQuestionItem.ts';
+import { MUserQuestionItemEmbedding } from '../../../../../Database/Entities/mUserQuestionItemEmbedding.ts';
 
 declare namespace Embedding {
   type IUserInfoDto = Pick<User, 'id' | 'selfIntro' | 'lifeRole'>;
@@ -25,6 +27,21 @@ declare namespace Embedding {
   type IFootprintEmbeddingDto = Pick<
     FootprintEmbedding,
     'titleEmbedding' | 'contentEmbedding' | 'footprintId'
+  >;
+
+  type IMUserQuestionItemDto = Pick<
+    MUserQuestionItem,
+    'userId' | 'questionItemId' | 'response'
+  >;
+
+  type IMUserQuestionItemEmbeddingDto = Pick<
+    MUserQuestionItemEmbedding,
+    'responseEmbedding' | 'userId' | 'questionItemId'
+  >;
+
+  type IUpdateMUserQuestionItemEmbeddingDto = Pick<
+    MUserQuestionItemEmbedding,
+    'responseEmbedding'
   >;
 
   type IUpdateFootprintEmbeddingDto = Partial<
@@ -69,28 +86,13 @@ declare namespace Embedding {
     description: string;
   }
 
-  interface IUserBeforeEmbedding {
-    userId: string;
-    selfIntro: string;
-    goal: string;
-    profileTags: string[];
-    footPrints: IFootprintBeforeEmbedding[];
-    questionnaire: {
-      question: string;
-      answer: string;
-    }[];
-  }
-
   interface IEmbeddingUser {
     userId: string;
     lifeRole: number[];
     selfIntro: number[] | undefined;
     profileTags: number[][];
     footprints: IEmbeddingFootprint[];
-    questionnaire: {
-      question: string;
-      answer: number[];
-    }[];
+    questionResponses: number[][];
   }
 
   type IEmbeddingUserWithoutFootprints = Omit<IEmbeddingUser, 'footprints'>;
@@ -104,11 +106,12 @@ declare namespace Embedding {
 
   type IEmbeddingIntervalVector = IEmbeddingFootprint[];
 
-  interface IEmbeddingUserWithHashTagEmbedding {
+  interface IEmbeddingUserWithAllRelationsEmbedding {
     userId: string;
     selfIntroEmbedding: UserEmbedding['selfIntroEmbedding'];
     lifeRoleEmbedding: UserEmbedding['lifeRoleEmbedding'];
     profileHashTagsEmbedding: ProfileHashTagEmbedding['contentEmbedding'][];
+    questionResponsesEmbedding: MUserQuestionItemEmbedding['responseEmbedding'][];
   }
 
   interface IEmbeddingFootprintWithHashTagEmbedding
@@ -124,7 +127,7 @@ declare namespace Embedding {
     goal: number;
     profileTags: number;
     footprints: IEmbeddingFootprintWeights;
-    questionnaire: number;
+    questionResponses: number;
   }
 
   interface IEmbeddingFootprintWeights {

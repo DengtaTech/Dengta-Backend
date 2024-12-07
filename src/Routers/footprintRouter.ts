@@ -46,6 +46,12 @@ router.post(
   wrapAsync(footprintController.uploadFootprintHeadImg),
 );
 
+router.post(
+  '/contentImg',
+  [jwtAuthentication, upload.single('contentImg')],
+  wrapAsync(footprintController.uploadFootprintContentImg),
+);
+
 router.delete(
   '/delete',
   jwtAuthentication,

@@ -54,23 +54,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "IT"
-      },
-      {
-        "question": "workName",
-        "answer": "後端工程師"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "程式設計對我有很大吸引力，我希望通過轉職提升自己的技能。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我想養成每天學習1小時的習慣。"
-      }
+    "questionResponses": [
+      "IT",
+      "後端工程師",
+      "程式設計對我有很大吸引力，我希望通過轉職提升自己的技能。",
+      "我想養成每天學習1小時的習慣。"
     ]
   },
   {
@@ -98,23 +86,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "IT"
-      },
-      {
-        "question": "workName",
-        "answer": "軟體工程師"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "我希望通過軟體開發來結合我的藝術創作背景，創建更多互動性強的作品。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我想成為一名在科技和藝術領域都能有所作為的創作者。"
-      }
+    "questionResponses": [
+      "IT",
+      "軟體工程師",
+      "我希望通過軟體開發來結合我的藝術創作背景，創建更多互動性強的作品。",
+      "我想成為一名在科技和藝術領域都能有所作為的創作者。"
     ]
   },
   {
@@ -129,23 +105,11 @@
     "goal": "我希望成為一名資料科學家。",
     "hashtags": ["Python", "資料分析", "機器學習"],
     "footprints": [],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "IT"
-      },
-      {
-        "question": "workName",
-        "answer": "資料科學家"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "資料分析和機器學習深深吸引了我，我希望能夠在這個領域發展自己的職業生涯。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我希望能夠結合資料科學和軟體開發，創造更多有價值的應用。"
-      }
+    "questionResponses": [
+      "IT",
+      "資料科學家",
+      "資料分析和機器學習深深吸引了我，我希望能夠在這個領域發展自己的職業生涯。",
+      "我希望能夠結合資料科學和軟體開發，創造更多有價值的應用。"
     ]
   },
   {
@@ -191,23 +155,11 @@
         "category": "作品集"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "藝術"
-      },
-      {
-        "question": "workName",
-        "answer": "美術創作者"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "我希望通過不斷學習和與其他創作者交流，來提升自己的藝術水平。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我想成為一名在全球藝術界有影響力的藝術家。"
-      }
+    "questionResponses": [
+      "藝術",
+      "美術創作者",
+      "我希望通過不斷學習和與其他創作者交流，來提升自己的藝術水平。",
+      "我想成為一名在全球藝術界有影響力的藝術家。"
     ]
   },
   {
@@ -259,23 +211,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "金融"
-      },
-      {
-        "question": "workName",
-        "answer": "資料科學家"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "我希望將資料科學的技術應用到我的財務分析工作中，提升工作效率和準確性。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我希望能夠在未來擁有自己的資料分析公司。"
-      }
+    "questionResponses": [
+      "金融",
+      "資料科學家",
+      "我希望將資料科學的技術應用到我的財務分析工作中，提升工作效率和準確性。",
+      "我希望能夠在未來擁有自己的資料分析公司。"
     ]
   },
   {
@@ -321,23 +261,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "營銷"
-      },
-      {
-        "question": "workName",
-        "answer": "資料分析師"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "資料驅動的營銷策略能夠帶來更高的營銷效果，我希望能夠精通這些技術。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我想成為一家知名資料營銷公司的首席資料官。"
-      }
+    "questionResponses": [
+      "營銷",
+      "資料分析師",
+      "資料驅動的營銷策略能夠帶來更高的營銷效果，我希望能夠精通這些技術。",
+      "我想成為一家知名資料營銷公司的首席資料官。"
     ]
   },
   {
@@ -383,23 +311,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "攝影"
-      },
-      {
-        "question": "workName",
-        "answer": "商業攝影師"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "商業攝影市場需求巨大，我希望能夠在這個領域中取得成功。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我希望在未來擁有自己的攝影工作室。"
-      }
+    "questionResponses": [
+      "攝影",
+      "商業攝影師",
+      "商業攝影市場需求巨大，我希望能夠在這個領域中取得成功。",
+      "我希望在未來擁有自己的攝影工作室。"
     ]
   },
   {
@@ -445,23 +361,11 @@
         "category": "研究"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "管理"
-      },
-      {
-        "question": "workName",
-        "answer": "組織發展顧問"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "我希望將心理學技術應用於組織發展，幫助企業提升效能。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我希望在組織發展領域成為一名有影響力的專家。"
-      }
+    "questionResponses": [
+      "管理",
+      "組織發展顧問",
+      "我希望將心理學技術應用於組織發展，幫助企業提升效能。",
+      "我希望在組織發展領域成為一名有影響力的專家。"
     ]
   },
   {
@@ -507,23 +411,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "IT"
-      },
-      {
-        "question": "workName",
-        "answer": "AI工程師"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "我對人工智慧技術充滿熱情，並希望能夠成為這個領域的一員，推動技術進步。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我希望通過人工智慧技術創建改變世界的產品。"
-      }
+    "questionResponses": [
+      "IT",
+      "AI工程師",
+      "我對人工智慧技術充滿熱情，並希望能夠成為這個領域的一員，推動技術進步。",
+      "我希望通過人工智慧技術創建改變世界的產品。"
     ]
   },
   {
@@ -569,23 +461,11 @@
         "category": "報告"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "環境科學"
-      },
-      {
-        "question": "workName",
-        "answer": "環境顧問"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "我希望能夠將我的環境科學知識應用於實際，幫助企業實現可持續發展目標。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我想通過我的工作對環境保護做出貢獻。"
-      }
+    "questionResponses": [
+      "環境科學",
+      "環境顧問",
+      "我希望能夠將我的環境科學知識應用於實際，幫助企業實現可持續發展目標。",
+      "我想通過我的工作對環境保護做出貢獻。"
     ]
   },
   {
@@ -631,23 +511,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "IT"
-      },
-      {
-        "question": "workName",
-        "answer": "無人駕駛技術專家"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "無人駕駛技術是未來發展的重要領域，我希望通過專注研究，推動技術進步。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我希望成為無人駕駛技術領域的領軍人物。"
-      }
+    "questionResponses": [
+      "IT",
+      "無人駕駛技術專家",
+      "無人駕駛技術是未來發展的重要領域，我希望通過專注研究，推動技術進步。",
+      "我希望成為無人駕駛技術領域的領軍人物。"
     ]
   },
   {
@@ -693,23 +561,11 @@
         "category": "項目"
       }
     ],
-    "questionnaire": [
-      {
-        "question": "workDomain",
-        "answer": "IT"
-      },
-      {
-        "question": "workName",
-        "answer": "後端工程師"
-      },
-      {
-        "question": "whyThisGoal",
-        "answer": "我希望通過學習和應用Node.js技術，轉職成為一名專業的後端工程師。"
-      },
-      {
-        "question": "lifeGoal",
-        "answer": "我希望能夠在技術領域中不斷學習和進步，並最終成為一名技術領導者。"
-      }
+    "questionResponses": [
+      "IT",
+      "後端工程師",
+      "我希望通過學習和應用Node.js技術，轉職成為一名專業的後端工程師。",
+      "我希望能夠在技術領域中不斷學習和進步，並最終成為一名技術領導者。"
     ]
   }
 ]
