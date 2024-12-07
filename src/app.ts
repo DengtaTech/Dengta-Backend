@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import 'reflect-metadata';
 import {
   Database,
@@ -43,7 +44,7 @@ import { rateLimiter } from './Middlewares/rateLimiter.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
-
+app.use(cors());
 app.use(express.json());
 app.use(rateLimiter);
 app.use('/image', imageRouter);
@@ -97,7 +98,7 @@ if (process.env.NODE_ENV !== 'test') {
       await initMilvus(false);
       console.log('Milvus initialized successfully');
       // 給前端用的假資料
-      // await initFakeData();
+      await initFakeData();
     })(),
   ]);
 
