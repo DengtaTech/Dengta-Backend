@@ -23,6 +23,7 @@ RUN apk add --no-cache bash curl \
     && rm -rf /var/cache/apk/* /tmp/*
 
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
 
 ARG CUSTOM_ENV
 ENV CUSTOM_ENV=${CUSTOM_ENV}
