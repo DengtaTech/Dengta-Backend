@@ -56,8 +56,9 @@ export const Database = new DataSource({
   port: MYSQL_PORT ? Number(MYSQL_PORT) : undefined,
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE,
-  synchronize:
-    process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development',
+  // synchronize:
+  //   process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development',
+  synchronize: true,
   dropSchema: process.env.NODE_ENV === 'test',
   logging: false,
   entities: [
