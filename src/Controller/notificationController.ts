@@ -7,6 +7,7 @@ import {
   InputEmptyError,
   InvalidInputError,
 } from '../Errors/errors.js';
+import { readNotificationHandler } from '../Application/Features/Notification/ReadNotification/readNotificationHandler.js';
 
 export const notificationController = {
   getNotification: async (req: Request, res: Response): Promise<void> => {
@@ -23,6 +24,20 @@ export const notificationController = {
     res
       .status(200)
       .json(await getNotificationHandler.handle({ userId, page: page }));
+  },
+  readNotification: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const notificationId = req.body.notificationId;
+
+    if (!notificationId) {
+      throw new InputEmptyError();
+    }
+    await readNotificationHandler.handle(notificationId);
+
+    res.status(200).json({ message: 'Notification read successfully' });
   },
   postOfficialNotification: async (
     req: Request,

@@ -17,6 +17,12 @@ router.post(
   wrapAsync(notificationController.postOfficialNotification),
 );
 
+router.patch(
+  '/read',
+  jwtAuthentication,
+  wrapAsync(notificationController.readNotification),
+);
+
 router.post(
   '/keyword',
   wrapAsync(notificationController.postWeeklyKeywordNotification),
