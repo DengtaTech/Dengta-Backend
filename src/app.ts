@@ -33,8 +33,8 @@ import notificationRouter from './Routers/notificationRouter.js';
 import questionItemRouter from './Routers/questionItemRouter.js';
 import volumeRouter from './Routers/volumeRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yaml';
+// import swaggerUi from 'swagger-ui-express';
+// import YAML from 'yaml';
 
 // using redis example
 import { User as CacheUser } from './Database/Cache/Entities/user.js';
@@ -64,9 +64,13 @@ app.get('/api/1.0/health', (req: Request, res: Response) => {
 app.use(multerErrorHandling);
 app.use(errorHandler);
 
-const file = fs.readFileSync('./swagger.yaml', 'utf8');
-const swaggerDocument = YAML.parse(file);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// const file = fs.readFileSync('./swagger.yaml', 'utf8');
+// const swagger = fs.readFileSync(
+//   path.resolve(__dirname, '../swagger.yaml'),
+//   'utf8',
+// );
+// const swaggerDocument = YAML.parse(swagger);
+// app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 async function usingRedisExample() {
   await CacheUser.setById(1, {
@@ -98,7 +102,7 @@ if (process.env.NODE_ENV !== 'test') {
       await initMilvus(false);
       console.log('Milvus initialized successfully');
       // 給前端用的假資料
-      await initFakeData();
+      // await initFakeData();
     })(),
   ]);
 
