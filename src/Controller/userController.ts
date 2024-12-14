@@ -22,7 +22,6 @@ import { searchFolloweesHandler } from '../Application/Features/User/SearchFollo
 import { editCardLinkHandler } from '../Application/Features/User/EditCardLink/editCardLinkHandler.js';
 import { getCardUrlHandler } from '../Application/Features/User/GetCardLink/getCardUrlHandler.js';
 import { getPublicUserInfoHandler } from '../Application/Features/User/GetPublicUserInfo/getPublicUserInfoHandler.js';
-import { get } from 'http';
 import { getPublicFootprintsHandler } from '../Application/Features/User/GetPublicFootprints/getPublicFootprintsHandler.js';
 
 export const userController = {
