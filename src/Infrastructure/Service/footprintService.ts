@@ -62,7 +62,7 @@ export const footprintService = {
             transactionManager,
           );
         footprint.totalLike += 1;
-        transactionManager.save(footprint);
+        await transactionManager.save(footprint);
         // build notification
         const notification = Notification.create({
           userId: footprint.userId,
@@ -116,7 +116,7 @@ export const footprintService = {
           transactionManager,
         );
         footprint.totalLike -= 1;
-        transactionManager.save(footprint);
+        await transactionManager.save(footprint);
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
