@@ -30,7 +30,8 @@ export const followshipService = {
           followDto,
           transactionManager,
         );
-
+        followee.helpCount += 1;
+        await transactionManager.save(followee);
         // build notification
         const notification = Notification.create({
           userId: followDto.followeeId,

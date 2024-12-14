@@ -31,6 +31,12 @@ export class FootprintNotEnoughError extends BaseError {
   }
 }
 
+export class NotificationNotFoundError extends BaseError {
+  constructor() {
+    super('Notification not found', 404);
+  }
+}
+
 export class EmailExistsError extends BaseError {
   constructor() {
     super('Email already exists', 403);

@@ -1,4 +1,7 @@
-import { UnauthorizedError } from '../../Errors/errors.js';
+import {
+  NotificationNotFoundError,
+  UnauthorizedError,
+} from '../../Errors/errors.js';
 import { notificationRepo } from '../Repository/notificationRepo.js';
 import { NotificationRetrieve } from '../../Application/Features/Notification/GetNotification/Types/api.js';
 import { PostOfficialNotification } from '../../Application/Features/Notification/PostOfficialNotification/Types/api.js';
@@ -6,6 +9,7 @@ import { userRepo } from '../Repository/userRepo.js';
 import { Notification } from '../../Database/Entities/notification.js';
 import { emailService } from './emailService.js';
 import { PostWeeklyKeyword } from '../../Application/Features/Notification/PostWeeklyKeyword/Types/api.js';
+import { Database } from '../../Database/data-source.js';
 
 export const notificationService = {
   getNotificationByUserId: async (
@@ -21,6 +25,21 @@ export const notificationService = {
       console.error('Error getting notifications by user id:');
       throw error;
     }
+  },
+  readNotification: async (notificationId: string): Promise<void> => {
+    await Database.transaction(async (transactionManager) => {
+      try {
+        const notification = await notificationRepo.findById(notificationId);
+        if (!notification) {
+          throw new NotificationNotFoundError();
+        }
+        notification.isRead = true;
+        await transactionManager.save(notification);
+      } catch (error) {
+        console.error('Error getting notifications by user id:');
+        throw error;
+      }
+    });
   },
   postOfficialNotification: async (
     body: PostOfficialNotification.IPostOfficialNotificationReq,

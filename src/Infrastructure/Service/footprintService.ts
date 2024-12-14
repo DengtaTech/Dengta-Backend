@@ -61,7 +61,8 @@ export const footprintService = {
             },
             transactionManager,
           );
-
+        footprint.totalLike += 1;
+        await transactionManager.save(footprint);
         // build notification
         const notification = Notification.create({
           userId: footprint.userId,
@@ -95,13 +96,11 @@ export const footprintService = {
         ) {
           throw new UserNotFoundError();
         }
-
-        if (
-          (await footprintRepo.findById(
-            reaction.footprintId,
-            transactionManager,
-          )) === null
-        ) {
+        const footprint = await footprintRepo.findById(
+          reaction.footprintId,
+          transactionManager,
+        );
+        if (footprint === null) {
           throw new FootprintNotFoundError();
         }
         const reactionObj = await mUserFootprintReactionRepo.findByIds(
@@ -116,6 +115,8 @@ export const footprintService = {
           reactionObj,
           transactionManager,
         );
+        footprint.totalLike -= 1;
+        await transactionManager.save(footprint);
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
