@@ -41,6 +41,7 @@ import { User as CacheUser } from './Database/Cache/Entities/user.js';
 import { errorHandler } from './Middlewares/errorHandler.js';
 import { multerErrorHandling } from './Middlewares/multer.js';
 import { rateLimiter } from './Middlewares/rateLimiter.js';
+import logger from './Database/Logger/index.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
@@ -82,7 +83,7 @@ async function usingRedisExample() {
   });
   const cache = await CacheUser.getById(1);
   if (cache !== undefined) {
-    console.log('Redis is working');
+    logger.info('Redis is working');
   }
 }
 
@@ -90,24 +91,24 @@ if (process.env.NODE_ENV !== 'test') {
   try {
     await Database.initialize();
   } catch (err) {
-    console.error('Failed to initialize the database:', err);
+    logger.error('Failed to initialize the database:', err as string);
   }
   await initFixedDbData();
   initDbCache();
-  console.log('all database initialized successfully');
+  logger.info('all database initialized successfully');
   await Promise.all([
     usingRedisExample(),
     (async () => {
       console.log('test');
       await initMilvus(false);
-      console.log('Milvus initialized successfully');
+      logger.info('Milvus initialized successfully');
       // 給前端用的假資料
       // await initFakeData();
     })(),
   ]);
 
   app.listen(port, () => {
-    console.log(`App listening on port: ${port}`);
+    logger.info(`App listening on port: ${port}`);
   });
 }
 
