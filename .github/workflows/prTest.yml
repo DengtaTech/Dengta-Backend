@@ -1,0 +1,41 @@
+name: PR Build Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build backend image
+        run: |
+          docker build \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            -t test-backend .
+      - name: Discord success notification
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: DengTa Chill Bot
+          DISCORD_AVATAR: https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Chill_guy_original_artwork.jpg/220px-Chill_guy_original_artwork.jpg
+        uses: Ilshidur/action-discord@master
+        with:
+          args: '✅ [CI] **${{ github.actor }}**，你的 PR「**${{ github.event.pull_request.head.ref }}**」很完美🥳'
+      - name: Notify on fail
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: DengTa Chill Bot
+          DISCORD_AVATAR: https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Chill_guy_original_artwork.jpg/220px-Chill_guy_original_artwork.jpg
+        uses: Ilshidur/action-discord@master
+        with:
+          args: '🚫 [CI] **${{ github.actor }}**，你的 PR「**${{ github.event.pull_request.head.ref }}**」 在搞事👺'
