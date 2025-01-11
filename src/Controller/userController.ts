@@ -21,7 +21,7 @@ import { userService } from '../Infrastructure/Service/userService.js';
 import { searchFolloweesHandler } from '../Application/Features/User/SearchFollowees/searchFolloweesHandler.js';
 import { editCardLinkHandler } from '../Application/Features/User/EditCardLink/editCardLinkHandler.js';
 import { getCardUrlHandler } from '../Application/Features/User/GetCardLink/getCardUrlHandler.js';
-import { getPublicUserInfoHandler } from '../Application/Features/User/GetPublicUserInfo/getPublicUserInfoHandler.js';
+import { getCardInfoHandler } from '../Application/Features/User/GetCardInfo/getCardInfoHandler.js';
 import { getPublicFootprintsHandler } from '../Application/Features/User/GetPublicFootprints/getPublicFootprintsHandler.js';
 
 export const userController = {
@@ -200,7 +200,7 @@ export const userController = {
   getPublicInfo: async (req: Request, res: Response): Promise<void> => {
     const { cardUrl } = req.params;
 
-    const response = await getPublicUserInfoHandler.handle(cardUrl);
+    const response = await getCardInfoHandler.handle(cardUrl);
     res.status(200).json(response);
   },
   getPublicFootprints: async (req: Request, res: Response): Promise<void> => {
