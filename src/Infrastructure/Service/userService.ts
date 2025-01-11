@@ -19,7 +19,6 @@ import { SearchFollowees } from '../../Application/Features/User/SearchFollowees
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 import { embeddingService } from './embeddingService.js';
 import { Card } from '../../Database/Entities/card.js';
-import { footprintService } from './footprintService.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/api.js';

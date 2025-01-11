@@ -8,7 +8,6 @@ import {
   Relation,
 } from 'typeorm';
 import { User } from './user.js';
-import { Footprint } from './footprint.js';
 
 @Entity({ name: 'Cards' })
 export class Card extends BaseEntity {
