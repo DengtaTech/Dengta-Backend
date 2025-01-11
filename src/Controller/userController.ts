@@ -175,11 +175,18 @@ export const userController = {
       throw new NoTokenError();
     }
     const { id: userId } = req.decodedToken;
-    const urlContext = req.body.urlContext;
+    const { urlContext, footprintId } = req.body;
     if (!urlContext) {
-      throw new InvalidInputError('urlContext is illegal');
+      throw new InvalidInputError('urlContext should not be null');
     }
-    const response = await editCardLinkHandler.handle(userId, urlContext);
+    if (!footprintId) {
+      throw new InvalidInputError('footprintId should not be null');
+    }
+    const response = await editCardLinkHandler.handle(
+      userId,
+      urlContext,
+      footprintId,
+    );
     res.status(200).json(response);
   },
   getCardUrl: async (req: Request, res: Response): Promise<void> => {

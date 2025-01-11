@@ -5,8 +5,9 @@ export const editCardLinkHandler = {
   handle: async (
     userId: string,
     editLink: string,
+    footprintId: string,
   ): Promise<EditCardLink.IEditCardLinkRes> => {
-    const result = await userService.editLink(userId, editLink);
+    const result = await userService.editLink(userId, editLink, footprintId);
 
     return editCardLinkRes.customize(result);
   },

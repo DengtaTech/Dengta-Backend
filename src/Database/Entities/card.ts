@@ -8,6 +8,7 @@ import {
   Relation,
 } from 'typeorm';
 import { User } from './user.js';
+import { Footprint } from './footprint.js';
 
 @Entity({ name: 'Cards' })
 export class Card extends BaseEntity {
@@ -29,6 +30,9 @@ export class Card extends BaseEntity {
 
   @Column('uuid')
   userId!: string;
+
+  @Column('uuid')
+  footprintId!: string;
 
   @OneToOne(() => User, (user) => user.card, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

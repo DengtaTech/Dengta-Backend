@@ -210,7 +210,11 @@ export const userService = {
       }
     });
   },
-  editLink: async (userId: string, editLink: string): Promise<string> => {
+  editLink: async (
+    userId: string,
+    editLink: string,
+    footprintId: string,
+  ): Promise<string> => {
     return Database.transaction(async (transactionManager) => {
       try {
         if ((await userRepo.findById(userId, transactionManager)) === null) {
@@ -228,10 +232,12 @@ export const userService = {
         });
         if (card) {
           card.cardUrl = cardUrl;
+          card.footprintId = footprintId;
           await transactionManager.save(card);
         } else {
           const card = new Card();
           card.cardUrl = cardUrl;
+          card.footprintId = footprintId;
           card.userId = userId;
           await transactionManager.save(card);
         }
