@@ -12,7 +12,16 @@ export const getCardInfoRes = {
           fullName: card.user.fullName,
           links: card.user.links,
         },
-        footprint: card.footprint,
+        footprint:
+          card.footprint === null
+            ? null
+            : {
+                title: card.footprint.title,
+                content: card.footprint.content,
+                category: card.footprint.category,
+                milestone: card.footprint.milestone,
+                occurAt: card.footprint.occurAt,
+              },
       },
     };
     return response;

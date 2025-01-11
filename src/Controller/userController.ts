@@ -197,7 +197,7 @@ export const userController = {
     const response = await getCardUrlHandler.handle(userId);
     res.status(200).json(response);
   },
-  getPublicInfo: async (req: Request, res: Response): Promise<void> => {
+  getCardInfo: async (req: Request, res: Response): Promise<void> => {
     const { cardUrl } = req.params;
 
     const response = await getCardInfoHandler.handle(cardUrl);
