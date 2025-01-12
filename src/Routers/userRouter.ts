@@ -21,7 +21,7 @@ router.get(
   wrapAsync(userController.getOthersInfo),
 );
 
-router.get('/:cardUrl/public-info', wrapAsync(userController.getPublicInfo));
+router.get('/:cardUrl/card-info', wrapAsync(userController.getCardInfo));
 
 router.post(
   '/avatar',
