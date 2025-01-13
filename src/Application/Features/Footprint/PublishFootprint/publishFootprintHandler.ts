@@ -24,11 +24,11 @@ export const publishFootprintHandler = {
 
     await embeddingService.addNewIntervalInMilvus(userId);
 
-    mentionService.analyzeContent(
-      result.title + ' ' + result.content,
-      result.createdAt,
-      'footprints',
-    );
+    // mentionService.analyzeContent(
+    //   result.title + ' ' + result.content,
+    //   result.createdAt,
+    //   'footprints',
+    // );
 
     return response;
   },

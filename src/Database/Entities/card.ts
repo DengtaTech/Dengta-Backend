@@ -30,6 +30,9 @@ export class Card extends BaseEntity {
   @Column('uuid')
   userId!: string;
 
+  @Column('uuid')
+  footprintId!: string;
+
   @OneToOne(() => User, (user) => user.card, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user?: Relation<User>;

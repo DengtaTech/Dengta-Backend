@@ -19,6 +19,9 @@ import { SearchFollowees } from '../../Application/Features/User/SearchFollowees
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 import { embeddingService } from './embeddingService.js';
 import { Card } from '../../Database/Entities/card.js';
+import { footprintRepo } from '../Repository/footprintRepo.js';
+import { Footprint } from '../../Database/Entities/footprint.js';
+import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/api.js';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -210,7 +213,11 @@ export const userService = {
       }
     });
   },
-  editLink: async (userId: string, editLink: string): Promise<string> => {
+  editLink: async (
+    userId: string,
+    editLink: string,
+    footprintId: string,
+  ): Promise<string> => {
     return Database.transaction(async (transactionManager) => {
       try {
         if ((await userRepo.findById(userId, transactionManager)) === null) {
@@ -228,10 +235,12 @@ export const userService = {
         });
         if (card) {
           card.cardUrl = cardUrl;
+          card.footprintId = footprintId;
           await transactionManager.save(card);
         } else {
           const card = new Card();
           card.cardUrl = cardUrl;
+          card.footprintId = footprintId;
           card.userId = userId;
           await transactionManager.save(card);
         }
@@ -254,16 +263,28 @@ export const userService = {
     }
     return card.cardUrl;
   },
-  getPublicUserInfo: async (
-    cardUrl: string,
-  ): Promise<GetUserInfo.UserWithHashtagsAndLinks> => {
+  getFullCardInfo: async (cardUrl: string): Promise<GetCardInfo.ICardDto> => {
     const url = `https://dengta.org/${cardUrl}`;
+
     const card = await Card.findOne({
       where: { cardUrl: url },
     });
     if (!card) {
       throw new CardUrlNotExistsError();
     }
-    return await userService.getUserInfo(card.userId);
+    let footprint: Footprint | null = null;
+    if (card.footprintId) {
+      // 若足跡被刪除分享卡 footrprint 就是 null（因為 card 並沒有跟 footprint 關聯）
+      footprint = await footprintRepo.findById(card.footprintId);
+    }
+    const user = await userRepo.findById(card.userId, undefined, ['links']);
+    if (!user) {
+      throw new Error('User should not be null');
+    }
+
+    return {
+      user,
+      footprint,
+    };
   },
 };

@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        CUSTOM_ENV: ${CUSTOM_ENV}
     container_name: dengta_backend_container
     environment:
       - INFISICAL_TOKEN=${INFISICAL_TOKEN}
