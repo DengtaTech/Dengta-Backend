@@ -10,6 +10,7 @@ import {
   mapFootprintData,
 } from './View/VFootprintWithAllRelations.js';
 import { View } from './View/view.js';
+import logger from '../../Database/Logger/index.js';
 
 export const footprintRepo = {
   findById: async (id: Footprint['id'], transactionManager?: EntityManager) => {
@@ -89,9 +90,34 @@ export const footprintRepo = {
         footprint,
       ) as GetFootprintDetail.FootprintDetailDto;
     } catch (error) {
-      console.error(
+      logger.error(
+        error,
         'Failed to find footprint detail by id with all relations:',
       );
+      throw error;
+    }
+  },
+  findNextFootprintByOccurAt: async (
+    occurAt: Date,
+    userId: User['id'],
+  ): Promise<Pick<Footprint, 'id' | 'title'> | null> => {
+    try {
+      const nextFootprint = await Footprint.createQueryBuilder('f')
+        .select(['f.id', 'f.title', 'f.occurAt'])
+        .where('f.occurAt > :occurAt', { occurAt })
+        .andWhere('f.userId = :userId', { userId })
+        .orderBy('f.occurAt', 'ASC')
+        .limit(1)
+        .getOne();
+
+      if (!nextFootprint) {
+        return null;
+      }
+
+      const { id, title } = nextFootprint;
+      return { id, title };
+    } catch (error) {
+      logger.error(error, 'Failed to find next footprint:');
       throw error;
     }
   },
