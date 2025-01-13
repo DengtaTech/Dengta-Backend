@@ -49,7 +49,7 @@ jobs:
         if: success()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_USERNAME: DengTa Chill Bot
+          DISCORD_USERNAME: DengTa Haˊ Bot
           DISCORD_AVATAR: https://truth.bahamut.com.tw/s01/202309/379d1c40ad39d1ab3be487687c8caa8c.JPG
         uses: Ilshidur/action-discord@master
         with:
@@ -58,7 +58,7 @@ jobs:
         if: failure()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_USERNAME: DengTa Chill Bot
+          DISCORD_USERNAME: DengTa Haˊ Bot
           DISCORD_AVATAR: https://truth.bahamut.com.tw/s01/202309/379d1c40ad39d1ab3be487687c8caa8c.JPG
         uses: Ilshidur/action-discord@master
         with:

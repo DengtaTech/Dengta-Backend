@@ -62,28 +62,27 @@ jobs:
           # Update version in .version
           echo "DENGTA_VERSION=$new_version" > .version
 
-          git config --global user.name 'dengta'
-          git config --global user.email 'dengta_gh_action@users.noreply.github.com'
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
 
           # Add v to the version
           new_version=v$new_version
 
           # commit the change
           git add .version
-          git commit -m "Bump version to $new_version"
+          git commit -m "[bot] Bump version to $new_version"
           git push origin main
 
           # add tag
           git tag -a $new_version -m "Bump version to $new_version"
           # push the tag
           git push origin $new_version
-
       - name: Send Notification to Discord
         if: success()
-        uses: appleboy/discord-action@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: DengTa Haˊ Bot
+          DISCORD_AVATAR: https://truth.bahamut.com.tw/s01/202309/379d1c40ad39d1ab3be487687c8caa8c.JPG
+        uses: Ilshidur/action-discord@master
         with:
-          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: 'GitHub Bot'
-          message: |
-            **[Bump Version]** New software version **v${{ env.NEW_VERSION }}** has been released by **「${{ github.actor }}」**.
+          args: '🚫 **[Bump Version]** New software version **v${{ env.NEW_VERSION }}** has been released by **「${{ github.actor }}」** 🤩'
