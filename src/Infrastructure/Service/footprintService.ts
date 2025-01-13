@@ -263,10 +263,17 @@ export const footprintService = {
   },
   getFootprintDetail: async (
     footprintId: string,
-  ): Promise<GetFootprintDetail.FootprintDetailDto> => {
-    const footprint =
+  ): Promise<GetFootprintDetail.FootprintDetailDtoWithNext> => {
+    const currentFootprint =
       await footprintRepo.findOneByIdWithAllRelations(footprintId);
-    return footprint as GetFootprintDetail.FootprintDetailDto;
+    const next = await footprintRepo.findNextFootprintByOccurAt(
+      currentFootprint.occurAt,
+      currentFootprint.userId,
+    );
+    return {
+      ...currentFootprint,
+      nextFootprint: next ? { ...next } : null,
+    } as GetFootprintDetail.FootprintDetailDtoWithNext;
   },
   getPublicFootprintByCardUrl: async (cardUrl: string, page: number) => {
     const url = `https://dengta.org/${cardUrl}`;
