@@ -16,6 +16,7 @@ import {
   QUESTION_TEMPLATES,
 } from '../../Config/constants.js';
 import { EmbeddingServerError } from '../../Errors/errors.js';
+import logger from '../../Database/Logger/index.js';
 
 const addWeightedEmbedding = (
   embedding: number[],
@@ -59,7 +60,10 @@ export const embeddingService = {
       try {
         embedding = await embeddingService.getEmbeddingBySentences(sentences);
       } catch (error) {
-        console.error('Error in embedding service ->');
+        logger.error(
+          error,
+          'Error in embedding service -> getEmbeddingBySentences',
+        );
         throw error;
       }
 
@@ -75,7 +79,7 @@ export const embeddingService = {
           transactionManager,
         );
       } catch (error) {
-        console.error('Error in DB ->');
+        logger.error(error, 'Error in DB -> insertUserEmbedding');
         throw error;
       }
     });
@@ -104,7 +108,10 @@ export const embeddingService = {
           embeddings =
             await embeddingService.getEmbeddingBySentences(sentences);
         } catch (error) {
-          console.error('Error in embedding service ->');
+          logger.error(
+            error,
+            'Error in embedding service -> getEmbeddingBySentences',
+          );
           throw error;
         }
       }
@@ -136,7 +143,7 @@ export const embeddingService = {
           transactionManager,
         );
       } catch (error) {
-        console.error('Error in DB ->');
+        logger.error(error, 'Error in DB -> insertFootprintEmbedding');
         throw error;
       }
     });
@@ -161,7 +168,10 @@ export const embeddingService = {
       try {
         embedding = await embeddingService.getEmbeddingBySentences(sentences);
       } catch (error) {
-        console.error('Error in embedding service ->');
+        logger.error(
+          error,
+          'Error in embedding service -> getEmbeddingBySentences',
+        );
         throw error;
       }
 
@@ -196,7 +206,7 @@ export const embeddingService = {
           transactionManager,
         );
       } catch (error) {
-        console.error('Error in DB ->');
+        logger.error(error, 'Error in DB -> insertMUserQuestionItemEmbedding');
         throw error;
       }
     });
@@ -226,7 +236,10 @@ export const embeddingService = {
           embeddings =
             await embeddingService.getEmbeddingBySentences(sentences);
         } catch (error) {
-          console.error('Error in embedding service ->');
+          logger.error(
+            error,
+            'Error in embedding service -> getEmbeddingBySentences',
+          );
           throw error;
         }
       }
@@ -259,7 +272,7 @@ export const embeddingService = {
           transactionManager,
         );
       } catch (error) {
-        console.error('Error in DB ->');
+        logger.error(error, 'Error in DB -> updateUserEmbedding');
         throw error;
       }
     });
@@ -293,7 +306,7 @@ export const embeddingService = {
         transactionManager,
       );
     } catch (error) {
-      console.error('Error in DB ->');
+      logger.error(error, 'Error in DB -> findOrInsertProfileHashTagEmbedding');
       throw error;
     }
   },
@@ -326,7 +339,10 @@ export const embeddingService = {
         transactionManager,
       );
     } catch (error) {
-      console.error('Error in DB ->');
+      logger.error(
+        error,
+        'Error in DB -> findOrinsertFootprintHashTagEmbedding',
+      );
       throw error;
     }
   },
@@ -356,7 +372,10 @@ export const embeddingService = {
 
       return weightedEmbedding;
     } catch (error) {
-      console.error('Error in DB ->');
+      logger.error(
+        error,
+        'Error in DB -> getUserWithoutFootprintWeightedEmbedding',
+      );
       throw error;
     }
   },
@@ -402,7 +421,10 @@ export const embeddingService = {
 
       return weightedEmbedding;
     } catch (error) {
-      console.error('Error in DB ->');
+      logger.error(
+        error,
+        'Error in DB -> getUserPartialIntervalWeightedEmbedding',
+      );
       throw error;
     }
   },
@@ -423,7 +445,7 @@ export const embeddingService = {
         );
 
       if (!userWithAllRelationsEmbedding) {
-        throw new Error('UserEmbedding not found');
+        throw new Error('UserEmbedding not found when addNewIntervalInMilvus');
       }
 
       const lastKFootprintWithHashTagEmbedding =
@@ -436,7 +458,9 @@ export const embeddingService = {
       if (
         lastKFootprintWithHashTagEmbedding.length !== FOOTPRINT_INTERVAL_SIZE
       ) {
-        throw new Error('FootprintEmbedding not found');
+        throw new Error(
+          'FootprintEmbedding not found when addNewIntervalInMilvus',
+        );
       }
 
       const userEmbedding: Embedding.IEmbeddingUser = {
@@ -455,16 +479,23 @@ export const embeddingService = {
         questionResponses:
           userWithAllRelationsEmbedding.questionResponsesEmbedding,
       };
+      try {
+        const userWeightedEmbedding =
+          await embeddingService.calculateUserWeightedEmbedding(
+            userEmbedding,
+            FOOTPRINT_INTERVAL_SIZE,
+          );
 
-      const userWeightedEmbedding =
-        await embeddingService.calculateUserWeightedEmbedding(
-          userEmbedding,
-          FOOTPRINT_INTERVAL_SIZE,
+        await milvusUserIntervalsEmbeddingRepo.insertIntervalsEmbedding(
+          userWeightedEmbedding,
         );
-
-      await milvusUserIntervalsEmbeddingRepo.insertIntervalsEmbedding(
-        userWeightedEmbedding,
-      );
+      } catch (error) {
+        logger.error(
+          error,
+          'Error when calculateUserWeightedEmbedding and  insertIntervalsEmbedding in addNewIntervalInMilvus',
+        );
+        throw error;
+      }
     });
   },
 
@@ -644,14 +675,18 @@ export const embeddingService = {
         weightedEmbedding,
       );
     });
-
-    for (const footprint of userEmbedding.footprints) {
-      const weightedEmbedding =
-        await embeddingService.calculateFootprintWeightedEmbedding(
-          footprint,
-          EMBEDDING_WEIGHTS.footprints,
-        );
-      addWeightedEmbedding(weightedEmbedding, 1, weightedEmbedding);
+    try {
+      for (const footprint of userEmbedding.footprints) {
+        const weightedEmbedding =
+          await embeddingService.calculateFootprintWeightedEmbedding(
+            footprint,
+            EMBEDDING_WEIGHTS.footprints,
+          );
+        addWeightedEmbedding(weightedEmbedding, 1, weightedEmbedding);
+      }
+    } catch (error) {
+      logger.error(error, 'Error in DB -> calculateUserWeightedEmbedding');
+      throw error;
     }
 
     const validQuestionResponses = userEmbedding.questionResponses.filter(
@@ -706,14 +741,21 @@ export const embeddingService = {
           intervalEmbedding,
         );
       });
-
-      for (const footprint of intervalFootprints) {
-        const weightedEmbedding =
-          await embeddingService.calculateFootprintWeightedEmbedding(
-            footprint,
-            EMBEDDING_WEIGHTS.footprints,
-          );
-        addWeightedEmbedding(weightedEmbedding, 1, intervalEmbedding);
+      try {
+        for (const footprint of intervalFootprints) {
+          const weightedEmbedding =
+            await embeddingService.calculateFootprintWeightedEmbedding(
+              footprint,
+              EMBEDDING_WEIGHTS.footprints,
+            );
+          addWeightedEmbedding(weightedEmbedding, 1, intervalEmbedding);
+        }
+      } catch (error) {
+        logger.error(
+          error,
+          'Error in DB -> calculateFootprintWeightedEmbedding',
+        );
+        throw error;
       }
 
       const validQuestionResponses = userEmbedding.questionResponses.filter(

@@ -3,6 +3,7 @@ import { UserEmbedding } from '../../Database/Entities/userEmbedding.js';
 import { Embedding } from '../../Application/Features/Recommendation/Embedding/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { DatabaseError } from '../../Errors/errors.js';
+import logger from '../../Database/Logger/index.js';
 
 export const userEmbeddingRepo = {
   findById: async (
@@ -35,7 +36,7 @@ export const userEmbeddingRepo = {
         await transactionManager.save(newUserEmbedding);
       return savedUserEmbedding;
     } catch (error) {
-      console.error('Failed to insert userEmbedding:');
+      logger.error(error, 'Failed to insert userEmbedding:');
       throw error;
     }
   },
@@ -80,8 +81,8 @@ export const userEmbeddingRepo = {
       .where('user.id = :userId', { userId });
 
     const user = await query.getOne();
-
     if (!user) {
+      logger.info(`user: ${user}`);
       throw new DatabaseError();
     }
 
