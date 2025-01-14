@@ -165,5 +165,6 @@ export async function initFixedDbData() {
 }
 
 export async function initFakeData() {
+  await testHelper.clearDatabase(Database);
   await testHelper.createFakeUsersForRecommendation(12);
 }
