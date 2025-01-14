@@ -346,21 +346,20 @@ export const testHelper = {
           `Avatar file not found for user ${signUpRes.data.user.id}: ${avatarFilename}`,
         );
       }
-
-      for (const footprintData of userRaw.footprints) {
+      for (let i = 0; i < userRaw.footprints.length; i++) {
+        const footprintData = userRaw.footprints[i];
         const footprintInitRes = await initFootprintHandler.handle(
           signUpRes.data.user.id,
           'draft',
         );
-
         await publishFootprintHandler.handle(signUpRes.data.user.id, {
           footprintId: footprintInitRes.data.footprint.id,
           title: footprintData.title,
           content: footprintData.content,
           hashtags: footprintData.tags,
-          category: 'career',
-          milestone: false,
-          occurAt: new Date('2021-01-01'),
+          category: i % 2 == 0 ? 'career' : 'life',
+          milestone: i % 2 == 0 ? true : false,
+          occurAt: new Date(`2021-0${i + 1}-01`),
           status: 'published',
         });
       }
