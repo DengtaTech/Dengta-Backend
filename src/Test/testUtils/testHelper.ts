@@ -358,7 +358,7 @@ export const testHelper = {
           content: footprintData.content,
           hashtags: footprintData.tags,
           category: i % 2 == 0 ? 'career' : 'life',
-          milestone: i % 2 == 0 ? true : false,
+          milestone: i % 2 == 0,
           occurAt: new Date(`2021-0${i + 1}-01`),
           status: 'published',
         });
