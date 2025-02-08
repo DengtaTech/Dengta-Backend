@@ -45,8 +45,6 @@ export const bowlService = {
     ) {
       throw new Error('When getting Bowl List, user should exist');
     }
-    console.log('userId', userId);
-    console.log('targetId', targetId);
     if (userId !== targetId) {
       return await bowlRepo.getBowlListByOther(userId, page);
     }
