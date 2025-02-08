@@ -1,5 +1,6 @@
 import { bowlService } from '../../../../Infrastructure/Service/bowlService.js';
 import { publishBowlRes } from './publishBowlRes.js';
+import { PublishBowl } from './Types/api.js';
 
 export const publishBowlHandler = {
   handle: async (

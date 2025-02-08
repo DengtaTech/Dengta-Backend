@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { User } from './user.js';
-import { MBowlLike } from './mbowlLikes.js';
+import { MBowlPush } from './mBowlPush.js';
 
 @Entity({ name: 'Bowls' })
 export class Bowl extends BaseEntity {
@@ -19,7 +19,6 @@ export class Bowl extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: false })
   content!: string;
 
-  // 不管誰推的
   @Column({ type: 'int', default: 0 })
   totalPushCount!: number;
 
@@ -55,6 +54,6 @@ export class Bowl extends BaseEntity {
   @JoinColumn({ name: 'commenterId' })
   commenter?: Relation<User>;
 
-  @OneToMany(() => MBowlLike, (bowlLike) => bowlLike.bowl)
-  pushCounts?: Relation<MBowlLike[]>;
+  @OneToMany(() => MBowlPush, (bowlPush) => bowlPush.bowl)
+  pushCounts?: Relation<MBowlPush[]>;
 }

@@ -3,36 +3,45 @@ import { GetBowlList } from '../../Application/Features/Bowl/GetBowlList/Types/a
 import { Bowl } from '../../Database/Entities/bowl.js';
 
 export const bowlRepo = {
+  findById: async (id: string): Promise<Bowl | null> => {
+    try {
+      console.log(id);
+      const bowl = await Bowl.findOne({ where: { id } });
+      console.log(bowl);
+      return bowl;
+    } catch (error) {
+      logger.error(error, 'Failed to find bowl by id:');
+      throw error;
+    }
+  },
   getBowlListByOther: async (
     currentUserId: string,
     page: number = 1,
     limit: number = 10,
   ): Promise<GetBowlList.IBowlDto[] | []> => {
     try {
-      // bowl_id, bow_creatAt --> TypeORM 在進行 pagination 時會自動搞子查詢，此修改可以避免 alias 衝突問題
-      const query = Bowl.createQueryBuilder('bowl')
-        .leftJoin(
-          'MBowlLikes',
-          'like',
-          'like.bowlId = bowl.id AND like.userId = :currentUserId',
+      const bowls = await Bowl.createQueryBuilder('bowl')
+        .leftJoinAndSelect(
+          'bowl.pushCounts',
+          'pushCounts',
+          "pushCounts.userId = :currentUserId AND pushCounts.status = 'normal'",
           { currentUserId },
         )
-        // 使用 CASE 語法來判斷該用戶是否有按讚：有則回傳 1，否則 0
-        .select([
-          'bowl.id AS bowl_id',
-          'bowl.content AS content',
-          'bowl.status AS status',
-          'bowl.userId AS userId',
-          'bowl.commenterId AS commenterId',
-          'bowl.createdAt AS bowl_createdAt',
-          'bowl.totalPushCount AS totalPushCount',
-          'CASE WHEN like.userId IS NOT NULL THEN 1 ELSE 0 END AS isPushed',
-        ])
         .orderBy('bowl.createdAt', 'DESC')
         .skip((page - 1) * limit)
-        .take(limit);
-      // 當有用到select--> getRawMany();
-      const [data] = await query.getRawMany();
+        .take(limit)
+        .getMany();
+      const data: GetBowlList.IBowlDto[] = bowls.map((bowl) => ({
+        id: bowl.id,
+        content: bowl.content,
+        status: bowl.status,
+        userId: bowl.userId,
+        commenterId: bowl.commenterId,
+        createdAt: bowl.createdAt,
+        totalPushCount: bowl.totalPushCount,
+        isPushed: bowl.pushCounts && bowl.pushCounts.length > 0 ? true : false,
+      }));
+
       if (!data) return [];
       return data;
     } catch (error) {
@@ -48,19 +57,11 @@ export const bowlRepo = {
     try {
       const query = Bowl.createQueryBuilder('bowl')
         .where('bowl.userId = :authorId', { authorId })
-        .select([
-          'bowl.id AS bowl_id',
-          'bowl.content AS content',
-          'bowl.status AS status',
-          'bowl.userId AS userId',
-          'bowl.commenterId AS commenterId',
-          'bowl.createdAt AS bowl_createdAt',
-          'bowl.totalPushCount AS totalPushCount',
-        ])
+        .select(['bowl'])
         .orderBy('bowl.createdAt', 'DESC')
         .skip((page - 1) * limit)
         .take(limit);
-      const [bowls] = await query.getRawMany();
+      const [bowls] = await query.getManyAndCount();
       if (!bowls) return [];
       return bowls;
     } catch (error) {

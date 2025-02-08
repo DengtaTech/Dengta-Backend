@@ -23,6 +23,7 @@ import { embeddingService } from './embeddingService.js';
 import { Notification } from '../../Database/Entities/notification.js';
 import { notificationRepo } from '../Repository/notificationRepo.js';
 import { Card } from '../../Database/Entities/card.js';
+import logger from '../../Database/Logger/index.js';
 
 export const footprintService = {
   expressReaction: async (
@@ -118,7 +119,7 @@ export const footprintService = {
         footprint.totalLike -= 1;
         await transactionManager.save(footprint);
       } catch (error) {
-        console.error('Error in DB ->', error);
+        logger.error(error, 'Error in DB ');
         throw error;
       }
     });
@@ -170,7 +171,7 @@ export const footprintService = {
         }
         return updatedFootprint;
       } catch (error) {
-        console.error('Error in DB ->', error);
+        logger.error(error, 'Error in DB layer');
         throw error;
       }
     });

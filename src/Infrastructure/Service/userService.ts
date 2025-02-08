@@ -73,7 +73,7 @@ export const userService = {
           }),
         } as Signup.ISignUpDto;
       } catch (error) {
-        console.error('Error in DB ->', error);
+        logger.error(error, 'Error in DB layer');
         throw error;
       }
     });

@@ -11,7 +11,6 @@ import {
 } from './View/VFootprintWithAllRelations.js';
 import { View } from './View/view.js';
 import logger from '../../Database/Logger/index.js';
-import e from 'express';
 
 export const footprintRepo = {
   findById: async (id: Footprint['id'], transactionManager?: EntityManager) => {

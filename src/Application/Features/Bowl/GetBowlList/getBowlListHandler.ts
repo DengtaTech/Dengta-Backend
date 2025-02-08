@@ -8,11 +8,7 @@ export const getBowlListHandler = {
     targetId: string,
     page: number,
   ): Promise<GetBowlList.IGetBowlListResponse> => {
-    const result = await bowlService.getBowlList(
-      targetId,
-      userId === targetId,
-      page,
-    );
+    const result = await bowlService.getBowlList(userId, targetId, page);
 
     return await getBowlListRes.customize(result);
   },

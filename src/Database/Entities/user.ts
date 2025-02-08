@@ -23,7 +23,7 @@ import { Notification } from './notification.js';
 import { MUserQuestionItem } from './mUserQuestionItem.js';
 import { Card } from './card.js';
 import { Bowl } from './bowl.js';
-import { MBowlLike } from './mbowlLikes.js';
+import { MBowlPush } from './mBowlPush.js';
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 50 })
@@ -107,10 +107,10 @@ export class User extends BaseEntity {
   )
   mUserProfileHashTag?: Relation<MUserProfileHashTag[]>;
 
-  @OneToMany(() => MBowlLike, (bowlLike) => bowlLike.bowl, {
+  @OneToMany(() => MBowlPush, (bowlPush) => bowlPush.user, {
     cascade: true,
   })
-  mBowlLikes?: Relation<MBowlLike[]>;
+  mBowlPushs?: Relation<MBowlPush[]>;
 
   @OneToMany(
     () => MUserFootprintReaction,
