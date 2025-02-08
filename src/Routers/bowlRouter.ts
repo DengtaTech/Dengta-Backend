@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/', jwtAuthentication, wrapAsync(bowlController.publishBowl));
 router.get(
-  '/all/:userId',
+  '/all/:targetId',
   jwtAuthentication,
   wrapAsync(bowlController.getBowlList),
 );

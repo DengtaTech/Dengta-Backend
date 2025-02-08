@@ -11,6 +11,7 @@ import {
 } from './View/VFootprintWithAllRelations.js';
 import { View } from './View/view.js';
 import logger from '../../Database/Logger/index.js';
+import e from 'express';
 
 export const footprintRepo = {
   findById: async (id: Footprint['id'], transactionManager?: EntityManager) => {
@@ -52,7 +53,7 @@ export const footprintRepo = {
       const savedFootprint = await transactionManager.save(footprint);
       return savedFootprint;
     } catch (error) {
-      console.error('Failed to init footprint:');
+      logger.error(error, 'Failed to init footprint:');
       throw error;
     }
   },

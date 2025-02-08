@@ -1,5 +1,7 @@
+import { GetBowlList } from '../../Application/Features/Bowl/GetBowlList/Types/api.js';
 import { Database } from '../../Database/data-source.js';
 import { Bowl } from '../../Database/Entities/bowl.js';
+import { bowlRepo } from '../Repository/bowlRepo.js';
 import { userRepo } from '../Repository/userRepo.js';
 
 export const bowlService = {
@@ -30,17 +32,19 @@ export const bowlService = {
       }
     });
   },
-  getBowlList: async (userId: string): Promise<Bowl[]> => {
-    if ((await userRepo.findById(userId)) === null) {
+  getBowlList: async (
+    targetId: string,
+    isAuthor: boolean,
+    page: number,
+  ): Promise<GetBowlList.IBowlDto[] | []> => {
+    if ((await userRepo.findById(targetId)) === null) {
       throw new Error('When getting Bowl List, user should exist');
     }
-    const bowls = await Bowl.find({
-      where: { userId },
-      order: {
-        pushCount: 'DESC',
-        createdAt: 'DESC',
-      },
-    });
-    return bowls;
+    // 效能上考量的區分
+    if (isAuthor) {
+      return await bowlRepo.getBowlListByAuthor(targetId, page);
+    } else {
+      return await bowlRepo.getBowlListByOther(targetId, page);
+    }
   },
 };

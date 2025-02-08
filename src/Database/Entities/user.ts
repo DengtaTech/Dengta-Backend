@@ -23,6 +23,7 @@ import { Notification } from './notification.js';
 import { MUserQuestionItem } from './mUserQuestionItem.js';
 import { Card } from './card.js';
 import { Bowl } from './bowl.js';
+import { MBowlLike } from './mbowlLikes.js';
 @Entity({ name: 'Users' })
 export class User extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 50 })
@@ -88,7 +89,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Footprint, (footprint) => footprint.user, { cascade: true })
   footprints?: Relation<Footprint[]>;
 
-  @OneToMany(() => Bowl, (bowl) => bowl.user, { cascade: true })
+  @OneToMany(() => Bowl, (bowl) => bowl.author, { cascade: true })
   bowls?: Relation<Bowl[]>;
 
   @OneToMany(() => Link, (link) => link.user, { cascade: true })
@@ -105,6 +106,11 @@ export class User extends BaseEntity {
     },
   )
   mUserProfileHashTag?: Relation<MUserProfileHashTag[]>;
+
+  @OneToMany(() => MBowlLike, (bowlLike) => bowlLike.bowl, {
+    cascade: true,
+  })
+  mBowlLikes?: Relation<MBowlLike[]>;
 
   @OneToMany(
     () => MUserFootprintReaction,

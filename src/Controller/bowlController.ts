@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
-import { InputEmptyError, NoTokenError } from '../Errors/errors.js';
+import {
+  InputEmptyError,
+  InvalidInputError,
+  NoTokenError,
+} from '../Errors/errors.js';
 import { publishBowlHandler } from '../Application/Features/Bowl/PublishBowl/publishBowlHandler.js';
 import { getBowlListHandler } from '../Application/Features/Bowl/GetBowlList/getBowlListHandler.js';
 
@@ -25,8 +29,14 @@ export const bowlController = {
     if (req.decodedToken === undefined) {
       throw new NoTokenError();
     }
-    const { userId } = req.params;
-    const response = await getBowlListHandler.handle(userId);
+    const { id: userId } = req.decodedToken;
+    const { targetId } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    if (page < 0) {
+      throw new InvalidInputError('page must be a positive integer');
+    }
+
+    const response = await getBowlListHandler.handle(userId, targetId, page);
     res.status(200).json(response);
   },
 };

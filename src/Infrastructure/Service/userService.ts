@@ -22,6 +22,7 @@ import { Card } from '../../Database/Entities/card.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/api.js';
+import logger from '../../Database/Logger/index.js';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -31,13 +32,12 @@ export const userService = {
   signUp: async (
     userInfoObj: Signup.ISignUpReq,
   ): Promise<Signup.ISignUpDto> => {
-    // try {
+    // 這邊沒有檢查email 所以當email存在時會拋 501
     const checkUserExist = await userRepo.findById(
       userInfoObj.clerkId,
       undefined,
       undefined,
     );
-
     if (checkUserExist) {
       throw new EmailExistsError();
     }
