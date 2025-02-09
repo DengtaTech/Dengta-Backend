@@ -63,5 +63,10 @@ router.post(
   jwtAuthentication,
   wrapAsync(footprintController.quickPost),
 );
+router.patch(
+  '/quick',
+  jwtAuthentication,
+  wrapAsync(footprintController.patchQuickPost),
+);
 
 export default router;

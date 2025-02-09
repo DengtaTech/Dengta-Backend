@@ -18,6 +18,7 @@ import { deleteFootprintHandler } from '../Application/Features/Footprint/Delete
 import { getFootprintDetailHandler } from '../Application/Features/Footprint/GetFootprintDetail/GetFootprintDetailHandler.js';
 import { uploadFootprintContentImgHandler } from '../Application/Features/Footprint/UploadFootprintContentImg/uploadFootprintContentImgHandler.js';
 import { quickPostHandler } from '../Application/Features/Footprint/PostQuickFootprint/quickPostHandler.js';
+import { patchQuickPostHandler } from '../Application/Features/Footprint/PatchQuickPost/patchQuickPostHandler.js';
 
 export const footprintController = {
   getFootprintDetail: async (req: Request, res: Response): Promise<void> => {
@@ -180,6 +181,24 @@ export const footprintController = {
     }
 
     const response = await quickPostHandler.handle(userId, content);
+    res.status(200).json(response);
+  },
+  patchQuickPost: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const { id: userId } = req.decodedToken;
+    const { content, footprintId } = req.body;
+    if (!content || !footprintId) {
+      throw new InputEmptyError();
+    }
+
+    const response = await patchQuickPostHandler.handle(
+      userId,
+      content,
+      footprintId,
+    );
     res.status(200).json(response);
   },
 };

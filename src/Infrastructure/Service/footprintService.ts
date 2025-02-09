@@ -7,6 +7,7 @@ import {
   FootprintNotFoundError,
   CardUrlNotExistsError,
   UserShouldExistError,
+  UserNotAuthor,
 } from '../../Errors/errors.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { mUserFootprintReactionRepo } from '../Repository/mUserFootprintReactionRepo.js';
@@ -302,6 +303,32 @@ export const footprintService = {
         newFootprint.status = 'published';
         newFootprint.isQuickPost = true;
         await transactionManager.save(newFootprint);
+        return;
+      } catch (error) {
+        logger.error(error, 'Error in DB layer');
+        throw error;
+      }
+    });
+  },
+  patchQuickPost: async (
+    userId: string,
+    content: string,
+    footprintId: string,
+  ): Promise<void> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserShouldExistError();
+    }
+    const footprint = await footprintRepo.findById(footprintId);
+    if (!footprint) {
+      throw new FootprintNotFoundError();
+    }
+    if (footprint.userId !== userId) {
+      throw new UserNotAuthor();
+    }
+    return Database.transaction(async (transactionManager) => {
+      try {
+        footprint.content = content;
+        await transactionManager.save(footprint);
         return;
       } catch (error) {
         logger.error(error, 'Error in DB layer');
