@@ -17,6 +17,7 @@ import { patchFootprintSettingHandler } from '../Application/Features/Footprint/
 import { deleteFootprintHandler } from '../Application/Features/Footprint/DeleteFootprint/deleteFootprintHandler.js';
 import { getFootprintDetailHandler } from '../Application/Features/Footprint/GetFootprintDetail/GetFootprintDetailHandler.js';
 import { uploadFootprintContentImgHandler } from '../Application/Features/Footprint/UploadFootprintContentImg/uploadFootprintContentImgHandler.js';
+import { quickPostHandler } from '../Application/Features/Footprint/PostQuickFootprint/quickPostHandler.js';
 
 export const footprintController = {
   getFootprintDetail: async (req: Request, res: Response): Promise<void> => {
@@ -165,6 +166,20 @@ export const footprintController = {
     // 不確定要不要檢查 userId 是否是作者
 
     const response = await deleteFootprintHandler.handle(footprintId);
+    res.status(200).json(response);
+  },
+  quickPost: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const { id: userId } = req.decodedToken;
+    const { content } = req.body;
+    if (!content) {
+      throw new InputEmptyError();
+    }
+
+    const response = await quickPostHandler.handle(userId, content);
     res.status(200).json(response);
   },
 };

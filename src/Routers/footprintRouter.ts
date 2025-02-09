@@ -57,4 +57,11 @@ router.delete(
   jwtAuthentication,
   wrapAsync(footprintController.deleteFootprint),
 );
+
+router.post(
+  '/quick',
+  jwtAuthentication,
+  wrapAsync(footprintController.quickPost),
+);
+
 export default router;
