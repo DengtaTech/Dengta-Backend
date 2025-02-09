@@ -7,6 +7,7 @@ import {
 import { publishBowlHandler } from '../Application/Features/Bowl/PublishBowl/publishBowlHandler.js';
 import { getBowlListHandler } from '../Application/Features/Bowl/GetBowlList/getBowlListHandler.js';
 import { pushHandler } from '../Application/Features/Bowl/Push/pushHandler.js';
+import { acceptBowlHandler } from '../Application/Features/Bowl/AcceptBowl/acceptBowlHandler.js';
 
 export const bowlController = {
   publishBowl: async (req: Request, res: Response): Promise<void> => {
@@ -47,6 +48,15 @@ export const bowlController = {
     const { id: userId } = req.decodedToken;
     const { bowlId } = req.params;
     const response = await pushHandler.handle(userId, bowlId);
+    res.status(200).json(response);
+  },
+  acceptBowl: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+    const { bowlId } = req.params;
+    const response = await acceptBowlHandler.handle(userId, bowlId);
     res.status(200).json(response);
   },
 };
