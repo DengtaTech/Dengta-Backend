@@ -6,6 +6,8 @@ import {
   UserNotFoundError,
   FootprintNotFoundError,
   CardUrlNotExistsError,
+  UserShouldExistError,
+  UserNotAuthor,
 } from '../../Errors/errors.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { mUserFootprintReactionRepo } from '../Repository/mUserFootprintReactionRepo.js';
@@ -285,5 +287,77 @@ export const footprintService = {
       throw new CardUrlNotExistsError();
     }
     return await footprintService.getFootprintByUserId(card.userId, true, page);
+  },
+  postQuickFootprint: async (
+    userId: string,
+    content: string,
+  ): Promise<void> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserShouldExistError();
+    }
+    return Database.transaction(async (transactionManager) => {
+      try {
+        const newFootprint = new Footprint();
+        newFootprint.content = content;
+        newFootprint.userId = userId;
+        newFootprint.status = 'published';
+        newFootprint.isQuickPost = true;
+        await transactionManager.save(newFootprint);
+        return;
+      } catch (error) {
+        logger.error(error, 'Error in DB layer');
+        throw error;
+      }
+    });
+  },
+  patchQuickPost: async (
+    userId: string,
+    content: string,
+    footprintId: string,
+  ): Promise<void> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserShouldExistError();
+    }
+    const footprint = await footprintRepo.findById(footprintId);
+    if (!footprint) {
+      throw new FootprintNotFoundError();
+    }
+    if (footprint.userId !== userId) {
+      throw new UserNotAuthor();
+    }
+    return Database.transaction(async (transactionManager) => {
+      try {
+        footprint.content = content;
+        await transactionManager.save(footprint);
+        return;
+      } catch (error) {
+        logger.error(error, 'Error in DB layer');
+        throw error;
+      }
+    });
+  },
+  deleteQuickPost: async (
+    userId: string,
+    footprintId: string,
+  ): Promise<void> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserShouldExistError();
+    }
+    const footprint = await footprintRepo.findById(footprintId);
+    if (!footprint) {
+      throw new FootprintNotFoundError();
+    }
+    if (footprint.userId !== userId) {
+      throw new UserNotAuthor();
+    }
+    return Database.transaction(async (transactionManager) => {
+      try {
+        await transactionManager.delete(Footprint, { id: footprint.id });
+        return;
+      } catch (error) {
+        logger.error(error, 'Error in DB layer');
+        throw error;
+      }
+    });
   },
 };

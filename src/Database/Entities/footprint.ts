@@ -45,6 +45,9 @@ export class Footprint extends BaseEntity {
   })
   status!: string;
 
+  @Column({ type: 'boolean', default: false })
+  isQuickPost!: boolean;
+
   @Column({ type: 'boolean', default: false }) // in mysql, boolean is tinyint(1)
   milestone!: boolean;
 
