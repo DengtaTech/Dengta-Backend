@@ -6,8 +6,10 @@ import {
   ManyToOne,
   JoinColumn,
   Relation,
+  OneToMany,
 } from 'typeorm';
 import { User } from './user.js';
+import { MBowlPush } from './mBowlPush.js';
 
 @Entity({ name: 'Bowls' })
 export class Bowl extends BaseEntity {
@@ -18,7 +20,7 @@ export class Bowl extends BaseEntity {
   content!: string;
 
   @Column({ type: 'int', default: 0 })
-  pushCount!: number;
+  totalPushCount!: number;
 
   @Column({
     type: 'enum',
@@ -27,9 +29,11 @@ export class Bowl extends BaseEntity {
   })
   status!: string;
 
+  // 被敲者（即接受敲碗的用戶）
   @Column('uuid')
   userId!: string;
 
+  // 敲碗者（即發起敲碗行為的用戶）
   @Column('uuid')
   commenterId!: string;
 
@@ -40,7 +44,16 @@ export class Bowl extends BaseEntity {
   })
   createdAt!: Date;
 
+  // 關聯被敲者
   @ManyToOne(() => User, (user) => user.bowls, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user?: Relation<User>;
+  author?: Relation<User>;
+
+  // 關聯敲碗者
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'commenterId' })
+  commenter?: Relation<User>;
+
+  @OneToMany(() => MBowlPush, (bowlPush) => bowlPush.bowl)
+  pushCounts?: Relation<MBowlPush[]>;
 }
