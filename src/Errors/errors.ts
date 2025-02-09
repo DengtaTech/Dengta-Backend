@@ -31,6 +31,24 @@ export class FootprintNotEnoughError extends BaseError {
   }
 }
 
+export class BowlRelatedError extends BaseError {
+  constructor(message: string) {
+    super(message, 400);
+  }
+}
+
+export class UserShouldExistError extends BaseError {
+  constructor() {
+    super('User should exist but not found', 400);
+  }
+}
+
+export class UserNotAuthor extends BaseError {
+  constructor() {
+    super('User is not the author, have no permission', 400);
+  }
+}
+
 export class NotificationNotFoundError extends BaseError {
   constructor() {
     super('Notification not found', 404);

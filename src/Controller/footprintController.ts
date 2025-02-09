@@ -17,6 +17,9 @@ import { patchFootprintSettingHandler } from '../Application/Features/Footprint/
 import { deleteFootprintHandler } from '../Application/Features/Footprint/DeleteFootprint/deleteFootprintHandler.js';
 import { getFootprintDetailHandler } from '../Application/Features/Footprint/GetFootprintDetail/GetFootprintDetailHandler.js';
 import { uploadFootprintContentImgHandler } from '../Application/Features/Footprint/UploadFootprintContentImg/uploadFootprintContentImgHandler.js';
+import { quickPostHandler } from '../Application/Features/Footprint/PostQuickFootprint/quickPostHandler.js';
+import { patchQuickPostHandler } from '../Application/Features/Footprint/PatchQuickPost/patchQuickPostHandler.js';
+import { deleteQuickPostHandler } from '../Application/Features/Footprint/DeleteQuickPost/deleteQuickPostHandler.js';
 
 export const footprintController = {
   getFootprintDetail: async (req: Request, res: Response): Promise<void> => {
@@ -165,6 +168,52 @@ export const footprintController = {
     // 不確定要不要檢查 userId 是否是作者
 
     const response = await deleteFootprintHandler.handle(footprintId);
+    res.status(200).json(response);
+  },
+  quickPost: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const { id: userId } = req.decodedToken;
+    const { content } = req.body;
+    if (!content) {
+      throw new InputEmptyError();
+    }
+
+    const response = await quickPostHandler.handle(userId, content);
+    res.status(200).json(response);
+  },
+  patchQuickPost: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const { id: userId } = req.decodedToken;
+    const { content, footprintId } = req.body;
+    if (!content || !footprintId) {
+      throw new InputEmptyError();
+    }
+
+    const response = await patchQuickPostHandler.handle(
+      userId,
+      content,
+      footprintId,
+    );
+    res.status(200).json(response);
+  },
+  deleteQuickPost: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+
+    const { id: userId } = req.decodedToken;
+    const { footprintId } = req.body;
+    if (!footprintId) {
+      throw new InputEmptyError();
+    }
+
+    const response = await deleteQuickPostHandler.handle(userId, footprintId);
     res.status(200).json(response);
   },
 };

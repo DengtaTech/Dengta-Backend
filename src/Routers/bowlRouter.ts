@@ -4,12 +4,18 @@ import { jwtAuthentication } from '../Middlewares/auth.js';
 import { bowlController } from '../Controller/bowlController.js';
 
 const router = express.Router();
-
-router.post('/', jwtAuthentication, wrapAsync(bowlController.publishBowl));
 router.get(
-  '/all/:userId',
+  '/all/:targetId',
   jwtAuthentication,
   wrapAsync(bowlController.getBowlList),
+);
+
+router.post('/', jwtAuthentication, wrapAsync(bowlController.publishBowl));
+router.post('/:bowlId/push', jwtAuthentication, wrapAsync(bowlController.push));
+router.patch(
+  '/:bowlId/accept',
+  jwtAuthentication,
+  wrapAsync(bowlController.acceptBowl),
 );
 
 export default router;
