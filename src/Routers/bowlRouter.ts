@@ -12,5 +12,10 @@ router.get(
 
 router.post('/', jwtAuthentication, wrapAsync(bowlController.publishBowl));
 router.post('/:bowlId/push', jwtAuthentication, wrapAsync(bowlController.push));
+router.patch(
+  '/:bowlId/accept',
+  jwtAuthentication,
+  wrapAsync(bowlController.acceptBowl),
+);
 
 export default router;
