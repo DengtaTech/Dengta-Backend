@@ -73,21 +73,22 @@ jobs:
         run: |
           cd /srv/dengta-ci
           npm run test:ci
-      - name: Send Notification to Discord
+
+      - name: Discord success notification
         if: success()
-        uses: appleboy/discord-action@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: DengTa Chill Bot
+          DISCORD_AVATAR: https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Chill_guy_original_artwork.jpg/220px-Chill_guy_original_artwork.jpg
+        uses: Ilshidur/action-discord@master
         with:
-          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: 'GitHub Bot'
-          message: |
-            **[Test]** Tests completed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** succeeded.
-      - name: Send Notification to Discord
+          args: '✅ **[CI]** **API Test** from「**${{ github.event.pull_request.head.ref }}**」完美的成功了🥳'
+      - name: Notify on fail
         if: failure()
-        uses: appleboy/discord-action@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: DengTa Chill Bot
+          DISCORD_AVATAR: https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Chill_guy_original_artwork.jpg/220px-Chill_guy_original_artwork.jpg
+        uses: Ilshidur/action-discord@master
         with:
-          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: 'GitHub Bot'
-          message: |
-            **[Test]** Tests completed,but failed. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** failed.
+          args: '🚫 **[CI]** **API Test** from「**${{ github.event.pull_request.head.ref }}**」 完美的失敗了👺'

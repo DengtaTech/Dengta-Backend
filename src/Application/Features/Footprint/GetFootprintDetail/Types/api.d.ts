@@ -5,9 +5,15 @@ declare namespace GetFootprintDetail {
     hashtags: string[];
     reactionCounts: Record<NativeReaction, number>;
   };
+  type FootprintDetailDtoWithNext = FootprintDetailDto & {
+    nextFootprint: {
+      id: string;
+      title: string | null;
+    } | null;
+  };
   type FootprintDetailResponse = {
     data: {
-      footprint: FootprintDetailDto;
+      footprint: FootprintDetailDtoWithNext;
     };
   };
 }

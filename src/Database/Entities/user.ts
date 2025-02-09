@@ -66,6 +66,9 @@ export class User extends BaseEntity {
   })
   gender!: string;
 
+  @Column({ type: 'int', default: 0 })
+  helpCount!: number;
+
   @Column({ type: 'varchar', length: 50, nullable: true })
   phone!: string | null;
 

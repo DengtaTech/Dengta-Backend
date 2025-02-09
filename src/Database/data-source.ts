@@ -29,6 +29,7 @@ import { MUserQuestionItem } from './Entities/mUserQuestionItem.js';
 import { QuestionItem } from './Entities/questionItems.js';
 import { questionItemRepo } from '../Infrastructure/Repository/questionItemRepo.js';
 import { Mention } from './Entities/mention.js';
+import { MUserQuestionItemEmbedding } from './Entities/mUserQuestionItemEmbedding.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -55,7 +56,10 @@ export const Database = new DataSource({
   port: MYSQL_PORT ? Number(MYSQL_PORT) : undefined,
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE,
+  // synchronize:
+  //   process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development',
   synchronize: true,
+  dropSchema: process.env.NODE_ENV === 'test',
   logging: false,
   entities: [
     User,
@@ -82,6 +86,7 @@ export const Database = new DataSource({
     Mention,
     Card,
     Bowl,
+    MUserQuestionItemEmbedding,
   ],
 });
 
@@ -160,5 +165,6 @@ export async function initFixedDbData() {
 }
 
 export async function initFakeData() {
+  await testHelper.clearDatabase(Database);
   await testHelper.createFakeUsersForRecommendation(12);
 }

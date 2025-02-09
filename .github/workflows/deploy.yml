@@ -45,16 +45,24 @@ jobs:
           docker compose -f /srv/dengta-backend-production/docker-compose.yml --env-file /srv/dengta-backend-production/.env.production build --no-cache
           docker compose -f /srv/dengta-backend-production/docker-compose.yml --env-file /srv/dengta-backend-production/.env.production up -d
           docker exec nginx nginx -s reload
-
-      - name: Send Notification to Discord
-        uses: appleboy/discord-action@master
+      - name: Discord success notification
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: DengTa Haˊ Bot
+          DISCORD_AVATAR: https://truth.bahamut.com.tw/s01/202309/379d1c40ad39d1ab3be487687c8caa8c.JPG
+        uses: Ilshidur/action-discord@master
         with:
-          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: 'GitHub Bot'
-          message: |
-            **[Deploy]** Deployment completed on backend.dengta.org. The **「${{ github.event_name }}」** event triggered by **「${{ github.actor }}」** on **${{ github.ref }}** succeeded.
-
+          args: '✅ **[Deploy]** Deployment completed on backend.dengta.org. 「${{ github.actor }}」幹得好🥳'
+      - name: Notify on fail
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: DengTa Haˊ Bot
+          DISCORD_AVATAR: https://truth.bahamut.com.tw/s01/202309/379d1c40ad39d1ab3be487687c8caa8c.JPG
+        uses: Ilshidur/action-discord@master
+        with:
+          args: '🚫 **[Deploy]** Deployment failed. 「${{ github.actor }}」在衝殺小👺'
   create-release:
     needs: [deploy]
     runs-on: [self-hosted, dengta-ubuntu]

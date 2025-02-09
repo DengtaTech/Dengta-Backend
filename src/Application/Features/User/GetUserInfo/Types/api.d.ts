@@ -1,3 +1,4 @@
+import { Footprint } from '../../../../../Database/Entities/footprint.ts';
 import { User } from '../../../../../Database/Entities/user.js';
 import { Dengta } from '../../../../../Types/common.js';
 declare namespace GetUserInfo {

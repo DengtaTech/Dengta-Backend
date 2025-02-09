@@ -15,13 +15,13 @@ RUN apk add --no-cache bash curl \
     && apk del bash curl \
     && rm -rf /var/cache/apk/* /tmp/*
 
-ARG CUSTOM_ENV
-ENV CUSTOM_ENV=${CUSTOM_ENV}
+ENV CUSTOM_ENV=prod
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && npm ci --legacy-peer-deps \
     && npx tsc \
-    && cp -r src/Test/mockData dist/src/Test/ \
+    && cp src/utils/rateLimit.lua dist/src/utils/rateLimit.lua \
+    && cp src/Config/stopwords.txt dist/src/Config/stopwords.txt \
     && npm ci --omit=dev --omit=optional --legacy-peer-deps \
     && npm cache clean --force
 

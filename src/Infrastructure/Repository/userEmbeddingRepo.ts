@@ -3,6 +3,7 @@ import { UserEmbedding } from '../../Database/Entities/userEmbedding.js';
 import { Embedding } from '../../Application/Features/Recommendation/Embedding/Types/api.js';
 import { User } from '../../Database/Entities/user.js';
 import { DatabaseError } from '../../Errors/errors.js';
+import logger from '../../Database/Logger/index.js';
 
 export const userEmbeddingRepo = {
   findById: async (
@@ -35,7 +36,7 @@ export const userEmbeddingRepo = {
         await transactionManager.save(newUserEmbedding);
       return savedUserEmbedding;
     } catch (error) {
-      console.error('Failed to insert userEmbedding:');
+      logger.error(error, 'Failed to insert userEmbedding:');
       throw error;
     }
   },
@@ -60,10 +61,10 @@ export const userEmbeddingRepo = {
       throw error;
     }
   },
-  getUserWithProfileHashTagEmbedding: async (
+  getUserEmbeddingWithAllrelations: async (
     userId: string,
     transactionManager?: EntityManager,
-  ): Promise<Embedding.IEmbeddingUserWithHashTagEmbedding> => {
+  ): Promise<Embedding.IEmbeddingUserWithAllRelationsEmbedding> => {
     const query = (
       transactionManager?.createQueryBuilder(User, 'user') ||
       User.createQueryBuilder('user')
@@ -72,11 +73,16 @@ export const userEmbeddingRepo = {
       .leftJoinAndSelect('user.mUserProfileHashTag', 'mUserProfileHashTag')
       .leftJoinAndSelect('mUserProfileHashTag.profileHashTag', 'profileHashTag')
       .leftJoinAndSelect('profileHashTag.embedding', 'profileHashTagEmbedding')
+      .leftJoinAndSelect('user.questionResponses', 'questionResponses')
+      .leftJoinAndSelect(
+        'questionResponses.embedding',
+        'questionResponseEmbedding',
+      )
       .where('user.id = :userId', { userId });
 
     const user = await query.getOne();
-
     if (!user) {
+      logger.info(`user: ${user}`);
       throw new DatabaseError();
     }
 
@@ -87,6 +93,10 @@ export const userEmbeddingRepo = {
       profileHashTagsEmbedding:
         user?.mUserProfileHashTag?.map((tag) => {
           return tag.profileHashTag?.embedding?.contentEmbedding || [];
+        }) || [],
+      questionResponsesEmbedding:
+        user?.questionResponses?.map((response) => {
+          return response.embedding?.responseEmbedding || [];
         }) || [],
     };
 

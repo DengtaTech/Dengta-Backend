@@ -7,9 +7,10 @@ import {
   EMBEDDING_WEIGHTS,
   RECOMMENDATION_LIMIT,
 } from '../../Config/constants.js';
-import { DatabaseError } from '../../Errors/errors.js';
 import { GetSimilarUser } from '../../Application/Features/Recommendation/GetSimilarUser/Types/api.js';
 import { followshipRepo } from '../Repository/followshipRepo.js';
+import { Footprint } from '../../Database/Entities/footprint.js';
+import logger from '../../Database/Logger/index.js';
 
 export const recommendationService = {
   getSimilarUsers: async (
@@ -20,7 +21,6 @@ export const recommendationService = {
       await milvusUserIntervalsEmbeddingRepo.getLastIntervelEmbeddingByUserId(
         userId,
       );
-
     if (lastIntervelEmbedding.length === 0) {
       const footprintCount =
         await footprintRepo.getPublishedFootprintCountByUserId(userId);
@@ -58,6 +58,7 @@ export const recommendationService = {
       vector: mixedEmbedding,
       limit: RECOMMENDATION_LIMIT,
     });
+    console.log(res);
 
     const similarUserIds = res.results.map((result) => {
       return {
@@ -65,15 +66,17 @@ export const recommendationService = {
           id: result.userId,
           fullName: '',
           lifeRole: '',
-          selfIntro: ('' as string) || null,
+          selfIntro: '' as string | null,
           followerCount: 0,
-          hashtags: ([] as string[]) || [],
+          hashtags: [] as string[],
+          avatar: '',
         },
         similarity: result.score,
         startFootprintId: result.startFootprintId,
         endFootprintId: result.endFootprintId,
-        startFootprintAge: 0,
-        endFootprintAge: 0,
+        startFootprintAge: (0 as number) || undefined,
+        endFootprintAge: (0 as number) || undefined,
+        endFootprint: null as Footprint | null,
       };
     });
 
@@ -86,17 +89,14 @@ export const recommendationService = {
         similarUser.endFootprintId,
       );
 
-      if (!startFootprint || !endFootprint) {
-        throw new DatabaseError();
-      }
-
       const user = await userRepo.findById(similarUser.user.id, undefined, [
         'mUserProfileHashTag',
         'mUserProfileHashTag.profileHashTag',
       ]);
+      logger.info(`user: ${user}`);
 
       if (!user) {
-        throw new DatabaseError();
+        throw new Error('[get similar user] user should not be null');
       }
       const followerCount = await followshipRepo.getFollowerCountByUserId(
         user.id,
@@ -106,8 +106,16 @@ export const recommendationService = {
       similarUser.user.selfIntro = user.selfIntro;
       similarUser.user.hashtags = user.hashtags;
       similarUser.user.followerCount = followerCount;
+      similarUser.user.avatar = user.avatar;
+      // Edge case? -> no footprints
+      if (!startFootprint || !endFootprint) {
+        similarUser.startFootprintAge = undefined;
+        similarUser.endFootprintAge = undefined;
+        similarUser.endFootprint = null;
+        continue;
+      }
 
-      if (!user.birthday) throw new DatabaseError();
+      if (!user.birthday) throw new Error('User birthday should not be null');
       const birthday = new Date(user.birthday);
 
       const startFootprintAge =
@@ -117,6 +125,7 @@ export const recommendationService = {
 
       similarUser.startFootprintAge = startFootprintAge;
       similarUser.endFootprintAge = endFootprintAge;
+      similarUser.endFootprint = endFootprint;
     }
     return similarUserIds;
   },

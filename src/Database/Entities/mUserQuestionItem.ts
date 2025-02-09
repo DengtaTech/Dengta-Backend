@@ -2,6 +2,7 @@ import {
   Entity,
   PrimaryColumn,
   ManyToOne,
+  OneToOne,
   JoinColumn,
   Relation,
   Column,
@@ -9,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from './user.js';
 import { QuestionItem } from './questionItems.js';
+import { MUserQuestionItemEmbedding } from './mUserQuestionItemEmbedding.js';
 
 @Entity({ name: 'MUserQuestionItem' })
 export class MUserQuestionItem extends BaseEntity {
@@ -50,4 +52,13 @@ export class MUserQuestionItem extends BaseEntity {
   })
   @JoinColumn({ name: 'questionItemId' })
   questionItem?: Relation<QuestionItem>;
+
+  @OneToOne(
+    () => MUserQuestionItemEmbedding,
+    (embedding) => embedding.mUserQuestionItem,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  embedding?: Relation<MUserQuestionItemEmbedding>;
 }

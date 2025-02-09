@@ -33,18 +33,21 @@ import notificationRouter from './Routers/notificationRouter.js';
 import questionItemRouter from './Routers/questionItemRouter.js';
 import volumeRouter from './Routers/volumeRouter.js';
 import { initDbCache } from './Database/Cache/init.js';
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yaml';
+// import swaggerUi from 'swagger-ui-express';
+// import YAML from 'yaml';
 
 // using redis example
 import { User as CacheUser } from './Database/Cache/Entities/user.js';
 import { errorHandler } from './Middlewares/errorHandler.js';
 import { multerErrorHandling } from './Middlewares/multer.js';
+import { rateLimiter } from './Middlewares/rateLimiter.js';
+import logger from './Database/Logger/index.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
 app.use(cors());
 app.use(express.json());
+app.use(rateLimiter);
 app.use('/image', imageRouter);
 app.use('/api/1.0/user', userRouter);
 app.use('/api/1.0/recommendation', recommendationRouter);
@@ -62,9 +65,13 @@ app.get('/api/1.0/health', (req: Request, res: Response) => {
 app.use(multerErrorHandling);
 app.use(errorHandler);
 
-const file = fs.readFileSync('./swagger.yaml', 'utf8');
-const swaggerDocument = YAML.parse(file);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// const file = fs.readFileSync('./swagger.yaml', 'utf8');
+// const swagger = fs.readFileSync(
+//   path.resolve(__dirname, '../swagger.yaml'),
+//   'utf8',
+// );
+// const swaggerDocument = YAML.parse(swagger);
+// app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 async function usingRedisExample() {
   await CacheUser.setById(1, {
@@ -76,7 +83,7 @@ async function usingRedisExample() {
   });
   const cache = await CacheUser.getById(1);
   if (cache !== undefined) {
-    console.log('Redis is working');
+    logger.info('Redis is working');
   }
 }
 
@@ -84,24 +91,24 @@ if (process.env.NODE_ENV !== 'test') {
   try {
     await Database.initialize();
   } catch (err) {
-    console.error('Failed to initialize the database:', err);
+    logger.error('Failed to initialize the database:', err as string);
   }
   await initFixedDbData();
   initDbCache();
-  console.log('all database initialized successfully');
+  logger.info('all database initialized successfully');
   await Promise.all([
     usingRedisExample(),
     (async () => {
       console.log('test');
       await initMilvus(false);
-      console.log('Milvus initialized successfully');
+      logger.info('Milvus initialized successfully');
       // 給前端用的假資料
       await initFakeData();
     })(),
   ]);
 
   app.listen(port, () => {
-    console.log(`App listening on port: ${port}`);
+    logger.info(`App listening on port: ${port}`);
   });
 }
 
