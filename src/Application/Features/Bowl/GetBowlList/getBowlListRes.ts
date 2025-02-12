@@ -1,8 +1,8 @@
-import { Bowl } from '../../../../Database/Entities/bowl.js';
+import { GetBowlList } from './Types/api.js';
 
 export const getBowlListRes = {
   customize: async (
-    result: Bowl[],
+    result: GetBowlList.IBowlDto[] | [],
   ): Promise<GetBowlList.IGetBowlListResponse> => {
     return {
       data: {

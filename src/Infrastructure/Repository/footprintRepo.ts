@@ -52,7 +52,7 @@ export const footprintRepo = {
       const savedFootprint = await transactionManager.save(footprint);
       return savedFootprint;
     } catch (error) {
-      console.error('Failed to init footprint:');
+      logger.error(error, 'Failed to init footprint:');
       throw error;
     }
   },

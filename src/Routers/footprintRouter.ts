@@ -57,4 +57,23 @@ router.delete(
   jwtAuthentication,
   wrapAsync(footprintController.deleteFootprint),
 );
+
+// quick post
+router.post(
+  '/quick',
+  jwtAuthentication,
+  wrapAsync(footprintController.quickPost),
+);
+router.patch(
+  '/quick',
+  jwtAuthentication,
+  wrapAsync(footprintController.patchQuickPost),
+);
+
+router.delete(
+  '/quick',
+  jwtAuthentication,
+  wrapAsync(footprintController.deleteQuickPost),
+);
+
 export default router;

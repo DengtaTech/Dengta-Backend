@@ -99,7 +99,6 @@ if (process.env.NODE_ENV !== 'test') {
   await Promise.all([
     usingRedisExample(),
     (async () => {
-      console.log('test');
       await initMilvus(false);
       logger.info('Milvus initialized successfully');
       // 給前端用的假資料
