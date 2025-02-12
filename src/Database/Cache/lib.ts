@@ -39,9 +39,9 @@ export class BaseEntity {
   protected static REDIS_ROOT: string;
   private static PROPERTIES: string[];
 
-  public static init<U extends BaseEntity>(this: Constructor<U>) {
+  public static init<U extends BaseEntity>(this: Constructor<U>, redis: Redis) {
     // setup redis of derived class
-    (this as unknown as typeof BaseEntity)._redis = newRedis();
+    (this as unknown as typeof BaseEntity)._redis = redis;
     (this as unknown as typeof BaseEntity).PROPERTIES = getAllNonFunctionKeys(
       new this(),
     );
@@ -145,5 +145,8 @@ export class BaseEntity {
 
 type BaseEntityConstructor = new () => BaseEntity;
 export function init(...entities: BaseEntityConstructor[]) {
-  entities.forEach((entity) => (entity as unknown as typeof BaseEntity).init());
+  const redis = newRedis();
+  entities.forEach((entity) =>
+    (entity as unknown as typeof BaseEntity).init(redis),
+  );
 }
