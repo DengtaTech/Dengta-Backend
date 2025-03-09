@@ -23,6 +23,7 @@ import { footprintRepo } from '../Repository/footprintRepo.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/api.js';
 import logger from '../../Database/Logger/index.js';
+import { nanoid } from 'nanoid';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -32,7 +33,7 @@ export const userService = {
   signUp: async (
     userInfoObj: Signup.ISignUpReq,
   ): Promise<Signup.ISignUpDto> => {
-    // 這邊沒有檢查email 所以當email存在時會拋 501
+    // 這邊沒有檢查email而是直接檢查clerkid 所以當email存在時會拋 501
     const checkUserExist = await userRepo.findById(
       userInfoObj.clerkId,
       undefined,
@@ -62,6 +63,12 @@ export const userService = {
             transactionManager,
           );
         }
+        const cardUrl = `https://dengta.org/${nanoid(10)}`;
+        const card = new Card();
+        card.cardUrl = cardUrl;
+        card.userId = newUser.id;
+        card.footprintId = null;
+        await transactionManager.save(card);
         return {
           id: newUser.id,
           fullName: newUser.fullName,
@@ -98,10 +105,19 @@ export const userService = {
       'mUserProfileHashTag',
       'mUserProfileHashTag.profileHashTag',
     ]);
+    const card = await Card.findOne({
+      where: { userId: id },
+    });
+    if (!card) {
+      throw new CardUrlNotExistsError();
+    }
     if (!userInfo) {
       throw new UserNotFoundError();
     }
-    return userInfo;
+    return {
+      ...userInfo,
+      cardUrl: card.cardUrl,
+    } as GetUserInfo.UserWithHashtagsAndLinks;
   },
 
   updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {

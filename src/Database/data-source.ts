@@ -60,7 +60,8 @@ export const Database = new DataSource({
   // synchronize:
   //   process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development',
   synchronize: true,
-  // dropSchema: process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development',
+  dropSchema:
+    process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development',
   logging: false,
   entities: [
     User,
