@@ -20,9 +20,6 @@ router.get(
   jwtAuthentication, // 還是驗證 token
   wrapAsync(userController.getOthersInfo),
 );
-
-router.get('/:cardUrl/card-info', wrapAsync(userController.getCardInfo));
-
 router.post(
   '/avatar',
   [jwtAuthentication, upload.single('avatar')],
@@ -48,11 +45,6 @@ router.get(
 );
 
 router.get(
-  '/:cardUrl/public-footprints',
-  wrapAsync(userController.getPublicFootprints),
-);
-
-router.get(
   '/followees',
   jwtAuthentication,
   wrapAsync(userController.searchFollowees),
@@ -68,6 +60,14 @@ router.get(
   '/card/url',
   jwtAuthentication,
   wrapAsync(userController.getCardUrl),
+);
+
+router.get('/:cardUrl/card-info', wrapAsync(userController.getCardInfo));
+
+// deprecated
+router.get(
+  '/:cardUrl/public-footprints',
+  wrapAsync(userController.getPublicFootprints),
 );
 
 export default router;
