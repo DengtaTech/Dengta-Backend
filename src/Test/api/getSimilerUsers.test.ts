@@ -3,11 +3,13 @@ import app from '../../app.js';
 import { testHelper } from '../testUtils/testHelper.js';
 import { RECOMMENDATION_LIMIT } from '../../Config/constants.js';
 import { initMilvus } from '../../Database/VectorDB/vector-db.js';
+import { initDbCache } from '../../Database/Cache/init.js';
 
 const fakeUserIdsForRecommendation: string[] = [];
 
 describe('GET /api/1.0/recommendation/similar_users', () => {
   beforeAll(async () => {
+    initDbCache();
     await initMilvus(true);
 
     const newFakeUserIdsForRecommendation =
