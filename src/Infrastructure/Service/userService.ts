@@ -17,6 +17,7 @@ import { profileHashTagRepo } from '../Repository/profileHashTagRepo.js';
 import { User } from '../../Database/Entities/user.js';
 import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
+import { UserInfo as UserInfoCache } from '../../Database/Cache/Entities/user.js';
 import { embeddingService } from './embeddingService.js';
 import { Card } from '../../Database/Entities/card.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
@@ -93,6 +94,10 @@ export const userService = {
   getUserInfo: async (
     id: string,
   ): Promise<GetUserInfo.UserWithHashtagsAndLinks> => {
+    const userInfoCache = await UserInfoCache.getByUserId(id);
+    if (userInfoCache) {
+      return userInfoCache;
+    }
     const userInfo = await userRepo.findById(id, undefined, [
       'links',
       'mUserProfileHashTag',
@@ -101,6 +106,7 @@ export const userService = {
     if (!userInfo) {
       throw new UserNotFoundError();
     }
+    await UserInfoCache.setByUserId(id, userInfo);
     return userInfo;
   },
 
@@ -185,6 +191,7 @@ export const userService = {
         }
 
         await transactionManager.save(user);
+        await UserInfoCache.delByUserId(user.id);
       });
     } catch (error) {
       console.error('Error in DB ->', error);

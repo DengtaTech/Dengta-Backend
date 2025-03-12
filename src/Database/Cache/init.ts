@@ -1,6 +1,6 @@
 import { init } from './lib.js';
-import { User } from './Entities/user.js';
+import { User, UserInfo } from './Entities/user.js';
 
 export function initDbCache() {
-  init(User);
+  init(User, UserInfo);
 }

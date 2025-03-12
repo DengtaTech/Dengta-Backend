@@ -14,7 +14,7 @@ services:
     volumes:
       - ..:/workspace/Dengta-Backend:rw,cached
     ports:
-      - '3000:3000'
+      - ${BACKEND_PORT:-3001}:3001
     depends_on:
       mysql:
         condition: service_healthy

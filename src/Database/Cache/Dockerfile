@@ -8,6 +8,6 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup && \
 
 USER appuser
 
-EXPOSE 6380
+EXPOSE 6379
 
 CMD redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}

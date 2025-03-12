@@ -3,10 +3,10 @@
 # description: Socat Port Forwarding for Multiple Services
 
 SERVICES=(
-    "6379 cache 6379 Redis"
+    "6380 cache 6379 Redis"
     "3309 mysql 3306 MySQL"
-    "19530 milvus 19530 Milvus-gRPC"
-    "9091 milvus 9091 Milvus-HTTP"
+    "19533 milvus 19530 Milvus-gRPC"
+    "9991 milvus 9091 Milvus-HTTP"
     "9001 minio 9001 Minio-API"
     "9002 minio 9000 Minio-Console"
     "5001 embeddings_server 5001 embeddings-server"

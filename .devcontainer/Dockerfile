@@ -3,6 +3,8 @@ FROM node:20-bookworm
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Taipei
 
+SHELL [ "/bin/bash", "-c" ]
+
 RUN apt-get update && apt-get upgrade -y \
     # infisical
     && apt-get install -y bash curl \
@@ -21,6 +23,6 @@ COPY socat /etc/init.d/socat
 
 USER root
 
-ENTRYPOINT /bin/sh -c 'echo "Container started" ; trap "service socat stop ; echo \"Container stopped\" ; exit 0" 2 15 ; exec "$@" ; service socat start ; while sleep 1 & wait $!; do :; done'
+ENTRYPOINT ["/bin/bash", "-c", "echo \"Container started\"; trap \"service socat stop ; echo Container stopped; exit 0\" 15; exec \"$@\"; service socat start; while sleep 1 & wait $!; do :; done"]
 
 EXPOSE 3001

@@ -12,6 +12,7 @@
   "service": "dengta_backend",
   // "runServices": [],
   // "overrideCommand": false,
+  "shutdownAction": "stopCompose",
 
   // ## Environment ##
   "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
