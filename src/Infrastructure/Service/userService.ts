@@ -24,6 +24,7 @@ import { footprintRepo } from '../Repository/footprintRepo.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
 import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/api.js';
 import logger from '../../Database/Logger/index.js';
+import { nanoid } from 'nanoid';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -33,7 +34,7 @@ export const userService = {
   signUp: async (
     userInfoObj: Signup.ISignUpReq,
   ): Promise<Signup.ISignUpDto> => {
-    // 這邊沒有檢查email 所以當email存在時會拋 501
+    // 這邊沒有檢查email而是直接檢查clerkid 所以當email存在時會拋 501
     const checkUserExist = await userRepo.findById(
       userInfoObj.clerkId,
       undefined,
@@ -63,6 +64,12 @@ export const userService = {
             transactionManager,
           );
         }
+        const cardUrl = `${process.env.SHARING_CARD_DOMAIN}/${nanoid(10)}`;
+        const card = new Card();
+        card.cardUrl = cardUrl;
+        card.userId = newUser.id;
+        card.footprintId = null;
+        await transactionManager.save(card);
         return {
           id: newUser.id,
           fullName: newUser.fullName,
@@ -103,11 +110,22 @@ export const userService = {
       'mUserProfileHashTag',
       'mUserProfileHashTag.profileHashTag',
     ]);
+    const card = await Card.findOne({
+      where: { userId: id },
+    });
+    if (!card) {
+      throw new CardUrlNotExistsError();
+    }
     if (!userInfo) {
       throw new UserNotFoundError();
     }
-    await UserInfoCache.setByUserId(id, userInfo);
-    return userInfo;
+    const fullInfo = {
+      ...userInfo,
+      cardUrl: card.cardUrl,
+    } as GetUserInfo.UserWithHashtagsAndLinks;
+
+    await UserInfoCache.setByUserId(id, fullInfo);
+    return fullInfo;
   },
 
   updateAvatar: async (userId: string, permanentURL: string): Promise<void> => {
@@ -230,7 +248,7 @@ export const userService = {
         if ((await userRepo.findById(userId, transactionManager)) === null) {
           throw new UserNotFoundError();
         }
-        const cardUrl = `https://dengta.org/${editLink}`;
+        const cardUrl = `${process.env.SHARING_CARD_DOMAIN}/${editLink}`;
         let isConflict = await Card.findOne({
           where: { cardUrl: cardUrl },
         });
@@ -271,7 +289,7 @@ export const userService = {
     return card.cardUrl;
   },
   getFullCardInfo: async (cardUrl: string): Promise<GetCardInfo.ICardDto> => {
-    const url = `https://dengta.org/${cardUrl}`;
+    const url = `${process.env.SHARING_CARD_DOMAIN}/${cardUrl}`;
 
     const card = await Card.findOne({
       where: { cardUrl: url },

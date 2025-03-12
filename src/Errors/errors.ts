@@ -57,7 +57,7 @@ export class NotificationNotFoundError extends BaseError {
 
 export class EmailExistsError extends BaseError {
   constructor() {
-    super('Email already exists', 403);
+    super('User already exists', 403);
   }
 }
 

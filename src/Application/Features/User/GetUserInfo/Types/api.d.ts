@@ -6,6 +6,7 @@ declare namespace GetUserInfo {
   type UserWithHashtagsAndLinks = User & {
     links: Dengta.ILink[];
     hashtags: string[];
+    cardUrl: string;
   };
   interface IGetUserInfoResponse {
     data: {
