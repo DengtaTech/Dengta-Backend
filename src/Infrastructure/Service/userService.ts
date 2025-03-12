@@ -63,7 +63,7 @@ export const userService = {
             transactionManager,
           );
         }
-        const cardUrl = `https://dengta.org/${nanoid(10)}`;
+        const cardUrl = `${process.env.SHARING_CARD_DOMAIN}/${nanoid(10)}`;
         const card = new Card();
         card.cardUrl = cardUrl;
         card.userId = newUser.id;
@@ -239,7 +239,7 @@ export const userService = {
         if ((await userRepo.findById(userId, transactionManager)) === null) {
           throw new UserNotFoundError();
         }
-        const cardUrl = `https://dengta.org/${editLink}`;
+        const cardUrl = `${process.env.SHARING_CARD_DOMAIN}/${editLink}`;
         let isConflict = await Card.findOne({
           where: { cardUrl: cardUrl },
         });
@@ -280,7 +280,7 @@ export const userService = {
     return card.cardUrl;
   },
   getFullCardInfo: async (cardUrl: string): Promise<GetCardInfo.ICardDto> => {
-    const url = `https://dengta.org/${cardUrl}`;
+    const url = `${process.env.SHARING_CARD_DOMAIN}/${cardUrl}`;
 
     const card = await Card.findOne({
       where: { cardUrl: url },
