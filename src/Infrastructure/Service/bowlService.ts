@@ -52,7 +52,7 @@ export const bowlService = {
       throw new BowlRelatedError('When getting Bowl List, user should exist');
     }
     if (userId !== targetId) {
-      return await bowlRepo.getBowlListByOther(userId, page);
+      return await bowlRepo.getBowlListByOther(userId, targetId, page);
     }
     return await bowlRepo.getBowlListByAuthor(userId, page);
   },
