@@ -16,11 +16,13 @@ export const bowlRepo = {
   },
   getBowlListByOther: async (
     currentUserId: string,
+    targetId: string,
     page: number = 1,
     limit: number = 10,
   ): Promise<GetBowlList.IBowlDto[] | []> => {
     try {
       const bowls = await Bowl.createQueryBuilder('bowl')
+        .where('bowl.userId = :targetId', { targetId })
         .leftJoinAndSelect(
           'bowl.pushCounts',
           'pushCounts',
