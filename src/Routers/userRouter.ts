@@ -64,6 +64,12 @@ router.get(
 
 router.get('/:cardUrl/card-info', wrapAsync(userController.getCardInfo));
 
+router.get(
+  '/card/setting',
+  jwtAuthentication,
+  wrapAsync(userController.getCardSetting),
+);
+
 // deprecated
 router.get(
   '/:cardUrl/public-footprints',

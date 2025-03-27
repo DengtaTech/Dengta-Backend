@@ -5,6 +5,6 @@ export const getCardUrlHandler = {
   handle: async (userId: string): Promise<GetCardUrl.IGetCardUrlRes> => {
     const cardUrl = await userService.getCardUrl(userId);
 
-    return getCardUrlRes.customize(cardUrl);
+    return await getCardUrlRes.customize(cardUrl);
   },
 };

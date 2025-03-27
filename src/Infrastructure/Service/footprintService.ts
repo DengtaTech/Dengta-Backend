@@ -8,6 +8,7 @@ import {
   CardUrlNotExistsError,
   UserShouldExistError,
   UserNotAuthor,
+  CardShouldExistError,
 } from '../../Errors/errors.js';
 import { footprintRepo } from '../Repository/footprintRepo.js';
 import { mUserFootprintReactionRepo } from '../Repository/mUserFootprintReactionRepo.js';
@@ -26,6 +27,7 @@ import { Notification } from '../../Database/Entities/notification.js';
 import { notificationRepo } from '../Repository/notificationRepo.js';
 import { Card } from '../../Database/Entities/card.js';
 import logger from '../../Database/Logger/index.js';
+import { cardRepo } from '../Repository/cardRepo.js';
 
 export const footprintService = {
   expressReaction: async (
@@ -149,7 +151,6 @@ export const footprintService = {
           footprintObj,
           transactionManager,
         );
-
         for (const tagContent of footprintObj.hashtags) {
           let footprintHashTag =
             await footprintHashTagRepo.findOrCreateByContent(
@@ -170,6 +171,15 @@ export const footprintService = {
             },
             transactionManager,
           );
+          const authorSharingCard = await cardRepo.findByUserId(
+            footprint.userId,
+          );
+          if (!authorSharingCard) throw new CardShouldExistError();
+          // 若用戶分享卡維預設最新足跡 -> 自動更新用
+          if (authorSharingCard.latest === true) {
+            authorSharingCard.footprintId = updatedFootprint.id;
+            await transactionManager.save(authorSharingCard);
+          }
         }
         return updatedFootprint;
       } catch (error) {
@@ -244,6 +254,21 @@ export const footprintService = {
       try {
         // cascade delete the footprintHashTag / reaction
         await transactionManager.delete(Footprint, { id: footprint.id });
+        const card = await cardRepo.findByUserId(footprint.userId);
+        if (!card) throw new CardShouldExistError();
+        const latestFootprint = await footprintRepo.findLatestByUserId(
+          footprint.userId,
+        );
+        if (card.latest) {
+          card.footprintId = latestFootprint ? latestFootprint.id : null;
+          await transactionManager.save(card);
+          return;
+        }
+        if (footprintId === card.footprintId) {
+          card.latest = true;
+          card.footprintId = latestFootprint ? latestFootprint.id : null;
+          await transactionManager.save(card);
+        }
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;

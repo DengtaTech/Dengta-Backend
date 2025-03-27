@@ -90,6 +90,21 @@ export class WrongPasswordError extends BaseError {
   }
 }
 
+export class CardShouldExistError extends BaseError {
+  constructor() {
+    super('Card should exist', 403);
+  }
+}
+
+export class CardSettingError extends BaseError {
+  constructor() {
+    super(
+      "latest attributes should not be false when user don't have any footprint",
+      403,
+    );
+  }
+}
+
 export class InputEmptyError extends BaseError {
   constructor() {
     super('Client error - Input field should not be empty', 400);
