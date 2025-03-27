@@ -23,6 +23,7 @@ import { editCardLinkHandler } from '../Application/Features/User/EditCardLink/e
 import { getCardUrlHandler } from '../Application/Features/User/GetCardLink/getCardUrlHandler.js';
 import { getCardInfoHandler } from '../Application/Features/User/GetCardInfo/getCardInfoHandler.js';
 import { getPublicFootprintsHandler } from '../Application/Features/User/GetPublicFootprints/getPublicFootprintsHandler.js';
+import { getCardSettingHandler } from '../Application/Features/User/GetCardSetting/getCardSettingHandler.js';
 
 export const userController = {
   signUp: async (req: Request, res: Response): Promise<void> => {
@@ -175,16 +176,17 @@ export const userController = {
       throw new NoTokenError();
     }
     const { id: userId } = req.decodedToken;
-    const { urlContext, footprintId } = req.body;
+    const { urlContext, footprintId, latest } = req.body;
     if (!urlContext) {
       throw new InvalidInputError('urlContext should not be null');
     }
-    if (!footprintId) {
-      throw new InvalidInputError('footprintId should not be null');
+    if (latest === undefined) {
+      throw new InvalidInputError('latest must be defined and must be 0 or 1');
     }
     const response = await editCardLinkHandler.handle(
       userId,
       urlContext,
+      latest,
       footprintId,
     );
     res.status(200).json(response);
@@ -201,6 +203,15 @@ export const userController = {
     const { cardUrl } = req.params;
 
     const response = await getCardInfoHandler.handle(cardUrl);
+    res.status(200).json(response);
+  },
+  getCardSetting: async (req: Request, res: Response): Promise<void> => {
+    if (req.decodedToken === undefined) {
+      throw new NoTokenError();
+    }
+    const { id: userId } = req.decodedToken;
+
+    const response = await getCardSettingHandler.handle(userId);
     res.status(200).json(response);
   },
   getPublicFootprints: async (req: Request, res: Response): Promise<void> => {

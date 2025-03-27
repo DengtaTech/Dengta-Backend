@@ -6,4 +6,10 @@ declare namespace UserFollow {
   type IFollowRes = void;
 
   type IFollowDto = IFollowReq;
+
+  interface IFollowResponse {
+    data: {
+      message: string;
+    };
+  }
 }

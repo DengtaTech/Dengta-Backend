@@ -5,9 +5,7 @@ import { Bowl } from '../../Database/Entities/bowl.js';
 export const bowlRepo = {
   findById: async (id: string): Promise<Bowl | null> => {
     try {
-      console.log(id);
       const bowl = await Bowl.findOne({ where: { id } });
-      console.log(bowl);
       return bowl;
     } catch (error) {
       logger.error(error, 'Failed to find bowl by id:');

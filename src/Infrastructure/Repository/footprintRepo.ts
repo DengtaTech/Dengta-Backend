@@ -20,6 +20,20 @@ export const footprintRepo = {
       return await Footprint.findOne({ where: { id } });
     }
   },
+  findLatestByUserId: async (userId: User['id']): Promise<Footprint | null> => {
+    try {
+      const latestFootprint = await Footprint.findOne({
+        where: { userId },
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+      return latestFootprint;
+    } catch (error) {
+      logger.error(error, 'Failed to find latest footprint for user:');
+      throw error;
+    }
+  },
   initFootprint: async (
     userId: string,
     status: string,

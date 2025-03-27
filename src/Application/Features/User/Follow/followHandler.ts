@@ -5,8 +5,8 @@ import { UserFollow } from './Types/api.js';
 export const followHandler = {
   handle: async (
     followReq: UserFollow.IFollowReq,
-  ): Promise<UserFollow.IFollowRes> => {
-    const followship = await followshipService.follow(followReq);
-    return followRes.customize(followship);
+  ): Promise<UserFollow.IFollowResponse> => {
+    await followshipService.follow(followReq);
+    return await followRes.customize();
   },
 };
