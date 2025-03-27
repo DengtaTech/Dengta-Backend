@@ -85,4 +85,4 @@ jobs:
           DISCORD_AVATAR: https://truth.bahamut.com.tw/s01/202309/379d1c40ad39d1ab3be487687c8caa8c.JPG
         uses: Ilshidur/action-discord@master
         with:
-          args: '🚫 **[Bump Version]** New software version **v${{ env.NEW_VERSION }}** has been released by **「${{ github.actor }}」** 🤩'
+          args: '✅ **[Bump Version]** New software version **v${{ env.NEW_VERSION }}** has been released by **「${{ github.actor }}」** 🤩'
