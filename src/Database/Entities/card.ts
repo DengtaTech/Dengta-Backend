@@ -33,6 +33,9 @@ export class Card extends BaseEntity {
   @Column('uuid', { nullable: true })
   footprintId!: string | null;
 
+  @Column({ type: 'boolean', default: true }) // in mysql, boolean is tinyint(1)
+  latest!: boolean;
+
   @OneToOne(() => User, (user) => user.card, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user?: Relation<User>;

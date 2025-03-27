@@ -1,5 +1,5 @@
 export const getCardUrlRes = {
-  customize: (cardUrl: string): GetCardUrl.IGetCardUrlRes => {
+  customize: async (cardUrl: string): Promise<GetCardUrl.IGetCardUrlRes> => {
     return {
       data: {
         cardURL: cardUrl,

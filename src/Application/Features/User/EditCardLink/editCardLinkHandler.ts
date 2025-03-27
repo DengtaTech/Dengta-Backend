@@ -5,9 +5,15 @@ export const editCardLinkHandler = {
   handle: async (
     userId: string,
     editLink: string,
-    footprintId: string,
+    latest: boolean,
+    footprintId?: string | null,
   ): Promise<EditCardLink.IEditCardLinkRes> => {
-    const result = await userService.editLink(userId, editLink, footprintId);
+    const result = await userService.editLink(
+      userId,
+      editLink,
+      latest,
+      footprintId,
+    );
 
     return editCardLinkRes.customize(result);
   },

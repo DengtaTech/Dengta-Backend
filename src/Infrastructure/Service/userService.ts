@@ -3,6 +3,8 @@ import { userRepo } from '../Repository/userRepo.js';
 import { userCredentialRepo } from '../Repository/userCredentialRepo.js';
 import { linkRepo } from '../Repository/linkRepo.js';
 import {
+  CardSettingError,
+  CardShouldExistError,
   CardUrlAlreadyExistsError,
   CardUrlNotExistsError,
   EmailExistsError,
@@ -25,6 +27,7 @@ import { Footprint } from '../../Database/Entities/footprint.js';
 import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/api.js';
 import logger from '../../Database/Logger/index.js';
 import { nanoid } from 'nanoid';
+import { cardRepo } from '../Repository/cardRepo.js';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -241,7 +244,8 @@ export const userService = {
   editLink: async (
     userId: string,
     editLink: string,
-    footprintId: string,
+    latest: boolean,
+    footprintId?: string | null,
   ): Promise<string> => {
     return Database.transaction(async (transactionManager) => {
       try {
@@ -258,17 +262,27 @@ export const userService = {
         const card = await Card.findOne({
           where: { userId: userId },
         });
-        if (card) {
-          card.cardUrl = cardUrl;
-          card.footprintId = footprintId;
-          await transactionManager.save(card);
-        } else {
-          const card = new Card();
-          card.cardUrl = cardUrl;
-          card.footprintId = footprintId;
-          card.userId = userId;
-          await transactionManager.save(card);
+        if (!card) {
+          throw new CardShouldExistError();
         }
+        if (latest) {
+          // 若 latest = true
+          // footprintId 若存在 => 表示使用者至少有一篇 footprint
+          // footprintId 若為 null/undefined => 新用戶尚無 footprint
+          card.latest = true;
+          card.footprintId = footprintId ?? null;
+        } else {
+          // 若 latest = false => 使用者必須帶有效的 footprintId
+          if (!footprintId) {
+            throw new CardSettingError();
+          }
+          card.latest = false;
+          card.footprintId = footprintId;
+        }
+
+        card.cardUrl = cardUrl;
+        await transactionManager.save(card);
+
         return cardUrl;
       } catch (error) {
         console.error('Error in DB ->', error);
@@ -288,6 +302,7 @@ export const userService = {
     }
     return card.cardUrl;
   },
+  // TODO: map 回傳足跡型態加上快取
   getFullCardInfo: async (cardUrl: string): Promise<GetCardInfo.ICardDto> => {
     const url = `${process.env.SHARING_CARD_DOMAIN}/${cardUrl}`;
 
@@ -311,5 +326,16 @@ export const userService = {
       user,
       footprint,
     };
+  },
+  getCardSetting: async (userId: string): Promise<Card> => {
+    if ((await userRepo.findById(userId)) === null) {
+      throw new UserNotFoundError();
+    }
+    const card = await cardRepo.findByUserId(userId);
+
+    if (!card) {
+      throw new CardShouldExistError();
+    }
+    return card;
   },
 };
