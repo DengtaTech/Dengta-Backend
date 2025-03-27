@@ -177,7 +177,7 @@ export const footprintService = {
           if (!authorSharingCard) throw new CardShouldExistError();
           // 若用戶分享卡維預設最新足跡 -> 自動更新用
           if (authorSharingCard.latest === true) {
-            authorSharingCard!.footprintId = updatedFootprint.id;
+            authorSharingCard.footprintId = updatedFootprint.id;
             await transactionManager.save(authorSharingCard);
           }
         }
@@ -262,12 +262,12 @@ export const footprintService = {
         if (card.latest) {
           card.footprintId = latestFootprint ? latestFootprint.id : null;
           await transactionManager.save(card);
-        } else {
-          if (footprintId === card.footprintId) {
-            card.latest = true;
-            card.footprintId = latestFootprint ? latestFootprint.id : null;
-            await transactionManager.save(card);
-          }
+          return;
+        }
+        if (footprintId === card.footprintId) {
+          card.latest = true;
+          card.footprintId = latestFootprint ? latestFootprint.id : null;
+          await transactionManager.save(card);
         }
       } catch (error) {
         console.error('Error in DB ->', error);
