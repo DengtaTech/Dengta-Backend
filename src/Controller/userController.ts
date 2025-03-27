@@ -180,6 +180,11 @@ export const userController = {
     if (!urlContext) {
       throw new InvalidInputError('urlContext should not be null');
     }
+    if (!/^[A-Za-z0-9_-]+$/.test(urlContext)) {
+      throw new InvalidInputError(
+        'urlContext can only contain letters, numbers, underscores, and hyphens',
+      );
+    }
     if (latest === undefined) {
       throw new InvalidInputError('latest must be defined and must be 0 or 1');
     }
