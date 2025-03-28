@@ -28,6 +28,7 @@ import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/a
 import logger from '../../Database/Logger/index.js';
 import { nanoid } from 'nanoid';
 import { cardRepo } from '../Repository/cardRepo.js';
+import { Not } from 'typeorm';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -254,7 +255,10 @@ export const userService = {
         }
         const cardUrl = `${process.env.SHARING_CARD_DOMAIN}/${editLink}`;
         let isConflict = await Card.findOne({
-          where: { cardUrl: cardUrl },
+          where: {
+            cardUrl: cardUrl,
+            userId: Not(userId),
+          },
         });
         if (isConflict) {
           throw new CardUrlAlreadyExistsError();
