@@ -102,7 +102,7 @@ export const userRepo = {
     transactionManager?: EntityManager;
   }) => {
     try {
-      if (!keywords && !followerId) {
+      if (keywords === undefined && followerId === undefined) {
         throw new Error(
           'keywords and followerId cannot be both undefined. This operation should have been blocked by TS type guard',
         );
