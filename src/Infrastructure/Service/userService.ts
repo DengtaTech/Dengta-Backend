@@ -28,6 +28,7 @@ import { GetCardInfo } from '../../Application/Features/User/GetCardInfo/Types/a
 import logger from '../../Database/Logger/index.js';
 import { nanoid } from 'nanoid';
 import { cardRepo } from '../Repository/cardRepo.js';
+import { Not } from 'typeorm';
 
 export const userService = {
   isUserIdExists: async (userId: string): Promise<boolean> => {
@@ -254,7 +255,10 @@ export const userService = {
         }
         const cardUrl = `${process.env.SHARING_CARD_DOMAIN}/${editLink}`;
         let isConflict = await Card.findOne({
-          where: { cardUrl: cardUrl },
+          where: {
+            cardUrl: cardUrl,
+            userId: Not(userId),
+          },
         });
         if (isConflict) {
           throw new CardUrlAlreadyExistsError();
@@ -266,11 +270,11 @@ export const userService = {
           throw new CardShouldExistError();
         }
         if (latest) {
+          const footprint = await footprintRepo.findLatestByUserId(userId);
           // 若 latest = true
-          // footprintId 若存在 => 表示使用者至少有一篇 footprint
-          // footprintId 若為 null/undefined => 新用戶尚無 footprint
+          // 前端不會傳 footprintId，這邊要自動更新
           card.latest = true;
-          card.footprintId = footprintId ?? null;
+          card.footprintId = footprint === null ? null : footprint.id;
         } else {
           // 若 latest = false => 使用者必須帶有效的 footprintId
           if (!footprintId) {
