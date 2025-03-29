@@ -30,6 +30,7 @@ services:
       - ${MYSQL_PORT}:3306
     volumes:
       - dengta_mysql_volume:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf:rw
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
