@@ -39,6 +39,31 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "取得特定人的搜尋紀錄",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tmp_accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://{{endpoint}}:{{port}}/{{basePath}}/search",
+          "protocol": "http",
+          "host": ["{{endpoint}}"],
+          "port": "{{port}}",
+          "path": ["{{basePath}}", "search"]
+        }
+      },
+      "response": []
     }
   ]
 }
