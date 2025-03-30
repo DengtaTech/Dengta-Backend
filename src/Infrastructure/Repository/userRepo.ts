@@ -112,10 +112,12 @@ export const userRepo = {
         ? transactionManager.getRepository(User).createQueryBuilder('user')
         : User.createQueryBuilder('user');
 
+      query
+        .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+        .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag');
+
       if (keywords) {
         query
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
           .where(
             new Brackets((qb) =>
               qb
