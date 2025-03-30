@@ -23,6 +23,7 @@ import { insertResponseHandler } from '../../Application/Features/QuestionItem/I
 import path from 'path';
 import { uploadAvatarHandler } from '../../Application/Features/User/UploadAvatar/uploadAvatarHandler.js';
 import { initFixedDbData } from '../../Database/data-source.js';
+import { newRedis } from '../../Database/Cache/lib.js';
 
 export type TFootprintJson = Footprint & {
   hashtags: string[];
@@ -43,8 +44,8 @@ export const testHelper = {
   },
   clearDatabase: async (dataSource: DataSource) => {
     const tablesQuery = await dataSource.query(`
-      SELECT table_name 
-      FROM information_schema.tables 
+      SELECT table_name
+      FROM information_schema.tables
       WHERE table_schema = DATABASE()
     `);
     const tables = tablesQuery.map(
@@ -55,6 +56,11 @@ export const testHelper = {
       await dataSource.query(`TRUNCATE TABLE \`${table}\`;`);
     }
     await dataSource.query('SET FOREIGN_KEY_CHECKS = 1;');
+  },
+  clearCache: async () => {
+    const redis = newRedis();
+    await redis.flushall();
+    await redis.quit();
   },
   createFakeUsers: async (dataSource: DataSource) => {
     const usersJsonFile = fs.readFileSync(

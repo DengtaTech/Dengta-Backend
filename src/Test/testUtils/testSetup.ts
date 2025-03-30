@@ -2,6 +2,7 @@ import { Database } from '../../Database/data-source.js';
 import { testHelper, TFootprintJson } from './testHelper.js';
 
 import { Notification } from '../../Database/Entities/notification.js';
+import { initDbCache } from '../../Database/Cache/init.js';
 
 const fakeUserIds: string[] = [];
 const fakeFootprintIds: string[] = [];
@@ -11,6 +12,7 @@ const userToFootprintsMapSorted: Record<string, TFootprintJson[]> = {};
 const fakeNotifications: Notification[] = [];
 
 beforeAll(async () => {
+  initDbCache();
   await Database.initialize();
   console.log('Initializing Database success');
   await testHelper.clearDatabase(Database);
