@@ -73,7 +73,7 @@ class RabbitmqService {
       await this.sendEmailByElement(data);
     }
   }
-
+  // TODO: 美化郵件 UI（可能可以封裝一下 mjml
   async sendEmailByElement(element) {
     if (element.type === this.notifyType[1]) {
       await this.mailService.sendMail({
