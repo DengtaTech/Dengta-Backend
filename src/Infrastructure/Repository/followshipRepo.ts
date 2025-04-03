@@ -6,7 +6,7 @@ import { UserUnFollow } from '../../Application/Features/User/UnFollow/Types/api
 
 export const followshipRepo = {
   follow: async (
-    followDto: UserFollow.IFollowDto,
+    followDto: UserFollow.IFollowReq,
     transactionManager?: EntityManager,
   ): Promise<Followship> => {
     if (transactionManager) {

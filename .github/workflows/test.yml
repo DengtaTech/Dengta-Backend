@@ -32,8 +32,6 @@ jobs:
           echo "${{ secrets.GITHUBACTIONS_USER_PASSWD }}" | sudo -S chown -R $USER:$USER /srv/dengta-ci
       - name: run the container test needs
         run: |
-          docker compose -f /srv/dengta-ci/docker-compose-ci.yml down
-          docker volume rm milvus-minio-staging milvus-staging dengta-mysql-staging
           docker compose -f /srv/dengta-ci/docker-compose-ci.yml --env-file /srv/dengta-ci/.env.staging up --build -d
       - name: Wait for Milvus and MySQL to be Ready
         run: |
@@ -92,3 +90,10 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: '🚫 **[CI]** **API Test** from「**${{ github.event.pull_request.head.ref }}**」 完美的失敗了👺'
+
+      - name: Shutdown containers
+        if: always()
+        run: |
+          docker compose -f /srv/dengta-ci/docker-compose-ci.yml down
+          # 如果不需要移除 volume，可以省略下面這行
+          docker volume rm milvus-minio-staging milvus-staging dengta-mysql-staging || true

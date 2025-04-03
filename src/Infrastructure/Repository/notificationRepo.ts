@@ -63,4 +63,19 @@ export const notificationRepo = {
       throw error;
     }
   },
+  insertOne: async (
+    notification: Partial<Notification>,
+    transactionManager: EntityManager,
+  ) => {
+    try {
+      if (transactionManager) {
+        await transactionManager.save(Notification, notification);
+      } else {
+        await Notification.save(notification);
+      }
+    } catch (error) {
+      console.error('Error inserting new notification:');
+      throw error;
+    }
+  },
 };

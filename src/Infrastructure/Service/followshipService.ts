@@ -1,15 +1,14 @@
 import { UserFollow } from '../../Application/Features/User/Follow/Types/api.js';
 import { UserUnFollow } from '../../Application/Features/User/UnFollow/Types/api.js';
 import { Database } from '../../Database/data-source.js';
-import { Followship } from '../../Database/Entities/followship.js';
-import { Notification } from '../../Database/Entities/notification.js';
 import { UserNotFoundError } from '../../Errors/errors.js';
 import { followshipRepo } from '../Repository/followshipRepo.js';
-import { notificationRepo } from '../Repository/notificationRepo.js';
 import { userRepo } from '../Repository/userRepo.js';
 
 export const followshipService = {
-  follow: async (followDto: UserFollow.IFollowDto): Promise<Followship> => {
+  follow: async (
+    followDto: UserFollow.IFollowReq,
+  ): Promise<UserFollow.IFollowDto> => {
     return Database.transaction(async (transactionManager) => {
       const follower = await userRepo.findById(
         followDto.followerId,
@@ -26,27 +25,14 @@ export const followshipService = {
         throw new UserNotFoundError();
       }
       try {
-        const followship = await followshipRepo.follow(
-          followDto,
-          transactionManager,
-        );
+        await followshipRepo.follow(followDto, transactionManager);
         followee.helpCount += 1;
         await transactionManager.save(followee);
-        // build notification
-        const notification = Notification.create({
-          userId: followDto.followeeId,
-          type: 'is_followed',
-          title: '你被視為榜樣啦！',
-          content: `${follower.firstName} 將您視為榜樣`,
-          relatedUserId: followDto.followerId,
-        });
-
-        await notificationRepo.insertNewNotification(
-          notification,
-          transactionManager,
-        );
-
-        return followship;
+        return {
+          followerInfo: follower,
+          followeeEmail: followee.email,
+          followeeId: followee.id,
+        };
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;

@@ -7,6 +7,7 @@ import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/a
 import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
 
 export const userRepo = {
+  // TODO: 尚未附上 cardUrl 屬性（未來可能會需要
   findById: async (
     userId: string,
     transactionManager?: EntityManager | undefined,

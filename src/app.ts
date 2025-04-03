@@ -42,6 +42,7 @@ import { errorHandler } from './Middlewares/errorHandler.js';
 import { multerErrorHandling } from './Middlewares/multer.js';
 import { rateLimiter } from './Middlewares/rateLimiter.js';
 import logger from './Database/Logger/index.js';
+import { initMQ } from './Database/mq.js';
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
@@ -95,16 +96,21 @@ if (process.env.NODE_ENV !== 'test') {
   }
   await initFixedDbData();
   initDbCache();
-  logger.info('all database initialized successfully');
+  logger.info('database and redis initialized successfully');
   await Promise.all([
+    // TODO: remove this when online
     usingRedisExample(),
-    (async () => {
-      await initMilvus(false);
-      logger.info('Milvus initialized successfully');
-      // 給前端用的假資料
-      await initFakeData();
-    })(),
+    initMilvus(false),
+    initMQ(),
+    // (async () => {
+    //   await initMilvus(false);
+    //   await initMQ();
+    //   logger.info('Milvus and RabbitMQ initialized successfully');
+    // })(),
   ]);
+  logger.info('Milvus and RabbitMQ initialized successfully');
+  // 給前端用的假資料
+  await initFakeData();
 
   app.listen(port, () => {
     logger.info(`App listening on port: ${port}`);

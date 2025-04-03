@@ -3,32 +3,62 @@ services:
     extends:
       file: docker-compose.yml
       service: mysql
-
+    networks:
+      - backend_network
   cache:
     extends:
       file: docker-compose.yml
       service: cache
     ports:
       - ${REDIS_PORT}:6379
+    networks:
+      - backend_network
 
   etcd:
     extends:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: etcd
-
+    networks:
+      - backend_network
   minio:
     extends:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: minio
-
+    networks:
+      - backend_network
   milvus:
     extends:
       file: ./src/Database/VectorDB/docker-compose.yml
       service: standalone
+    networks:
+      - backend_network
+
+  mq:
+    extends:
+      file: docker-compose.yml
+      service: mq
+    networks:
+      - backend_network
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  notify_mail_sender:
+    extends:
+      file: docker-compose.yml
+      service: notify_mail_sender
+    networks:
+      - backend_network
+    depends_on:
+      mq:
+        condition: service_healthy
 
   embeddings_server:
     build:
-      context: ./src/EmbeddingsServer/
+      context: ./srv/EmbeddingsServer/
       dockerfile: Dockerfile
     ports:
       - ${EMBEDDING_SERVER_PORT}:5001
@@ -45,6 +75,8 @@ volumes:
     name: ${MILVUS_MINIO_VOLUME_PATH}
   dengta_milvus_volume:
     name: ${MILVUS_VOLUME_PATH}
+  dengta_mq_volume:
+    name: ${MQ_VOLUME_PATH}
 
 networks:
   backend_network:
