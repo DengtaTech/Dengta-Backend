@@ -102,11 +102,6 @@ if (process.env.NODE_ENV !== 'test') {
     usingRedisExample(),
     initMilvus(false),
     initMQ(),
-    // (async () => {
-    //   await initMilvus(false);
-    //   await initMQ();
-    //   logger.info('Milvus and RabbitMQ initialized successfully');
-    // })(),
   ]);
   logger.info('Milvus and RabbitMQ initialized successfully');
   // 給前端用的假資料
