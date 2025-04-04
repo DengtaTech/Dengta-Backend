@@ -33,7 +33,6 @@ jobs:
       - name: run the container test needs
         run: |
           docker compose -f /srv/dengta-ci/docker-compose-ci.yml down
-          docker volume rm milvus-minio-staging milvus-staging dengta-mysql-staging
           docker compose -f /srv/dengta-ci/docker-compose-ci.yml --env-file /srv/dengta-ci/.env.staging up --build -d
       - name: Wait for Milvus and MySQL to be Ready
         run: |
