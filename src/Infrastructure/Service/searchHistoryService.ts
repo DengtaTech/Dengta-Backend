@@ -52,7 +52,8 @@ export const searchHistoryService = {
           keywords: searchInfoObj.searchContent,
           transactionManager,
         });
-        return result;
+        // Don't include the searcher
+        return result.filter((usr) => usr.id !== searchInfoObj.userId);
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;
