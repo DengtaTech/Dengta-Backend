@@ -40,7 +40,6 @@ export default class RabbitmqService {
         if (msg !== null) {
           try {
             const content = msg.content.toString();
-            console.log('[RabbitmqService] Received message =>', content);
             const data = JSON.parse(content);
 
             await this.handleEmailMessage(data);

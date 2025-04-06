@@ -8,9 +8,6 @@ export default class MailService {
     this.clientSecret = process.env.CLIENT_SECRET;
     this.refreshToken = process.env.REFRESH_TOKEN;
 
-    // 可以選擇是否在這裡也要放上 NOTIFICATION_TYPES
-    // this.notifyType = NOTIFICATION_TYPES;
-
     // 建立 Google OAuth2 Client
     this.oAuth2Client = new google.auth.OAuth2(
       this.clientId,
