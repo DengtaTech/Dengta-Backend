@@ -1,16 +1,11 @@
-const amqp = require('amqplib');
-
-class RabbitmqService {
+import amqp from 'amqplib';
+import { sendStrategies } from './utils/sendStrategies.js';
+export default class RabbitmqService {
   constructor(mailService) {
     this.mailService = mailService;
     this.mqUrl = process.env.MQ_URL;
     this.queueName = 'EMAIL';
-    this.notifyType = [
-      'system',
-      'is_followed',
-      'follower_footprint',
-      'footprint_reaction',
-    ];
+
     this.connection = null;
     this.channel = null;
   }
@@ -20,12 +15,13 @@ class RabbitmqService {
       this.connection = await amqp.connect(this.mqUrl);
       this.channel = await this.connection.createChannel();
 
-      // 宣告 queue（若已存在，不會重複創建，queue 在 RabbitMQ node 的持久化
+      // 宣告 queue（若已存在，不會重複創建）
       await this.channel.assertQueue(this.queueName, { durable: true });
       console.log(
         `[RabbitmqService] Connected to ${this.mqUrl}, queue: ${this.queueName}`,
       );
-
+      // 若希望一次只處理一筆訊息，避免併發寄信，可加:
+      // this.channel.prefetch(1);
       this.consumeMessages();
     } catch (error) {
       console.error('[RabbitmqService] Error initializing:', error);
@@ -53,16 +49,17 @@ class RabbitmqService {
           } catch (error) {
             console.error('[RabbitmqService] Error processing message:', error);
             // 根據需求決定是否要重試或退給 dead-letter
-            // 此處範例是放棄處理 (nack, 不重新入列)
+            // TODO: 可以先在這做監控 alert 就好
             this.channel.nack(msg, false, false);
           }
         }
       },
       {
-        noAck: false, // manual acknowledgment mode,
+        noAck: false,
       },
     );
   }
+
   // 不可並行寄信 -> Gmail API rate limit
   async handleEmailMessage(data) {
     if (Array.isArray(data)) {
@@ -73,17 +70,17 @@ class RabbitmqService {
       await this.sendEmailByElement(data);
     }
   }
-  // TODO: 美化郵件 UI（可能可以封裝一下 mjml
+
   async sendEmailByElement(element) {
-    if (element.type === this.notifyType[1]) {
-      await this.mailService.sendMail({
-        from: `"DengTa" <${process.env.GMAIL_ACCOUNT}>`,
-        to: element.email,
-        subject: element.title,
-        text: `${element.content}.\n` + `第二行測試`,
-      });
+    const strategy = sendStrategies[element.type];
+
+    if (strategy) {
+      await strategy(this.mailService, element);
+    } else {
+      console.warn(
+        '[RabbitmqService] No strategy found for type:',
+        element.type,
+      );
     }
   }
 }
-
-module.exports = RabbitmqService;

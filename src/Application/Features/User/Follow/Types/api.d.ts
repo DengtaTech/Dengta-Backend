@@ -3,6 +3,8 @@ import { User } from '../../../../../Database/Entities/user.ts';
 declare namespace UserFollow {
   type IFollowReq = Pick<Followship, 'followerId' | 'followeeId'>;
 
+  type TFollowProps = IFollowReq;
+
   type IFollowRes = void;
 
   interface IFollowDto {

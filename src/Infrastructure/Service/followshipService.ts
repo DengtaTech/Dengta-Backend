@@ -1,31 +1,31 @@
 import { UserFollow } from '../../Application/Features/User/Follow/Types/api.js';
 import { UserUnFollow } from '../../Application/Features/User/UnFollow/Types/api.js';
 import { Database } from '../../Database/data-source.js';
+import logger from '../../Database/Logger/index.js';
 import { UserNotFoundError } from '../../Errors/errors.js';
 import { followshipRepo } from '../Repository/followshipRepo.js';
 import { userRepo } from '../Repository/userRepo.js';
-
 export const followshipService = {
   follow: async (
-    followDto: UserFollow.IFollowReq,
+    followProps: UserFollow.TFollowProps,
   ): Promise<UserFollow.IFollowDto> => {
     return Database.transaction(async (transactionManager) => {
       const follower = await userRepo.findById(
-        followDto.followerId,
+        followProps.followerId,
         transactionManager,
       );
       if (follower === null) {
         throw new UserNotFoundError();
       }
       const followee = await userRepo.findById(
-        followDto.followeeId,
+        followProps.followeeId,
         transactionManager,
       );
       if (followee === null) {
         throw new UserNotFoundError();
       }
       try {
-        await followshipRepo.follow(followDto, transactionManager);
+        await followshipRepo.follow(followProps, transactionManager);
         followee.helpCount += 1;
         await transactionManager.save(followee);
         return {
@@ -34,7 +34,7 @@ export const followshipService = {
           followeeId: followee.id,
         };
       } catch (error) {
-        console.error('Error in DB ->', error);
+        logger.error(error, 'Error in DB ->');
         throw error;
       }
     });
@@ -58,7 +58,7 @@ export const followshipService = {
       try {
         return await followshipRepo.unfollow(unfollowDto, transactionManager);
       } catch (error) {
-        console.error('Error in DB ->', error);
+        logger.error(error, 'Error in DB ->');
         throw error;
       }
     });

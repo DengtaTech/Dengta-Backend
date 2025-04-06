@@ -6,25 +6,25 @@ import { UserUnFollow } from '../../Application/Features/User/UnFollow/Types/api
 
 export const followshipRepo = {
   follow: async (
-    followDto: UserFollow.IFollowReq,
+    followProps: UserFollow.TFollowProps,
     transactionManager?: EntityManager,
   ): Promise<Followship> => {
     if (transactionManager) {
-      if (await transactionManager.existsBy(Followship, followDto)) {
+      if (await transactionManager.existsBy(Followship, followProps)) {
         throw new InvalidInputError('Followship already exists');
       }
       const followship = Followship.create({
-        followerId: followDto.followerId,
-        followeeId: followDto.followeeId,
+        followerId: followProps.followerId,
+        followeeId: followProps.followeeId,
       });
       return await transactionManager.save(followship);
     } else {
-      if (await Followship.existsBy(followDto)) {
+      if (await Followship.existsBy(followProps)) {
         throw new InvalidInputError('Followship already exists');
       }
       const followship = Followship.create({
-        followerId: followDto.followerId,
-        followeeId: followDto.followeeId,
+        followerId: followProps.followerId,
+        followeeId: followProps.followeeId,
       });
       return await followship.save();
     }

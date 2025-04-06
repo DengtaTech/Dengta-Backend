@@ -1,18 +1,15 @@
-const { google } = require('googleapis');
-const nodemailer = require('nodemailer');
+import { google } from 'googleapis';
+import nodemailer from 'nodemailer';
 
-class MailService {
+export default class MailService {
   constructor() {
     this.gmailAccount = process.env.GMAIL_ACCOUNT;
     this.clientId = process.env.CLIENT_ID;
     this.clientSecret = process.env.CLIENT_SECRET;
     this.refreshToken = process.env.REFRESH_TOKEN;
-    this.noftifyType = [
-      'system',
-      'is_followed',
-      'follower_footprint',
-      'footprint_reaction',
-    ];
+
+    // 可以選擇是否在這裡也要放上 NOTIFICATION_TYPES
+    // this.notifyType = NOTIFICATION_TYPES;
 
     // 建立 Google OAuth2 Client
     this.oAuth2Client = new google.auth.OAuth2(
@@ -27,9 +24,6 @@ class MailService {
     this.transporter = null;
   }
 
-  /**
-   * 初始化並設定 Nodemailer 的 Transporter
-   */
   async setupTransporter() {
     try {
       const accessToken = await this.oAuth2Client.getAccessToken();
@@ -62,7 +56,6 @@ class MailService {
       console.log('[MailService] 郵件已成功傳送');
     } catch (error) {
       console.error('[MailService] 郵件傳送失敗:', error);
-      // 如果可能是認證問題，嘗試重新初始化 transporter 並重試一次
       if (error.code === 'EAUTH' || error.response?.includes('auth')) {
         console.log(
           '[MailService] Auth error detected, re-initializing transporter...',
@@ -83,5 +76,3 @@ class MailService {
     }
   }
 }
-
-module.exports = MailService;

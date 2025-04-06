@@ -1,8 +1,10 @@
-const MailService = require('./mailService');
-const RabbitmqService = require('./rabbitmqService');
+import MailService from './mailService.js';
+import RabbitmqService from './rabbitmqService.js';
 
 async function startApp() {
-  const rabbitmqService = new RabbitmqService(new MailService());
+  const mailService = new MailService();
+  const rabbitmqService = new RabbitmqService(mailService);
+
   await rabbitmqService.init();
 }
 
