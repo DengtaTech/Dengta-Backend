@@ -86,7 +86,8 @@ export const emailService = {
         week: `${weekStart} ~ ${weekEnd}`,
       });
 
-      const { html } = mjml2html(renderedTemplate);
+      // 我不知道為什麼要 await，但新版本不 await 會回傳 promise
+      const { html } = await mjml2html(renderedTemplate);
 
       await emailService.sendEmail(to, subject, html);
     } catch (err) {
