@@ -62,4 +62,4 @@ volumes:
 
 networks:
   backend_network:
-    name: dengta_backend_network
+    name: dengta_backend_ci_network
