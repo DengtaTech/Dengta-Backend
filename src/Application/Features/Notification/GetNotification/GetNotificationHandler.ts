@@ -1,4 +1,5 @@
 import { notificationService } from '../../../../Infrastructure/Service/notificationService.js';
+import { getNotificationRes } from './GetNotificationRes.js';
 import { NotificationRetrieve } from './Types/api.js';
 
 export const getNotificationHandler = {
@@ -6,6 +7,7 @@ export const getNotificationHandler = {
     body: NotificationRetrieve.INotificationRetrieveReq,
   ): Promise<NotificationRetrieve.INotificationRetrieveRes> => {
     const result = await notificationService.getNotificationByUserId(body);
-    return { data: { notifications: result } };
+
+    return getNotificationRes.customize(result);
   },
 };

@@ -15,7 +15,7 @@ export const notificationTypes = [
   'follower_footprint',
   'footprint_reaction',
 ] as const;
-type NotificationType = (typeof notificationTypes)[number];
+export type NotificationType = (typeof notificationTypes)[number];
 
 @Entity({ name: 'Notification' })
 export class Notification extends BaseEntity {

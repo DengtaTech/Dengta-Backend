@@ -1,6 +1,7 @@
 import { EntityManager, FindManyOptions } from 'typeorm';
 import { Notification } from '../../Database/Entities/notification.js';
 import { User } from '../../Database/Entities/user.js';
+import logger from '../../Database/Logger/index.js';
 
 export const notificationRepo = {
   findById: async (
@@ -29,6 +30,7 @@ export const notificationRepo = {
       const pageSize = 10;
       const queryRules: FindManyOptions<Notification> = {
         where: { user: { id: userId } },
+        relations: ['relatedUser', 'relatedFootprint'],
         order: { createdAt: 'DESC' },
         skip: (page - 1) * pageSize,
         take: pageSize,
@@ -44,7 +46,7 @@ export const notificationRepo = {
         return notifications;
       }
     } catch (error) {
-      console.error('Error finding notifications by user id:');
+      logger.error(error, 'Error finding notifications by user id:');
       throw error;
     }
   },

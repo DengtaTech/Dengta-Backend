@@ -20,15 +20,16 @@ import { sendToNotificationServer } from '../../Database/mq.js';
 export const notificationService = {
   getNotificationByUserId: async (
     body: NotificationRetrieve.INotificationRetrieveReq,
-  ): Promise<NotificationRetrieve.INotificationDto> => {
+  ): Promise<Notification[]> => {
     try {
       const notifications = await notificationRepo.findByUserId(
         body.userId,
         body.page,
       );
+
       return notifications;
     } catch (error) {
-      console.error('Error getting notifications by user id:');
+      logger.error(error, 'Error getting notifications by user id:');
       throw error;
     }
   },
@@ -42,7 +43,7 @@ export const notificationService = {
         notification.isRead = true;
         await transactionManager.save(notification);
       } catch (error) {
-        console.error('Error getting notifications by user id:');
+        logger.error(error, 'Error read notifications');
         throw error;
       }
     });
@@ -116,7 +117,6 @@ export const notificationService = {
       content: `${notifyDto.followerInfo.fullName} 將您視為榜樣，趕快來看看吧！`,
       relatedUserId: notifyDto.followerInfo.id,
     };
-    const { relatedUserId, ...messageToMq } = notification;
     try {
       await Database.transaction(async (transactionManager) => {
         await notificationRepo.insertOne(notification, transactionManager);
@@ -124,8 +124,9 @@ export const notificationService = {
       // 交易成功才呼叫 MQ
       sendToNotificationServer(
         JSON.stringify({
-          ...messageToMq,
+          ...notification,
           email: notifyDto.followeeEmail,
+          avatar: notifyDto.followerInfo.avatar,
         }),
       );
       return;
