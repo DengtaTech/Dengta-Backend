@@ -59,7 +59,7 @@ export const userRepo = {
       }
       return user as GetUserInfo.UserWithHashtagsAndLinks;
     } catch (error) {
-      console.error('Error finding user by id:', error);
+      logger.error(error, 'Error finding user by id');
       throw error;
     }
   },
@@ -71,7 +71,7 @@ export const userRepo = {
       });
       return user;
     } catch (error) {
-      console.error('Error finding user by email:');
+      logger.error(error, 'Error finding user by email');
       throw error;
     }
   },
@@ -93,7 +93,7 @@ export const userRepo = {
       const savedUser = await transactionManager.save(newUser);
       return savedUser;
     } catch (error) {
-      console.error('Failed to save user:');
+      logger.error(error, 'Failed to save user');
       throw error;
     }
   },
@@ -151,7 +151,7 @@ export const userRepo = {
 
       return await query.getMany();
     } catch (error) {
-      console.error('Error finding user by name and tag:');
+      logger.error(error, 'Error finding user by name and tag');
       throw error;
     }
   }) as {
@@ -179,7 +179,7 @@ export const userRepo = {
         await user.save();
       }
     } catch (error) {
-      console.error('Error updating link:');
+      logger.error(error, 'Error updating link');
       throw error;
     }
   },
@@ -206,7 +206,7 @@ export const userRepo = {
       const users = await User.find();
       return users;
     } catch (error) {
-      console.error('Error getting all users:');
+      logger.error(error, 'Error getting all users');
       throw error;
     }
   },
@@ -222,10 +222,15 @@ export const userRepo = {
     const qb = Followship.createQueryBuilder('f')
       .leftJoin('f.follower', 'follower')
       .where('f.followeeId = :userId', { userId })
-      .select(['follower.id AS id', 'follower.fullName AS fullName']);
+      .select([
+        'follower.id AS id',
+        'follower.fullName AS fullName',
+        'follower.email AS email',
+      ]);
     const rawFollowers = await qb.getRawMany<{
       id: string;
       fullName: string;
+      email: string;
     }>();
 
     return {

@@ -24,7 +24,7 @@ export const publishFootprintHandler = {
     });
 
     await embeddingService.addNewIntervalInMilvus(userId);
-    // await notificationService.onNewFootprint(result);
+    await notificationService.onNewFootprint(result);
 
     // mentionService.analyzeContent(
     //   result.title + ' ' + result.content,

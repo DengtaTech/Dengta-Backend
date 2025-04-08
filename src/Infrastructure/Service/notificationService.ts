@@ -17,6 +17,10 @@ import { UserFollow } from '../../Application/Features/User/Follow/Types/api.js'
 import logger from '../../Database/Logger/index.js';
 import { sendToNotificationServer } from '../../Database/mq.js';
 import { Footprint } from '../../Database/Entities/footprint.js';
+import {
+  INewFollowMessage,
+  INewFootprintMessage,
+} from '../../Types/mqNotification.js';
 
 export const notificationService = {
   getNotificationByUserId: async (
@@ -122,19 +126,66 @@ export const notificationService = {
       await Database.transaction(async (transactionManager) => {
         await notificationRepo.insertOne(notification, transactionManager);
       });
-      // 交易成功才呼叫 MQ
-      sendToNotificationServer(
-        JSON.stringify({
-          ...notification,
-          email: notifyDto.followeeEmail,
+      const mqMessage: INewFollowMessage = {
+        destinationEmail: notifyDto.followeeEmail,
+        subject: notification.title,
+        content: notification.content,
+        type: notificationTypes[1],
+        metadata: {
+          id: notifyDto.followerInfo.id,
+          fullName: notifyDto.followerInfo.fullName,
           avatar: notifyDto.followerInfo.avatar,
-        }),
-      );
+        },
+      };
+      // 交易成功才呼叫 MQ
+      sendToNotificationServer(JSON.stringify(mqMessage));
       return;
     } catch (error) {
       logger.error(error, 'Error in onNewFollow notification');
       throw error;
     }
   },
-  onNewFootprint: async (footprint: Footprint) => {},
+  onNewFootprint: async (footprint: Footprint) => {
+    try {
+      const { followee, followers } = await userRepo.getFollowersByUserId(
+        footprint.userId,
+      );
+      // 如果沒有人追蹤該 user，就不需要發通知
+      if (!followers || followers.length === 0) {
+        return;
+      }
+      const mqMessage: INewFootprintMessage[] = [];
+      const notificationsToInsert = followers.map((follower) => {
+        const dbNotification = {
+          userId: follower.id,
+          type: notificationTypes[2],
+          title: `你關注的用戶 ${followee.fullName} 發布了${footprint.milestone == true ? '新的里程碑' : '新足跡'}！`,
+          content: `快去看看他的最新分享吧：${footprint.title}！`,
+          relatedUserId: followee.id,
+          relatedFootprintId: footprint.id,
+        };
+        mqMessage.push({
+          destinationEmail: follower.email,
+          subject: dbNotification.title,
+          content: dbNotification.content,
+          type: notificationTypes[2],
+          metadata: {
+            footprintId: footprint.id,
+            fullName: followee.fullName,
+            avatar: followee.avatar,
+          },
+        });
+        return dbNotification;
+      });
+      await Database.transaction(async (manager) => {
+        // bulk insert
+        await manager.getRepository(Notification).insert(notificationsToInsert);
+      });
+      sendToNotificationServer(JSON.stringify(mqMessage));
+      return;
+    } catch (error) {
+      logger.error(error, 'Error in onNewFootprint notification');
+      throw error;
+    }
+  },
 };

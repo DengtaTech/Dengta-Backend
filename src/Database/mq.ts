@@ -75,7 +75,7 @@ export function sendToNotificationServer(notifications: string) {
     channel.sendToQueue('EMAIL', Buffer.from(notifications), {
       persistent: true,
     });
-    logger.info(`Published to queue: ${notifications}`);
+    logger.info(`Published to queue successfully`);
   } catch (err) {
     logger.error(err, 'Publish error');
   }
