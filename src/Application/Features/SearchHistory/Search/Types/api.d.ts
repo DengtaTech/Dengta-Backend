@@ -5,6 +5,7 @@ declare namespace Search {
   interface ISearchReq {
     userId: string;
     content: string;
+    page: number;
   }
 
   interface ISearchRes {
@@ -17,6 +18,7 @@ declare namespace Search {
   interface ISearchInfoDto {
     userId: string;
     searchContent: string;
+    page: number;
   }
 
   type ISearchResultDto = Array<{

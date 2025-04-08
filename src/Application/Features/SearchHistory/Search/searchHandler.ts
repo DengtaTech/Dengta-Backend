@@ -8,6 +8,7 @@ export const searchHandler = {
     const result = await searchHistoryService.search({
       userId: body.userId,
       searchContent: body.content,
+      page: body.page,
     });
     mentionService.analyzeContent(body.content, new Date(), 'search');
     const response = await searchRes.customize(body.content, result);
