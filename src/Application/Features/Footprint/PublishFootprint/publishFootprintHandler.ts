@@ -3,6 +3,7 @@ import { embeddingService } from '../../../../Infrastructure/Service/embeddingSe
 import { PublishFootprint } from './Types/api.js';
 import { publishFootprintRes } from './publishFootprintRes.js';
 import { mentionService } from '../../../../Infrastructure/Service/mentionService.js';
+import { notificationService } from '../../../../Infrastructure/Service/notificationService.js';
 
 export const publishFootprintHandler = {
   handle: async (
@@ -23,6 +24,7 @@ export const publishFootprintHandler = {
     });
 
     await embeddingService.addNewIntervalInMilvus(userId);
+    await notificationService.onNewFootprint(result);
 
     // mentionService.analyzeContent(
     //   result.title + ' ' + result.content,

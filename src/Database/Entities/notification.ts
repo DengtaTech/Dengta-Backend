@@ -9,14 +9,13 @@ import {
 } from 'typeorm';
 import { User } from './user.js';
 import { Footprint } from './footprint.js';
-
-const notificationTypes = [
+export const notificationTypes = [
   'system',
   'is_followed',
   'follower_footprint',
   'footprint_reaction',
 ] as const;
-type NotificationType = (typeof notificationTypes)[number];
+export type NotificationType = (typeof notificationTypes)[number];
 
 @Entity({ name: 'Notification' })
 export class Notification extends BaseEntity {
@@ -37,7 +36,7 @@ export class Notification extends BaseEntity {
   })
   type!: NotificationType;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'varchar', length: 150, nullable: false })
   title!: string;
 
   @Column({ type: 'text', nullable: false })

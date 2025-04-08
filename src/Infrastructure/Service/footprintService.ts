@@ -135,7 +135,6 @@ export const footprintService = {
     const result = await footprintRepo.initFootprint(userId, status);
     return result;
   },
-  // TODO: 可能public 跟 update 可以合併用一個就好
   publish: async (
     footprintObj: PublishFootprint.IPublishFootprintReqBody,
   ): Promise<Footprint> => {

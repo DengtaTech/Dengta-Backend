@@ -5,8 +5,13 @@ import { Link } from '../../Database/Entities/link.js';
 import { Role } from '../../Database/Entities/role.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
+import { Followship } from '../../Database/Entities/followship.js';
+import logger from '../../Database/Logger/index.js';
+import { IFolloweeWithFollowers } from '../../Types/followship.js';
+import { UserShouldExistError } from '../../Errors/errors.js';
 
 export const userRepo = {
+  // TODO: 尚未附上 cardUrl 屬性（未來可能會需要
   findById: async (
     userId: string,
     transactionManager?: EntityManager | undefined,
@@ -54,7 +59,7 @@ export const userRepo = {
       }
       return user as GetUserInfo.UserWithHashtagsAndLinks;
     } catch (error) {
-      console.error('Error finding user by id:', error);
+      logger.error(error, 'Error finding user by id');
       throw error;
     }
   },
@@ -66,7 +71,7 @@ export const userRepo = {
       });
       return user;
     } catch (error) {
-      console.error('Error finding user by email:');
+      logger.error(error, 'Error finding user by email');
       throw error;
     }
   },
@@ -82,13 +87,13 @@ export const userRepo = {
       newUser.lastName = userInfoObj.lastName;
       newUser.lifeRole = userInfoObj.lifeRole;
       newUser.birthday = userInfoObj.birthday;
-      newUser.provider = userInfoObj.provider as string;
+      newUser.provider = userInfoObj.provider;
       newUser.avatar = '';
       newUser.gender = userInfoObj.gender;
       const savedUser = await transactionManager.save(newUser);
       return savedUser;
     } catch (error) {
-      console.error('Failed to save user:');
+      logger.error(error, 'Failed to save user');
       throw error;
     }
   },
@@ -146,7 +151,7 @@ export const userRepo = {
 
       return await query.getMany();
     } catch (error) {
-      console.error('Error finding user by name and tag:');
+      logger.error(error, 'Error finding user by name and tag');
       throw error;
     }
   }) as {
@@ -174,7 +179,7 @@ export const userRepo = {
         await user.save();
       }
     } catch (error) {
-      console.error('Error updating link:');
+      logger.error(error, 'Error updating link');
       throw error;
     }
   },
@@ -192,7 +197,7 @@ export const userRepo = {
 
       return userWithRoles.mUserRole.map((mUserRole) => mUserRole.role!);
     } catch (error) {
-      console.error('Error getting user roles:');
+      logger.error(error, 'Error getting user roles');
       throw error;
     }
   },
@@ -201,8 +206,36 @@ export const userRepo = {
       const users = await User.find();
       return users;
     } catch (error) {
-      console.error('Error getting all users:');
+      logger.error(error, 'Error getting all users');
       throw error;
     }
+  },
+  getFollowersByUserId: async (
+    userId: string,
+  ): Promise<IFolloweeWithFollowers> => {
+    const followee = await User.findOne({
+      where: { id: userId },
+    });
+    if (!followee) {
+      throw new UserShouldExistError();
+    }
+    const qb = Followship.createQueryBuilder('f')
+      .leftJoin('f.follower', 'follower')
+      .where('f.followeeId = :userId', { userId })
+      .select([
+        'follower.id AS id',
+        'follower.fullName AS fullName',
+        'follower.email AS email',
+      ]);
+    const rawFollowers = await qb.getRawMany<{
+      id: string;
+      fullName: string;
+      email: string;
+    }>();
+
+    return {
+      followee,
+      followers: rawFollowers,
+    };
   },
 };

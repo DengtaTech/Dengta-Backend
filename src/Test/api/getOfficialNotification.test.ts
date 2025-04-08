@@ -17,8 +17,12 @@ describe('GET /api/1.0/notification', () => {
     const objectToMatch = reversedFakeNotifications
       .slice(0, 10)
       .map((notification) => {
+        const { createdAt, relatedFootprintId, relatedUserId, ...rest } =
+          notification;
         return {
-          ...notification,
+          ...rest,
+          relatedFootprint: null,
+          relatedUser: null,
           createdAt: notification.createdAt.toISOString(),
         };
       });
@@ -34,8 +38,12 @@ describe('GET /api/1.0/notification', () => {
     const objectToMatch2 = reversedFakeNotifications
       .slice(10, 20)
       .map((notification) => {
+        const { createdAt, relatedFootprintId, relatedUserId, ...rest } =
+          notification;
         return {
-          ...notification,
+          ...rest,
+          relatedFootprint: null,
+          relatedUser: null,
           createdAt: notification.createdAt.toISOString(),
         };
       });
