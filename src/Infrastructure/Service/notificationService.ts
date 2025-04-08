@@ -159,7 +159,7 @@ export const notificationService = {
         const dbNotification = {
           userId: follower.id,
           type: notificationTypes[2],
-          title: `你關注的用戶 ${followee.fullName} 發布了${footprint.milestone == true ? '新的里程碑' : '新足跡'}！`,
+          title: `你關注的用戶 ${followee.fullName} 發布了${footprint.milestone ? '新的里程碑' : '新足跡'}！`,
           content: `快去看看他的最新分享吧：${footprint.title}！`,
           relatedUserId: followee.id,
           relatedFootprintId: footprint.id,
