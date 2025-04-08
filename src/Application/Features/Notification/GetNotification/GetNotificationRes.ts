@@ -13,6 +13,7 @@ export const getNotificationRes = {
           title: notification.title,
           content: notification.content,
           isRead: notification.isRead,
+          userId: notification.userId,
           createdAt: notification.createdAt,
           relatedUser: notification.relatedUser
             ? {

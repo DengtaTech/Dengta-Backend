@@ -16,6 +16,7 @@ import { Database } from '../../Database/data-source.js';
 import { UserFollow } from '../../Application/Features/User/Follow/Types/api.js';
 import logger from '../../Database/Logger/index.js';
 import { sendToNotificationServer } from '../../Database/mq.js';
+import { Footprint } from '../../Database/Entities/footprint.js';
 
 export const notificationService = {
   getNotificationByUserId: async (
@@ -66,7 +67,7 @@ export const notificationService = {
           notification.title = body.title;
           notification.type = 'system';
           notification.content = body.content;
-          notification.user = user;
+          notification.userId = user.id;
 
           await notificationRepo.insertNewNotification(notification);
         }),
@@ -135,4 +136,5 @@ export const notificationService = {
       throw error;
     }
   },
+  onNewFootprint: async (footprint: Footprint) => {},
 };

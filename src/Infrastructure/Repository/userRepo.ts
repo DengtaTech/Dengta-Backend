@@ -5,6 +5,10 @@ import { Link } from '../../Database/Entities/link.js';
 import { Role } from '../../Database/Entities/role.js';
 import { GetUserInfo } from '../../Application/Features/User/GetUserInfo/Types/api.js';
 import { SearchFollowees } from '../../Application/Features/User/SearchFollowees/Types/api.js';
+import { Followship } from '../../Database/Entities/followship.js';
+import logger from '../../Database/Logger/index.js';
+import { IFolloweeWithFollowers } from '../../Types/followship.js';
+import { UserShouldExistError } from '../../Errors/errors.js';
 
 export const userRepo = {
   // TODO: 尚未附上 cardUrl 屬性（未來可能會需要
@@ -193,7 +197,7 @@ export const userRepo = {
 
       return userWithRoles.mUserRole.map((mUserRole) => mUserRole.role!);
     } catch (error) {
-      console.error('Error getting user roles:');
+      logger.error(error, 'Error getting user roles');
       throw error;
     }
   },
@@ -205,5 +209,28 @@ export const userRepo = {
       console.error('Error getting all users:');
       throw error;
     }
+  },
+  getFollowersByUserId: async (
+    userId: string,
+  ): Promise<IFolloweeWithFollowers> => {
+    const followee = await User.findOne({
+      where: { id: userId },
+    });
+    if (!followee) {
+      throw new UserShouldExistError();
+    }
+    const qb = Followship.createQueryBuilder('f')
+      .leftJoin('f.follower', 'follower')
+      .where('f.followeeId = :userId', { userId })
+      .select(['follower.id AS id', 'follower.fullName AS fullName']);
+    const rawFollowers = await qb.getRawMany<{
+      id: string;
+      fullName: string;
+    }>();
+
+    return {
+      followee,
+      followers: rawFollowers,
+    };
   },
 };
