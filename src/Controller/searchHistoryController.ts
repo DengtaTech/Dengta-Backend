@@ -43,14 +43,12 @@ export const searchHistoryController = {
         `page must be a nonnegative integer. Input: ${req.body.page}`,
       );
     }
-    res
-      .status(200)
-      .json(
-        await searchHandler.handle({
-          userId,
-          content: req.body.content,
-          page: req.body.page,
-        }),
-      );
+    res.status(200).json(
+      await searchHandler.handle({
+        userId,
+        content: req.body.content,
+        page: req.body.page,
+      }),
+    );
   },
 };

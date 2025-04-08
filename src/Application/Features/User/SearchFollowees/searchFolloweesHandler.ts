@@ -6,9 +6,14 @@ import { SearchFollowees } from './Types/api.js';
 export const searchFolloweesHandler = {
   handle: async (
     followerId: User['id'],
+    page: number,
     keywords?: string,
   ): Promise<SearchFollowees.ISearchFolloweesRes> => {
-    const result = await userService.searchFollowees(followerId, keywords);
+    const result = await userService.searchFollowees(
+      followerId,
+      page,
+      keywords,
+    );
     return await searchFolloweesRes.customize(result);
   },
 };
