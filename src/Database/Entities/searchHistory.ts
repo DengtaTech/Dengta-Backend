@@ -2,22 +2,23 @@ import {
   Entity,
   BaseEntity,
   PrimaryColumn,
-  CreateDateColumn,
   ManyToOne,
   Relation,
+  Unique,
   Column,
 } from 'typeorm';
 import { User } from './user.js';
 
 @Entity({ name: 'SearchHistory' })
+@Unique(['userId', 'searchAt'])
 export class SearchHistory extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 50 })
   userId!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @PrimaryColumn({ type: 'varchar', length: 255 })
   content!: string;
 
-  @CreateDateColumn({ primary: true })
+  @Column()
   searchAt!: Date;
 
   @ManyToOne(() => User)

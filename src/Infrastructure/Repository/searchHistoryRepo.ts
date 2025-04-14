@@ -57,7 +57,7 @@ export const searchHistoryRepo = {
       throw error;
     }
   },
-  insertNewSearchHistory: async (
+  upsertSearchHistory: async (
     { userId, searchContent }: Search.ISearchInfoDto,
     transactionManager?: EntityManager,
   ): Promise<void> => {
@@ -65,6 +65,7 @@ export const searchHistoryRepo = {
       const newSearchHistory = new SearchHistory();
       newSearchHistory.userId = userId;
       newSearchHistory.content = searchContent;
+      newSearchHistory.searchAt = new Date();
       if (transactionManager) {
         await transactionManager.save(
           newSearchHistory,

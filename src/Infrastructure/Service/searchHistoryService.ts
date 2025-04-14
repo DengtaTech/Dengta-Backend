@@ -44,7 +44,7 @@ export const searchHistoryService = {
   search: async (searchInfoObj: Search.ISearchInfoDto): Promise<User[]> => {
     return Database.transaction(async (transactionManager) => {
       try {
-        await searchHistoryRepo.insertNewSearchHistory(
+        await searchHistoryRepo.upsertSearchHistory(
           searchInfoObj,
           transactionManager,
         );
