@@ -165,7 +165,10 @@ export const userController = {
     }
     const { id: userId } = req.decodedToken;
     const keywords = req.query.keywords;
-    const page = parseInt(req.query.page as string) || 0;
+    const page = parseInt(req.query.page as string) || 1;
+    if (page < 1) {
+      throw new InvalidInputError('page must be a positive integer');
+    }
     if (typeof keywords !== 'string' && typeof keywords !== 'undefined') {
       throw new InvalidInputError('keywords must be a string');
     }

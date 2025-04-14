@@ -51,7 +51,7 @@ export const searchHistoryService = {
         const result = await userRepo.findByNameAndTag({
           keywords: searchInfoObj.searchContent,
           transactionManager,
-          skip: searchInfoObj.page * 20,
+          skip: (searchInfoObj.page - 1) * 20,
           limit: 20,
         });
         // Don't include the searcher

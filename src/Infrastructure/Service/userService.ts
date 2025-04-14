@@ -236,7 +236,7 @@ export const userService = {
           keywords,
           followerId,
           transactionManager,
-          skip: page * 20,
+          skip: (page - 1) * 20,
           limit: 20,
         });
       } catch (error) {
