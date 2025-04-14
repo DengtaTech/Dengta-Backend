@@ -133,18 +133,26 @@ export const userRepo = {
         .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag');
 
       if (keywords) {
+        const matchUsersQuery = transactionManager
+          ? transactionManager.getRepository(User).createQueryBuilder('user')
+          : User.createQueryBuilder('user');
+        const matchUserIds = (
+          await matchUsersQuery
+            .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+            .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
+            .where(
+              'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            )
+            .orWhere(
+              'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            )
+            .select('user.id')
+            .setParameter('keywords', keywords)
+            .getMany()
+        ).map((user) => user.id);
+
         query
-          .where(
-            new Brackets((qb) =>
-              qb
-                .where(
-                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                )
-                .orWhere(
-                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                ),
-            ),
-          )
+          .whereInIds(matchUserIds)
           .addSelect(
             `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
              MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
