@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { getSearchHistoryHandler } from '../Application/Features/SearchHistory/GetHistory/GetHistoryHandler.js';
-import { InputEmptyError, NoTokenError } from '../Errors/errors.js';
+import {
+  InputEmptyError,
+  InvalidInputError,
+  NoTokenError,
+} from '../Errors/errors.js';
 import { clearSearchHistoryHandler } from '../Application/Features/SearchHistory/ClearSearch/clearHistoryHandler.js';
 import { searchHandler } from '../Application/Features/SearchHistory/Search/searchHandler.js';
 
@@ -30,8 +34,16 @@ export const searchHistoryController = {
     if (!req.body.content) {
       throw new InputEmptyError();
     }
-    res
-      .status(200)
-      .json(await searchHandler.handle({ userId, content: req.body.content }));
+    const page = parseInt(req.body.page as string) || 1;
+    if (page < 1) {
+      throw new InvalidInputError('page must be a positive integer');
+    }
+    res.status(200).json(
+      await searchHandler.handle({
+        userId,
+        content: req.body.content,
+        page: req.body.page,
+      }),
+    );
   },
 };

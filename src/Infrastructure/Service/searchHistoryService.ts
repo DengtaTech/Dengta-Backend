@@ -51,8 +51,11 @@ export const searchHistoryService = {
         const result = await userRepo.findByNameAndTag({
           keywords: searchInfoObj.searchContent,
           transactionManager,
+          skip: (searchInfoObj.page - 1) * 20,
+          limit: 20,
         });
-        return result;
+        // Don't include the searcher
+        return result.filter((usr) => usr.id !== searchInfoObj.userId);
       } catch (error) {
         console.error('Error in DB ->', error);
         throw error;

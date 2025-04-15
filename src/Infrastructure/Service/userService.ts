@@ -222,6 +222,7 @@ export const userService = {
   },
   searchFollowees: async (
     followerId: User['id'],
+    page: number,
     keywords?: string,
   ): Promise<SearchFollowees.ISearchFolloweesDto[]> => {
     return Database.transaction(async (transactionManager) => {
@@ -235,6 +236,8 @@ export const userService = {
           keywords,
           followerId,
           transactionManager,
+          skip: (page - 1) * 20,
+          limit: 20,
         });
       } catch (error) {
         console.error('Error in DB ->', error);

@@ -96,15 +96,31 @@ export const userRepo = {
     keywords,
     followerId,
     transactionManager,
+    skip = 0,
+    limit = 4294967295, // max length for nodejs array
   }: {
     keywords?: string;
     followerId?: User['id'];
     transactionManager?: EntityManager;
+    skip: number;
+    limit: number;
   }) => {
     try {
-      if (!keywords && !followerId) {
+      if (keywords === undefined && followerId === undefined) {
         throw new Error(
           'keywords and followerId cannot be both undefined. This operation should have been blocked by TS type guard',
+        );
+      }
+
+      if (
+        !Number.isInteger(skip) ||
+        !Number.isInteger(limit) ||
+        skip < 0 ||
+        limit < 0 ||
+        limit > 4294967295
+      ) {
+        throw new Error(
+          `skip and limit must meet criteria. Current skip: ${skip}, limit: ${limit}`,
         );
       }
 
@@ -112,21 +128,31 @@ export const userRepo = {
         ? transactionManager.getRepository(User).createQueryBuilder('user')
         : User.createQueryBuilder('user');
 
+      query
+        .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+        .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag');
+
       if (keywords) {
+        const matchUsersQuery = transactionManager
+          ? transactionManager.getRepository(User).createQueryBuilder('user')
+          : User.createQueryBuilder('user');
+        const matchUserIds = (
+          await matchUsersQuery
+            .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
+            .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
+            .where(
+              'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            )
+            .orWhere(
+              'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
+            )
+            .select('user.id')
+            .setParameter('keywords', keywords)
+            .getMany()
+        ).map((user) => user.id);
+
         query
-          .leftJoinAndSelect('user.mUserProfileHashTag', 'user_hashTag')
-          .leftJoinAndSelect('user_hashTag.profileHashTag', 'hashTag')
-          .where(
-            new Brackets((qb) =>
-              qb
-                .where(
-                  'MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                )
-                .orWhere(
-                  'MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)',
-                ),
-            ),
-          )
+          .whereInIds(matchUserIds)
           .addSelect(
             `MATCH(user.fullName) AGAINST (:keywords IN NATURAL LANGUAGE MODE) +
              MATCH(hashTag.content) AGAINST (:keywords IN NATURAL LANGUAGE MODE)`,
@@ -144,6 +170,8 @@ export const userRepo = {
           });
       }
 
+      query.skip(skip).take(limit);
+
       return await query.getMany();
     } catch (error) {
       console.error('Error finding user by name and tag:');
@@ -154,11 +182,15 @@ export const userRepo = {
       keywords?: string;
       followerId: User['id'];
       transactionManager?: EntityManager;
+      skip?: number;
+      limit?: number;
     }): Promise<SearchFollowees.ISearchFolloweesDto[]>;
     (_: {
       keywords: string;
       followerId?: never;
       transactionManager?: EntityManager;
+      skip?: number;
+      limit?: number;
     }): Promise<User[]>;
   },
   updateLink: async (
