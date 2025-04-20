@@ -57,7 +57,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', default: 'native' })
   provider!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 1024, nullable: true })
   avatar!: string | null;
 
   @Column({
