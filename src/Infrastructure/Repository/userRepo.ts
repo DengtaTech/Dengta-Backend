@@ -83,7 +83,7 @@ export const userRepo = {
       newUser.lifeRole = userInfoObj.lifeRole;
       newUser.birthday = userInfoObj.birthday;
       newUser.provider = userInfoObj.provider as string;
-      newUser.avatar = '';
+      newUser.avatar = userInfoObj.avatar ? userInfoObj.avatar : null;
       newUser.gender = userInfoObj.gender;
       const savedUser = await transactionManager.save(newUser);
       return savedUser;

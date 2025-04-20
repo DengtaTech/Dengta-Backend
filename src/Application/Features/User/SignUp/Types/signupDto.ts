@@ -67,6 +67,10 @@ export class SignUpReqBodyDto {
   @IsString()
   password?: string;
 
+  @IsOptional()
+  @IsString()
+  avatar?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => LinkDto)
