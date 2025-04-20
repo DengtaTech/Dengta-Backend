@@ -69,7 +69,7 @@ export const recommendationService = {
           selfIntro: '' as string | null,
           followerCount: 0,
           hashtags: [] as string[],
-          avatar: '',
+          avatar: null as string | null,
         },
         similarity: result.score,
         startFootprintId: result.startFootprintId,
@@ -106,7 +106,7 @@ export const recommendationService = {
       similarUser.user.selfIntro = user.selfIntro;
       similarUser.user.hashtags = user.hashtags;
       similarUser.user.followerCount = followerCount;
-      similarUser.user.avatar = user.avatar;
+      similarUser.user.avatar = user.avatar ? user.avatar : null;
       // Edge case? -> no footprints
       if (!startFootprint || !endFootprint) {
         similarUser.startFootprintAge = undefined;
