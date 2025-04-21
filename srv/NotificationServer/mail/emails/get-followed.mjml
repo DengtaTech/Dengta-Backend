@@ -62,10 +62,10 @@
         <mj-button
           background-color="#ffc500"
           color="#ffffff"
-          href="https://your-link.com"
+          href="<%= it.cardLink %>"
           align="center"
         >
-          前往生涯故事本 &#8594;
+          前往 <%= it.name %> 的生涯故事本 &#8594;
         </mj-button>
         <mj-spacer height="20px" />
       </mj-column>
