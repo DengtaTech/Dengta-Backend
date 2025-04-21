@@ -14,7 +14,9 @@ type TNewFootprintMessageMetadata = Pick<User, 'fullName' | 'avatar'> & {
 };
 
 export interface INewFollowMessage extends IEmailForm {
-  metadata: Pick<User, 'id' | 'fullName' | 'avatar'>;
+  metadata: Pick<User, 'id' | 'fullName' | 'avatar' | 'lifeRole'> & {
+    cardLink: string;
+  };
 }
 
 export interface INewFootprintMessage extends IEmailForm {

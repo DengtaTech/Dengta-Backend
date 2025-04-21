@@ -135,6 +135,8 @@ export const notificationService = {
           id: notifyDto.followerInfo.id,
           fullName: notifyDto.followerInfo.fullName,
           avatar: notifyDto.followerInfo.avatar,
+          lifeRole: notifyDto.followerInfo.lifeRole,
+          cardLink: 'https://dengta.org',
         },
       };
       // 交易成功才呼叫 MQ
