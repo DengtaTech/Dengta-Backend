@@ -1,11 +1,11 @@
+# DengTa (燈塔) — Backend
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-light.png">
-    <img src="docs/images/logo-dark.png" alt="DengTa logo" width="160">
+    <img src="docs/images/logo-dark.png" alt="DengTa logo" width="80">
   </picture>
 </p>
-
-# DengTa (燈塔) — Backend
 
 [![CI](https://github.com/DengtaTech/Dengta-Backend/actions/workflows/test.yml/badge.svg)](https://github.com/DengtaTech/Dengta-Backend/actions/workflows/test.yml)
 [![PR Build Check](https://github.com/DengtaTech/Dengta-Backend/actions/workflows/prTest.yml/badge.svg)](https://github.com/DengtaTech/Dengta-Backend/actions/workflows/prTest.yml)
