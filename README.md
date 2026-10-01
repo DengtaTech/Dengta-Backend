@@ -24,6 +24,8 @@ DengTa lets users write their growth journey into a **Career Storybook**, then u
 
 ## Specification
 
+![System Architecture](docs/images/architecture.webp)
+
 | Category                 | Technology                                                                                                                                         |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Runtime / Framework      | Node.js 20, Express 4, TypeScript (ESM)                                                                                                            |
@@ -99,8 +101,6 @@ See [System Design → Role Model Matching](#role-model-matching) for how it wor
 ---
 
 ## System Design
-
-![System Architecture](docs/images/architecture.webp)
 
 The whole system runs inside a single Docker network with Nginx as the only entry point. Design considerations per component are listed below.
 
